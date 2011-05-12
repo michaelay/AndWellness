@@ -8,12 +8,29 @@
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light">Available surveys</h1>
-   <ol>
-      <li><a href="index.html">Diet and Mood</a></li>
-      <li><a href=#>Exercise and Activity</a></li>
-      <li><a href=#>Sleep</a></li>
-      <li class="menu-last"><a href=#>survey4</a></li>
+   <ol id="survey-list">
    </ol>
 </div>
+<div id="content">
+</div>
+
+<script src="js/jquery-1.6.1.min.js"></script>
+<script src="js/aws_campaign.js"></script>
+<script>
+$(document).ready(function() { 
+   var loader = new CampaignXMLLoader(); 
+   var xmlString = loader.loadDefaultCampaign(); 
+   //$("#content").html(xmlString);
+
+   // print out the titles 
+   $(xmlString).find("survey").each(function() { 
+      var title = $(this).find("title").html();
+      var id = $(this).find("id").html();
+      $("#survey-list").append('<li><a href="survey.html?id='+id+'">'+title+'</a></li>'); 
+   });
+   $("#survey-list:last-child").addClass("menu-last");
+});
+</script>
+
 </body>
 </html>
