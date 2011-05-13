@@ -2,7 +2,6 @@
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
-   <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
 </head>
 <body>
 <h1 id="header" class="header center">AndWellness</h1>
@@ -14,11 +13,15 @@
     <input type="text" name="password" id="password" />
     <input type="button" name="login" id="login" value="Login" />
 </form>
-<div class="menu-full menu-detailed menu-padded">
-   <h1 class="light">Test</h1>
-   <ol>
-      <li><a href="surveylist.html">list<a/></li>
-   </ol>
-</div>
+
+<script src="http://m.ucla.edu/assets/js.php?webkit_libs=transitions"></script>
+<script src="js/jquery-1.6.1.min.js"></script>
+<script>
+$(document).ready(function() {
+   $("#login").click(function() { 
+      window.location.href = "surveylist.html";
+   });
+});
+</script>
 </body>
 </html>
