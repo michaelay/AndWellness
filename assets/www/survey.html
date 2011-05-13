@@ -2,56 +2,24 @@
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
-   <link rel="stylesheet" href="css/aws.css" type="text/css">
 </head>
 <body>
 
-<h1 id="header" class="header center"></h1>
+<h1 id="header" class="header center">
+   <!--button style="float:left;margin-top:2px;height:30px;">Home</button-->
+   AndWellness
+</h1>
 
-<div id="survey" class="webkit-transition-slideX">
-<!--
-   <div class="content-element webkit-transition-element aws-transition-element">
-      <form class="form-full form-padded"> 
-         <h1 class="light form-first">title</h1>
-         <label for="123">asdf</label>
-         <input type="text" name="a" id="a"/>
-         <div class="webkit-transition-trigger-prev only-webkit">
-            <a href="#">Previous</a>
-         </div>
-         <div class="webkit-transition-trigger-next only-webkit">
-            <a href="#">Next</a>
-         </div>
-         <div><a href="surveylist.html">survey list</a></div>
-      </form>
-   </div>
--->
-   <div class="content-full content-padded webkit-transition-element">
+<div id="survey">
+   <div class="content-full content-padded">
       <h1 id="desc-title"></h1>
       <p id="desc-content"></p>
-      <div class="webkit-transition-trigger-next only-webkit">
-         <a href="#">Begin</a>
-      </div>
    </div>
-<!--
-   <div class="content-full content-padded webkit-transition-element">
-      <h1>abdsafsdsaasdfas</h1>
-      <p>content content content</p>
-      <p>content content content</p>
-      <p>content content content</p>
-      <p>content content content</p>
-      <div>
-      <div class="webkit-transition-trigger-prev only-webkit">
-         <a href="#">Previous</a>
-      </div>
-      <div class="webkit-transition-trigger-next only-webkit">
-         <a href="#">Next</a>
-      </div>
-      </div>
-   </div>
--->
+   <a id="begin-button" href="#" class="button-full button-light button-padded">Begin</a>
 </div>
+<a class="button-full button-padded" href="surveylist.html">survey list</a>
 
-<script src="http://m.ucla.edu/assets/js.php?webkit_libs=transitions"></script>
+<script src="http://m.ucla.edu/assets/js.php"></script>
 <script src="js/jquery-1.6.1.min.js"></script>
 <script src="js/aws_campaign.js"></script>
 <script src="js/aws_utility.js"></script>
@@ -70,20 +38,15 @@ $(document).ready(function() {
       //console.log($(this).find("promptText").text());
       var question = $(this).find("promptText").text();
       var newFormHTML = '\
-   <div class="content-element webkit-transition-element aws-transition-element">\
       <form class="form-full form-padded">\
          <h1 class="light form-first">'+question+'</h1>\
          <label for="123">asdf</label>\
          <input type="text" name="a" id="a"/>\
-         <div class="webkit-transition-trigger-prev only-webkit">\
-            <a href="#">Previous</a>\
-         </div>\
-         <div class="webkit-transition-trigger-next only-webkit">\
-            <a href="#">Next</a>\
-         </div>\
-         <div><a href="surveylist.html">survey list</a></div>\
       </form>\
-   </div>';
+      <div class="button-full button-padded">\
+         <a class="button-first" href="#">Previous</a>\
+         <a class="button-last" href="#">Next</a>\
+      </div>';
       var $newForm = $(newFormHTML);
       $surveyEl.append($newForm);
    });
