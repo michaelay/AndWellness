@@ -867,12 +867,17 @@ function CampaignXMLLoader () {
 // }}} 
    this.xml = null;  
    this.loadDefaultCampaign = function() { 
-      this.xml = this.defaultCampaignXML;
+      this.xml = this.rewriteXML(this.defaultCampaignXML);
       return this.xml;
    };
    this.loadCampaignFromURL = function() { 
-      this.xml = this.defaultCampaignXML;
+      this.xml = this.rewriteXML(this.defaultCampaignXML);
       return this.xml;
    }; 
+   this.rewriteXML = function (xml) {
+      xml = xml.replace(/<title>/ig, "<title_t>");
+      xml = xml.replace(/<\/title>/gi, "</title_t>");
+      return xml;
+   } 
 } 
 

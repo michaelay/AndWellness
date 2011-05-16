@@ -21,12 +21,11 @@
 $(document).ready(function() { 
    var loader = new CampaignXMLLoader(); 
    var xmlString = loader.loadDefaultCampaign(); 
-   //$("#content").html(xmlString);
 
    // print out the titles 
    $(xmlString).find("survey").each(function() { 
-      var title = $(this).find("title").html();
-      var id = $(this).find("id").html();
+      var title = $(this).children("title_t").text();
+      var id = $(this).children("id").text();
       $("#survey-list").append('<li><a href="survey.html?id='+id+'">'+title+'</a></li>'); 
    });
    $("#survey-list:last-child").addClass("menu-last");

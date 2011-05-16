@@ -32,11 +32,11 @@ $(document).ready(function() {
    id = id.replace(/#$/, '');
    var $survey = $(xmlString).find("surveys > survey > id:contains('"+id+"')").parent();
    var $surveyEl = $("#survey");
-   $("#desc-title").html($survey.find("title").text());
+   $("#desc-title").html($survey.find("title_t").text());
    $("#desc-content").html($survey.find("description").text());
    $survey.find("contentList").children().each(function() {
       //console.log($(this).find("promptText").text());
-      var question = $(this).find("promptText").text();
+      var question = $(this).children("promptText").text();
       var newFormHTML = '\
       <form class="form-full form-padded">\
          <h1 class="light form-first">'+question+'</h1>\
