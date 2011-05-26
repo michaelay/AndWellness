@@ -12,10 +12,14 @@ $.extend({
   },
   getUrlVar: function(name){
     return $.getUrlVars()[name];
-  }
+  },
+  hasPhoneGap: function() { 
+    return (typeof device != undefined);
+  } 
 });
 /*example 
 var allVars = $.getUrlVars();
 var byName = $.getUrlVar('name');
+$.hasPhoneGap();
 */
 
