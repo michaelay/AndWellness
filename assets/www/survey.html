@@ -65,7 +65,17 @@
    var onClickSkip = function(surveyID) { 
       // just move for now... handle data later
       onClickNext(surveyID);
-   };  
+   };
+   var onClickTakePhoto = function() { 
+      // allow to choose from camera or photo library
+      //navigator.camera.getPicture( cameraSuccess, cameraError, [ cameraOptions ] );
+      console.log("camera");
+   };   
+   var onClickChoosePhoto = function() { 
+      // allow to choose from camera or photo library
+      //navigator.camera.getPicture( cameraSuccess, cameraError, [ cameraOptions ] );
+      console.log("choose from library");
+   }   
 
 $(document).ready(function() { 
 
@@ -240,7 +250,17 @@ $(document).ready(function() {
                          </ul>';
          break; 
       case "photo": 
-         newFormHTML += '<label>photo</label>';
+         // if on phone gap, use camera, 
+         // otherwise, ask for image upload.
+         if ($.hasPhoneGap()) { 
+            newFormHTML += '\
+               <div class="button-full button-padded button-light">\
+                  <a href=# class="button-first" onClick="onClickTakePhoto()">Take photo</a>\
+                  <a href=# class="button-last" onClick="onClickChoosePhoto()">Choose from Library</a>\
+               </div>\n';
+         } else { 
+            newFormHTML += '<label>photo upload form</label>';
+         } 
          break; 
       default: 
          newFormHTML += '<label>Unknown prompt type</label>';
