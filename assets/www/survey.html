@@ -116,41 +116,75 @@ $(document).ready(function() {
          newFormHTML += '<label>timestamp</label>';
          break; 
       case "number": 
-         newFormHTML += '<label>number</label>';
+         var min;
+         var max;
+         //newFormHTML += '<label>number</label>';
+         newFormHTML += '<select>\n';
+         $survey_properties.children("property").each(function() { 
+            var label = $(this).find("label").text();
+            var value = $(this).find("value").text();
+            var key = $(this).find("key").text(); 
+            if (key == "min") { 
+               min = (value?value:label);
+            } else if (key == "max") { 
+               max = (value?value:label);
+            } 
+         });
+         for (var i=min; i<=max; i++) { 
+            newFormHTML += '<option value="'+i+'">'+i+'</option>\n';
+         } 
+         newFormHTML += '</select>\n';
          break; 
       case "hours_before_now": 
          newFormHTML += '<label>hours_before_now</label>';
          break; 
       case "text": 
-         newFormHTML += '<label>text</label>';
+         //newFormHTML += '<label>text</label>';
+         var min; 
+         var max; 
          $survey_properties.children("property").each(function() { 
-            //var 
+            var label = $(this).find("label").text();
+            var value = $(this).find("value").text();
+            var key = $(this).find("key").text(); 
+            if (key == "min") { 
+               min = (value?value:label);
+            } else if (key == "max") { 
+               max = (value?value:label);
+            } 
          });
+         newFormHTML += '<textarea></textarea>\n';
          break; 
       case "multi_choice": 
-         newFormHTML += '<label>multi_choice</label>';
-         $survey_properties.children("property").each(function() { 
-            //var choiceKey = $(this).find("key").text(); 
-            var choiceLabel = $(this).find("label").text();
-            var choiceValue = $(this).find("value").text();
-            newFormHTML += '<label>' + choiceLabel + '</label>\
-                           <input type="checkbox" name="choice" value="'+choiceValue+'" />\n';
-         });
-         break; 
-      case "single_choice": 
-         newFormHTML += '<label>single_choice</label>';
+      case "multi_choice_custom": 
+         //newFormHTML += '<label>multi_choice</label>';
+         newFormHTML += '<ul class=".center" style="list-style:none;">';
          $survey_properties.children("property").each(function() { 
             var choiceKey = $(this).find("key").text(); 
             var choiceLabel = $(this).find("label").text();
-            newFormHTML += '<label>' + choiceLabel + '</label>\
-                           <input type="radio" name="choice" value="'+choiceKey+'" />\n';
+            var choiceValue = $(this).find("value").text();
+            newFormHTML += '<li class=".center" style="float:right;width:48%;">\
+                            <input type="checkbox" name="choice" value="'+choiceValue+'" />\
+                            <label>' + choiceLabel + '</label>\
+                            </li>\n';
          });
+         newFormHTML += '<li style="clear:both;"></li>\
+                         </ul>';
          break; 
+      case "single_choice": 
       case "single_choice_custom": 
-         newFormHTML += '<label>single_choice_custom</label>';
-         break; 
-      case "multi_choice_custom": 
-         newFormHTML += '<label>multi_choice_custom</label>';
+         //newFormHTML += '<label>single_choice</label>';
+         newFormHTML += '<ul class=".center" style="list-style:none;">';
+         $survey_properties.children("property").each(function() { 
+            var choiceKey = $(this).find("key").text(); 
+            var choiceValue = $(this).find("value").text();
+            var choiceLabel = $(this).find("label").text();
+            newFormHTML += '<li class=".center" style="float:right;width:48%;">\
+                            <input type="radio" name="choice" value="'+choiceValue+'" />\
+                            <label>' + choiceLabel + '</label>\
+                            </li>\n';
+         });
+         newFormHTML += '<li style="clear:both;"></li>\
+                         </ul>';
          break; 
       case "photo": 
          newFormHTML += '<label>photo</label>';
