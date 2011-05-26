@@ -79,11 +79,13 @@
 
 $(document).ready(function() { 
 
+   // load and parse campaign XML
    var loader = new CampaignXMLLoader(); 
    var xmlString = loader.loadDefaultCampaign(); 
 
    var id = $.getUrlVars()['id'];
    id = id.replace(/#$/, '');
+
    var $survey = $(xmlString).find("surveys > survey > id:contains('"+id+"')").parent();
    var $surveyEl = $("#survey");
    $("#desc-title").html($survey.find("title_t").text());
@@ -159,22 +161,25 @@ $(document).ready(function() {
       var newFormHTML = '\
       <form class="form-full form-padded">\
          <h1 class="light form-first">'+ survey_promptText +'</h1>\
-      ';
+      </form>';
+
+      var $newForm = $(newFormHTML);
+      $newForm.attr("id", surveyID);
 
       if (survey_skippable == "true") { 
-         newFormHTML += '\
-         <a class="button-full button-padded button-light" onClick="onClickSkip(' + currentSurveyID + ')" href=#>'+ survey_skipLabel +'</a>\n';
+         var skipButtonHTML = '<a class="button-full button-padded button-light" onClick="onClickSkip(' + currentSurveyID + ')" href=#>'+ survey_skipLabel +'</a>';
+         $newForm.append($(skipButtonHTML));
       } 
 
+      var $formContent = null;
       switch (survey_promptType) { 
       case "timestamp": 
-         newFormHTML += '<label>timestamp</label>';
+         $formContent = $('<label>timestamp</label>');
          break; 
       case "number": 
          var min;
          var max;
-         //newFormHTML += '<label>number</label>';
-         newFormHTML += '<select>\n';
+         var contentHTML = '<select>\n';
          $survey_properties.children("property").each(function() { 
             var label = $(this).find("label").text();
             var value = $(this).find("value").text();
@@ -187,18 +192,18 @@ $(document).ready(function() {
          });
          for (var i=min; i<=max; i++) { 
             if (survey_default != null && survey_default == i) { 
-               newFormHTML += '<option value="'+i+'" SELECTED>'+i+'</option>\n';
+               contentHTML += '<option value="'+i+'" SELECTED>'+i+'</option>\n';
             } else { 
-               newFormHTML += '<option value="'+i+'">'+i+'</option>\n';
+               contentHTML += '<option value="'+i+'">'+i+'</option>\n';
             }  
          } 
-         newFormHTML += '</select>\n';
+         contentHTML += '</select>\n';
+         $formContent = $(contentHTML);
          break; 
       case "hours_before_now": 
-         newFormHTML += '<label>hours_before_now</label>';
+         $formContent = $('<label>hours_before_now</label>');
          break; 
       case "text": 
-         //newFormHTML += '<label>text</label>';
          var min; 
          var max; 
          $survey_properties.children("property").each(function() { 
@@ -211,64 +216,71 @@ $(document).ready(function() {
                max = (value?value:label);
             } 
          });
+
+         var contentHTML = null;
          if (survey_default != null) { 
-            newFormHTML += '<textarea>'+survey_default+'</textarea>\n';
+            contentHTML += '<textarea>'+survey_default+'</textarea>\n';
          } else {  
-            newFormHTML += '<textarea></textarea>\n';
+            contentHTML += '<textarea></textarea>\n';
          } 
+         $formContent = $(contentHTML);
          break; 
       case "multi_choice": 
       case "multi_choice_custom": 
-         //newFormHTML += '<label>multi_choice</label>';
-         newFormHTML += '<ul class=".center" style="list-style:none;">';
+         var contentHTML = '<ul class=".center" style="list-style:none;">';
          $survey_properties.children("property").each(function() { 
             var choiceKey = $(this).find("key").text(); 
             var choiceLabel = $(this).find("label").text();
             var choiceValue = $(this).find("value").text();
-            newFormHTML += '<li class=".center" style="float:right;width:48%;">\
+            contentHTML += '<li class=".center" style="float:right;width:48%;">\
                             <input type="checkbox" name="choice" value="'+choiceValue+'" />\
                             <label>' + choiceLabel + '</label>\
                             </li>\n';
          });
-         newFormHTML += '<li style="clear:both;"></li>\
+         contentHTML += '<li style="clear:both;"></li>\
                          </ul>';
+         $formContent = $(contentHTML);
          break; 
       case "single_choice": 
       case "single_choice_custom": 
-         //newFormHTML += '<label>single_choice</label>';
-         newFormHTML += '<ul class=".center" style="list-style:none;">';
+         var contentHTML = '<ul class=".center" style="list-style:none;">';
          $survey_properties.children("property").each(function() { 
             var choiceKey = $(this).find("key").text(); 
             var choiceValue = $(this).find("value").text();
             var choiceLabel = $(this).find("label").text();
-            newFormHTML += '<li class=".center" style="float:right;width:48%;">\
+            contentHTML += '<li class=".center" style="float:right;width:48%;">\
                             <input type="radio" name="choice" value="'+choiceValue+'" />\
                             <label>' + choiceLabel + '</label>\
                             </li>\n';
          });
-         newFormHTML += '<li style="clear:both;"></li>\
+         contentHTML += '<li style="clear:both;"></li>\
                          </ul>';
+         $formContent = $(contentHTML);
          break; 
       case "photo": 
          // if on phone gap, use camera, 
          // otherwise, ask for image upload.
+         var contentHTML = null; 
          if ($.hasPhoneGap()) { 
-            newFormHTML += '\
+            contentHTML += '\
+               <p class="center">\
+               <img alt="no image" src="img/no_image.png" />\
+               </p>\
                <div class="button-full button-padded button-light">\
                   <a href=# class="button-first" onClick="onClickTakePhoto()">Take photo</a>\
                   <a href=# class="button-last" onClick="onClickChoosePhoto()">Choose from Library</a>\
                </div>\n';
          } else { 
-            newFormHTML += '<label>photo upload form</label>';
-         } 
+            contentHTML += '<label>photo upload form</label>';
+         }
+         $formContent = $(contentHTML); 
          break; 
       default: 
-         newFormHTML += '<label>Unknown prompt type</label>';
+         $formContent = $('<label>Unknown prompt type</label>');
          break;
       } 
 
-      newFormHTML += '\
-      </form>';
+      $newForm.append($formContent);
 
       var newButtonHTML = '\
       <div class="button-full button-padded">\
@@ -276,10 +288,8 @@ $(document).ready(function() {
          <a class="button-last" href="#" id="next'+currentSurveyID+'" onClick="onClickNext('+currentSurveyID+')">Next</a>\
       </div>';
 
-      $newForm = $(newFormHTML);
-      $newForm.attr("id", surveyID);
 
-      $newButton = $(newButtonHTML); 
+      var $newButton = $(newButtonHTML); 
       $newButton.attr("id", surveyButtonID);
 
       if (currentSurveyID != 1) { 
