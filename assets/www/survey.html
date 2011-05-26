@@ -50,7 +50,7 @@
       var surveyFormID = "survey"+surveyID;
       var surveyButtonID = "surveyButton"+surveyID
 
-      var prevID = surveyID + 1; 
+      var prevID = surveyID - 1; 
       if (surveyID > 1) { 
          var $prevSurvey = $("#survey > #survey" + prevID);
          var $prevButton = $("#survey > #surveyButton" + prevID);
@@ -61,7 +61,11 @@
          $currentSurvey.hide();  
          $currentButton.hide();  
       } 
-   }; 
+   };
+   var onClickSkip = function(surveyID) { 
+      // just move for now... handle data later
+      onClickNext(surveyID);
+   };  
 
 $(document).ready(function() { 
 
@@ -147,6 +151,11 @@ $(document).ready(function() {
          <h1 class="light form-first">'+ survey_promptText +'</h1>\
       ';
 
+      if (survey_skippable == "true") { 
+         newFormHTML += '\
+         <a class="button-full button-padded button-light" onClick="onClickSkip(' + currentSurveyID + ')" href=#>'+ survey_skipLabel +'</a>\n';
+      } 
+
       switch (survey_promptType) { 
       case "timestamp": 
          newFormHTML += '<label>timestamp</label>';
@@ -167,7 +176,11 @@ $(document).ready(function() {
             } 
          });
          for (var i=min; i<=max; i++) { 
-            newFormHTML += '<option value="'+i+'">'+i+'</option>\n';
+            if (survey_default != null && survey_default == i) { 
+               newFormHTML += '<option value="'+i+'" SELECTED>'+i+'</option>\n';
+            } else { 
+               newFormHTML += '<option value="'+i+'">'+i+'</option>\n';
+            }  
          } 
          newFormHTML += '</select>\n';
          break; 
@@ -188,7 +201,11 @@ $(document).ready(function() {
                max = (value?value:label);
             } 
          });
-         newFormHTML += '<textarea></textarea>\n';
+         if (survey_default != null) { 
+            newFormHTML += '<textarea>'+survey_default+'</textarea>\n';
+         } else {  
+            newFormHTML += '<textarea></textarea>\n';
+         } 
          break; 
       case "multi_choice": 
       case "multi_choice_custom": 
