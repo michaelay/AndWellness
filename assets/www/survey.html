@@ -35,22 +35,141 @@ $(document).ready(function() {
    $("#desc-title").html($survey.find("title_t").text());
    $("#desc-content").html($survey.find("description").text());
    $survey.find("contentList").children().each(function() {
-      //console.log($(this).find("promptText").text());
-      var question = $(this).children("promptText").text();
+      var promptText = $(this).find("promptText").text();
+      var promptType = $(this).find("promptType").text();
+/*
+      var properties = $(this).find("properties");
+      var default = $(this).find("default");
+      var condition = $(this).find("condition");
+      var skippable = $(this).find("skippable");
+      var skipLabel = $(this).find("skipLabel");
+*/
+      var survey_displayType = null; 
+      var survey_displayLabel = null; 
+      var survey_unit = null; 
+      var survey_id = null; 
+      var survey_promptText = null; 
+      var survey_abbreviatedText = null; 
+      var survey_explanationTExt = null; 
+      var survey_promptType = null; 
+      var $survey_properties = null; 
+      var survey_default = null; 
+      var survey_condition = null; 
+      var survey_skippable = null; 
+      var survey_skipLabel = null; 
+      // parse each children, put them in variables 
+      $(this).children().each(function() { 
+         //console.log($(this).text());
+         //console.log(this.nodeName);
+         switch (this.nodeName.toLowerCase()) { 
+         case "displaytype": 
+            survey_displayType = $(this).text();
+            break; 
+         case "displaylabel": 
+            survey_displayLabel = $(this).text();
+            break; 
+         case "unit": 
+            survey_unit = $(this).text();
+            break; 
+         case "id": 
+            survey_id = $(this).text(); 
+            break; 
+         case "prompttext": 
+            survey_promptText = $(this).text();
+            break; 
+         case "abbreviatedtext": 
+            survey_abbreviatedText = $(this).text();
+            break; 
+         case "explanationText": 
+            survey_explanationText = $(this).text();
+            break; 
+         case "prompttype": 
+            survey_promptType = $(this).text();
+            break; 
+         case "properties": 
+            $survey_properties = $(this);
+            break; 
+         case "default": 
+            survey_default = $(this).text();
+            break; 
+         case "condition": 
+            survey_condition = $(this).text();
+            break; 
+         case "skippable": 
+            survey_skippable = $(this).text();
+            break; 
+         case "skiplabel": 
+            survey_skipLabel = $(this).text();
+            break; 
+         // default case is to ignore
+         }
+      }); 
+
+      // construct HTML based on promptType 
       var newFormHTML = '\
       <form class="form-full form-padded">\
-         <h1 class="light form-first">'+question+'</h1>\
-         <label for="123">asdf</label>\
-         <input type="text" name="a" id="a"/>\
+         <h1 class="light form-first">'+ survey_promptText +'</h1>\
+      ';
+
+      switch (survey_promptType) { 
+      case "timestamp": 
+         newFormHTML += '<label>timestamp</label>';
+         break; 
+      case "number": 
+         newFormHTML += '<label>number</label>';
+         break; 
+      case "hours_before_now": 
+         newFormHTML += '<label>hours_before_now</label>';
+         break; 
+      case "text": 
+         newFormHTML += '<label>text</label>';
+         $survey_properties.children("property").each(function() { 
+            //var 
+         });
+         break; 
+      case "multi_choice": 
+         newFormHTML += '<label>multi_choice</label>';
+         $survey_properties.children("property").each(function() { 
+            //var choiceKey = $(this).find("key").text(); 
+            var choiceLabel = $(this).find("label").text();
+            var choiceValue = $(this).find("value").text();
+            newFormHTML += '<label>' + choiceLabel + '</label>\
+                           <input type="checkbox" name="choice" value="'+choiceValue+'" />\n';
+         });
+         break; 
+      case "single_choice": 
+         newFormHTML += '<label>single_choice</label>';
+         $survey_properties.children("property").each(function() { 
+            var choiceKey = $(this).find("key").text(); 
+            var choiceLabel = $(this).find("label").text();
+            newFormHTML += '<label>' + choiceLabel + '</label>\
+                           <input type="radio" name="choice" value="'+choiceKey+'" />\n';
+         });
+         break; 
+      case "single_choice_custom": 
+         newFormHTML += '<label>single_choice_custom</label>';
+         break; 
+      case "multi_choice_custom": 
+         newFormHTML += '<label>multi_choice_custom</label>';
+         break; 
+      case "photo": 
+         newFormHTML += '<label>photo</label>';
+         break; 
+      default: 
+         newFormHTML += '<label>Unknown prompt type</label>';
+         break;
+      } 
+
+      newFormHTML += '\
       </form>\
       <div class="button-full button-padded">\
          <a class="button-first" href="#">Previous</a>\
          <a class="button-last" href="#">Next</a>\
       </div>';
-      var $newForm = $(newFormHTML);
+
+      $newForm = $(newFormHTML);
       $surveyEl.append($newForm);
    });
-   //console.log(survey.text());
 });
 </script>
 
