@@ -2,3 +2,6 @@
 //padding:0px;
 width:100%;
 }
+.aws-button-disabled { 
+opacity:0.5; 
+}

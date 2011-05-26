@@ -2,6 +2,7 @@
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
+   <link rel="stylesheet" href="css/aws.css" type="text/css">
 </head>
 <body>
 
@@ -29,33 +30,53 @@
 <script src="js/aws_campaign.js"></script>
 <script src="js/aws_utility.js"></script>
 <script>
+   var enableButton = function(btnObj) { 
+      $(btnObj).addClass("aws-button-disabled");
+   }
+   var disableButton = function(btnObj) { 
+      $(btnObj).removeClass("aws-button-disabled");
+   } 
+   var isButtonDisabled = function(btnObj) { 
+      return $(btnObj).hasClass("aws-button-disabled");
+   } 
 // multiple survey with id like survey1, survey2, survey3, ...
-   var onClickNext = function(surveyID) { 
+   var onClickNext = function(eventObj) { 
+      eventObj.preventDefault();
+      if (isButtonDisabled(eventObj.currentTarget)) { 
+         alert("Please complete this page before proceeding"); 
+         return; 
+      } 
+      var surveyID = eventObj.data[0];
       var surveyFormID = "survey"+surveyID;
-      var surveyButtonID = "surveyButton"+surveyID
+      var surveyButtonSetID = "surveyButtonSet"+surveyID
 
       var nextID = surveyID + 1; 
       var $nextSurvey = $("#survey > #survey" + nextID);
       if ($nextSurvey) { 
-         var $nextButton = $("#survey > #surveyButton" + nextID);
+         var $nextButton = $("#survey > #surveyButtonSet" + nextID);
          var $currentSurvey = $("#survey > #survey" + surveyID);
-         var $currentButton = $("#survey > #surveyButton" + surveyID);
+         var $currentButton = $("#survey > #surveyButtonSet" + surveyID);
          $nextSurvey.show();
          $nextButton.show();
          $currentSurvey.hide();  
          $currentButton.hide();  
       } 
    };
-   var onClickPrev = function(surveyID) { 
+   var onClickPrev = function(eventObj) { 
+      eventObj.preventDefault();
+      if (isButtonDisabled(eventObj.currentTarget)) { 
+         return; 
+      } 
+      var surveyID = eventObj.data[0];
       var surveyFormID = "survey"+surveyID;
-      var surveyButtonID = "surveyButton"+surveyID
+      var surveyButtonSetID = "surveyButtonSet"+surveyID
 
       var prevID = surveyID - 1; 
       if (surveyID > 1) { 
          var $prevSurvey = $("#survey > #survey" + prevID);
-         var $prevButton = $("#survey > #surveyButton" + prevID);
+         var $prevButton = $("#survey > #surveyButtonSet" + prevID);
          var $currentSurvey = $("#survey > #survey" + surveyID);
-         var $currentButton = $("#survey > #surveyButton" + surveyID);
+         var $currentButton = $("#survey > #surveyButtonSet" + surveyID);
          $prevSurvey.show();
          $prevButton.show();
          $currentSurvey.hide();  
@@ -92,7 +113,11 @@ $(document).ready(function() {
    $("#desc-content").html($survey.find("description").text());
 
    var currentSurveyID = 1; 
-   $survey.find("contentList").children().each(function() {
+   var $surveyList = $survey.find("contentList").children(); 
+   var numSurvey = $surveyList.length;
+   console.log(numSurvey);
+   //$survey.find("contentList").children().each(function() {
+   $surveyList.each(function() {
       var promptText = $(this).find("promptText").text();
       var promptType = $(this).find("promptType").text();
       var survey_displayType = null; 
@@ -156,7 +181,7 @@ $(document).ready(function() {
 
       // construct HTML based on promptType 
       var surveyID = "survey"+currentSurveyID;
-      var surveyButtonID = "surveyButton"+currentSurveyID
+      var surveyButtonSetID = "surveyButtonSet"+currentSurveyID
 
       var newFormHTML = '\
       <form class="form-full form-padded">\
@@ -282,23 +307,34 @@ $(document).ready(function() {
 
       $newForm.append($formContent);
 
-      var newButtonHTML = '\
-      <div class="button-full button-padded">\
-         <a class="button-first" href="#" id="prev'+currentSurveyID+'" onClick="onClickPrev('+currentSurveyID+')">Previous</a>\
-         <a class="button-last" href="#" id="next'+currentSurveyID+'" onClick="onClickNext('+currentSurveyID+')">Next</a>\
-      </div>';
+      var $newButtonSet = $('<div class="button-full button-padded"></div>');
+      $newButtonSet.attr("id", surveyButtonSetID);
 
+      var firstButtonID = 'prev' + currentSurveyID; 
+      var $firstButton; 
+      if (currentSurveyID == 1) { // disable prev button
+         $firstButton = $('<a class="button-first aws-button-disabled" href="#">Previous</a>');
+      } else { 
+         $firstButton = $('<a class="button-first" href="#">Previous</a>');
+      } 
+      $firstButton.attr("id", firstButtonID); 
+      $firstButton.click([ currentSurveyID ], onClickPrev);
 
-      var $newButton = $(newButtonHTML); 
-      $newButton.attr("id", surveyButtonID);
+      var lastButtonID = 'next' + currentSurveyID; 
+      var $lastButton = $('<a class="button-last aws-button-disabled" href="#">Next</a>');
+      $lastButton.attr("id", lastButtonID); 
+      $lastButton.click([ currentSurveyID ], onClickNext);
+
+      $newButtonSet.append($firstButton);
+      $newButtonSet.append($lastButton);
 
       if (currentSurveyID != 1) { 
          $newForm.hide();
-         $newButton.hide();
+         $newButtonSet.hide();
       }
 
       $surveyEl.append($newForm);
-      $surveyEl.append($newButton);
+      $surveyEl.append($newButtonSet);
 
       currentSurveyID++;
    });
