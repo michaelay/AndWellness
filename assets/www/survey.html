@@ -83,9 +83,9 @@
          $currentButton.hide();  
       } 
    };
-   var onClickSkip = function(surveyID) { 
+   var onClickSkip = function(eventObj) { 
       // just move for now... handle data later
-      onClickNext(surveyID);
+      onClickNext(eventObj);
    };
    var onClickTakePhoto = function() { 
       // allow to choose from camera or photo library
@@ -221,8 +221,9 @@ $(document).ready(function() {
       $newForm.attr("id", surveyID);
 
       if (survey_skippable == "true") { 
-         var skipButtonHTML = '<a class="button-full button-padded button-light" onClick="onClickSkip(' + currentSurveyID + ')" href=#>'+ survey_skipLabel +'</a>';
-         $newForm.append($(skipButtonHTML));
+         var $skipButton = $('<a class="button-full button-padded button-light" href=#>'+ survey_skipLabel +'</a>');
+         $skipButton.click([ currentSurveyID ], onClickSkip);
+         $newForm.append($skipButton);
       } 
 
       var $formContent = null;
