@@ -289,6 +289,7 @@ $(document).ready(function() {
             var choiceKey = $(this).find("key").text(); 
             var choiceLabel = $(this).find("label").text();
             var choiceValue = $(this).find("value").text();
+            choiceValue = choiceValue?choiceValue:choiceKey;
             var $li = $('<li class=".center" style="float:right;width:48%;"></li>');
             var $checkbox = $('<input type="checkbox" name="choice" value="'+choiceValue+'"/>');
             $checkbox.attr('id', 'cb'+surveyID+'_'+choiceValue);
@@ -302,19 +303,25 @@ $(document).ready(function() {
          break; 
       case "single_choice": 
       case "single_choice_custom": 
-         var contentHTML = '<ul class=".center" style="list-style:none;">';
+
+         $formContent = $('<ul class=".center" style="list-style:none;">\
+                              <li style="clear:both;"></li>\
+                           </ul>');
          $survey_properties.children("property").each(function() { 
             var choiceKey = $(this).find("key").text(); 
             var choiceValue = $(this).find("value").text();
             var choiceLabel = $(this).find("label").text();
-            contentHTML += '<li class=".center" style="float:right;width:48%;">\
-                            <input type="radio" name="choice" value="'+choiceValue+'" />\
-                            <label>' + choiceLabel + '</label>\
-                            </li>\n';
+            choiceValue = choiceValue?choiceValue:choiceKey;
+
+            var $li = $('<li class=".center" style="float:right;width:48%;"></li>');
+            var $radio = $('<input type="radio" name="choice" value="'+choiceValue+'"/>');
+            $radio.attr('id', 'rd'+surveyID+'_'+choiceValue);
+            $radio.change([$lastButton], onSingleChoiceChange); // use closure to pass in $lastButton
+            $li.append($radio); 
+            $li.append($('<label for="'+'rd'+surveyID+'_'+choiceValue+'">' + choiceLabel + '</label>'));
+            $formContent.append($li);
          });
-         contentHTML += '<li style="clear:both;"></li>\
-                         </ul>';
-         $formContent = $(contentHTML);
+         $formContent.append($('<li style="clear:both;"></li>'));
          break; 
       case "photo": 
          // if on phone gap, use camera, 
