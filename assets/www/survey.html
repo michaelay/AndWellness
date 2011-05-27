@@ -31,10 +31,10 @@
 <script src="js/aws_utility.js"></script>
 <script>
    var enableButton = function(btnObj) { 
-      $(btnObj).addClass("aws-button-disabled");
+      $(btnObj).removeClass("aws-button-disabled");
    }
    var disableButton = function(btnObj) { 
-      $(btnObj).removeClass("aws-button-disabled");
+      $(btnObj).addClass("aws-button-disabled");
    } 
    var isButtonDisabled = function(btnObj) { 
       return $(btnObj).hasClass("aws-button-disabled");
@@ -96,7 +96,13 @@
       // allow to choose from camera or photo library
       //navigator.camera.getPicture( cameraSuccess, cameraError, [ cameraOptions ] );
       console.log("choose from library");
-   }   
+   };   
+   var onMultiChoiceChange = function(eventObj) { 
+      enableButton(eventObj.data[0]); 
+   };
+   var onSingleChoiceChange = function(eventObj) { 
+      enableButton(eventObj.data[0]); 
+   };
 
 $(document).ready(function() { 
 
@@ -183,6 +189,29 @@ $(document).ready(function() {
       var surveyID = "survey"+currentSurveyID;
       var surveyButtonSetID = "surveyButtonSet"+currentSurveyID
 
+      // create the buttons
+      var $newButtonSet = $('<div class="button-full button-padded"></div>');
+      $newButtonSet.attr("id", surveyButtonSetID);
+
+      var firstButtonID = 'prev' + currentSurveyID; 
+      var $firstButton; 
+      if (currentSurveyID == 1) { // disable prev button
+         $firstButton = $('<a class="button-first aws-button-disabled" href="#">Previous</a>');
+      } else { 
+         $firstButton = $('<a class="button-first" href="#">Previous</a>');
+      } 
+      $firstButton.attr("id", firstButtonID); 
+      $firstButton.click([ currentSurveyID ], onClickPrev);
+
+      var lastButtonID = 'next' + currentSurveyID; 
+      var $lastButton = $('<a class="button-last aws-button-disabled" href="#">Next</a>');
+      $lastButton.attr("id", lastButtonID); 
+      $lastButton.click([ currentSurveyID ], onClickNext);
+
+      $newButtonSet.append($firstButton);
+      $newButtonSet.append($lastButton);
+
+      // create the form
       var newFormHTML = '\
       <form class="form-full form-padded">\
          <h1 class="light form-first">'+ survey_promptText +'</h1>\
@@ -252,19 +281,24 @@ $(document).ready(function() {
          break; 
       case "multi_choice": 
       case "multi_choice_custom": 
-         var contentHTML = '<ul class=".center" style="list-style:none;">';
+
+         $formContent = $('<ul class=".center" style="list-style:none;">\
+                              <li style="clear:both;"></li>\
+                           </ul>');
          $survey_properties.children("property").each(function() { 
             var choiceKey = $(this).find("key").text(); 
             var choiceLabel = $(this).find("label").text();
             var choiceValue = $(this).find("value").text();
-            contentHTML += '<li class=".center" style="float:right;width:48%;">\
-                            <input type="checkbox" name="choice" value="'+choiceValue+'" />\
-                            <label>' + choiceLabel + '</label>\
-                            </li>\n';
+            var $li = $('<li class=".center" style="float:right;width:48%;"></li>');
+            var $checkbox = $('<input type="checkbox" name="choice" value="'+choiceValue+'"/>');
+            $checkbox.attr('id', 'cb'+surveyID+'_'+choiceValue);
+            $checkbox.change([$lastButton], onMultiChoiceChange); // use closure to pass in $lastButton
+            $li.append($checkbox); 
+            $li.append($('<label for="'+'cb'+surveyID+'_'+choiceValue+'">' + choiceLabel + '</label>'));
+            $formContent.append($li);
          });
-         contentHTML += '<li style="clear:both;"></li>\
-                         </ul>';
-         $formContent = $(contentHTML);
+         $formContent.append($('<li style="clear:both;"></li>'));
+
          break; 
       case "single_choice": 
       case "single_choice_custom": 
@@ -306,27 +340,6 @@ $(document).ready(function() {
       } 
 
       $newForm.append($formContent);
-
-      var $newButtonSet = $('<div class="button-full button-padded"></div>');
-      $newButtonSet.attr("id", surveyButtonSetID);
-
-      var firstButtonID = 'prev' + currentSurveyID; 
-      var $firstButton; 
-      if (currentSurveyID == 1) { // disable prev button
-         $firstButton = $('<a class="button-first aws-button-disabled" href="#">Previous</a>');
-      } else { 
-         $firstButton = $('<a class="button-first" href="#">Previous</a>');
-      } 
-      $firstButton.attr("id", firstButtonID); 
-      $firstButton.click([ currentSurveyID ], onClickPrev);
-
-      var lastButtonID = 'next' + currentSurveyID; 
-      var $lastButton = $('<a class="button-last aws-button-disabled" href="#">Next</a>');
-      $lastButton.attr("id", lastButtonID); 
-      $lastButton.click([ currentSurveyID ], onClickNext);
-
-      $newButtonSet.append($firstButton);
-      $newButtonSet.append($lastButton);
 
       if (currentSurveyID != 1) { 
          $newForm.hide();
