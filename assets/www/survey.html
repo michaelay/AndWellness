@@ -38,8 +38,11 @@
    } 
    var isButtonDisabled = function(btnObj) { 
       return $(btnObj).hasClass("aws-button-disabled");
-   } 
-// multiple survey with id like survey1, survey2, survey3, ...
+   }
+   /**  
+    * disable current survey and button set
+    * enable the next survye and button set 
+    */
    var onClickNext = function(eventObj) { 
       eventObj.preventDefault();
       if (isButtonDisabled(eventObj.currentTarget)) { 
@@ -47,19 +50,16 @@
          return; 
       } 
       var surveyID = eventObj.data[0];
-      var surveyFormID = "survey"+surveyID;
-      var surveyButtonSetID = "surveyButtonSet"+surveyID
-
-      var nextID = surveyID + 1; 
-      var $nextSurvey = $("#survey > #survey" + nextID);
+      $currentSurvey = $("#survey > #survey"+surveyID); 
+      $currentButtonSet = $currentSurvey.next(); 
+      $nextSurvey= $currentButtonSet.next(); 
+      $nextButtonSet = $nextSurvey.next(); 
+      // check if next survey is there
       if ($nextSurvey) { 
-         var $nextButton = $("#survey > #surveyButtonSet" + nextID);
-         var $currentSurvey = $("#survey > #survey" + surveyID);
-         var $currentButton = $("#survey > #surveyButtonSet" + surveyID);
-         $nextSurvey.show();
-         $nextButton.show();
-         $currentSurvey.hide();  
-         $currentButton.hide();  
+         $nextSurvey.show(); 
+         $nextButtonSet.show(); 
+         $currentSurvey.hide();
+         $currentButtonSet.hide(); 
       } 
    };
    var onClickPrev = function(eventObj) { 
@@ -68,19 +68,16 @@
          return; 
       } 
       var surveyID = eventObj.data[0];
-      var surveyFormID = "survey"+surveyID;
-      var surveyButtonSetID = "surveyButtonSet"+surveyID
+      var $currentSurvey = $("#survey > #survey" + surveyID);
+      var $currentButtonSet = $currentSurvey.next(); 
+      var $prevButtonSet = $currentSurvey.prev(); 
+      var $prevSurvey = $prevButtonSet.prev(); 
 
-      var prevID = surveyID - 1; 
-      if (surveyID > 1) { 
-         var $prevSurvey = $("#survey > #survey" + prevID);
-         var $prevButton = $("#survey > #surveyButtonSet" + prevID);
-         var $currentSurvey = $("#survey > #survey" + surveyID);
-         var $currentButton = $("#survey > #surveyButtonSet" + surveyID);
+      if ($prevSurvey) { 
          $prevSurvey.show();
-         $prevButton.show();
+         $prevButtonSet.show();
          $currentSurvey.hide();  
-         $currentButton.hide();  
+         $currentButtonSet.hide();  
       } 
    };
    var onClickSkip = function(eventObj) { 
@@ -103,6 +100,13 @@
    var onSingleChoiceChange = function(eventObj) { 
       enableButton(eventObj.data[0]); 
    };
+/*
+   var onTextChange = function(eventObj) { 
+         console.log("ontextchange");
+      var len = eventObj.currentTarget.innerHTML().length;
+      console.log(len);
+   }; 
+*/
 
 $(document).ready(function() { 
 
@@ -254,6 +258,7 @@ $(document).ready(function() {
          } 
          contentHTML += '</select>\n';
          $formContent = $(contentHTML);
+         enableButton($lastButton);
          break; 
       case "hours_before_now": 
          $formContent = $('<label>hours_before_now</label>');
@@ -272,13 +277,20 @@ $(document).ready(function() {
             } 
          });
 
-         var contentHTML = null;
+         $formContent = $('<textarea></textarea>');
+         //var contentHTML = null;
          if (survey_default != null) { 
+            $formContent.html(survey_default);
+         }
+         enableButton($lastButton);
+         //$formContent.change([currentSurveyID, $newForm, $newButtonSet], onTextChange); 
+/*
             contentHTML += '<textarea>'+survey_default+'</textarea>\n';
          } else {  
             contentHTML += '<textarea></textarea>\n';
          } 
          $formContent = $(contentHTML);
+*/
          break; 
       case "multi_choice": 
       case "multi_choice_custom": 
