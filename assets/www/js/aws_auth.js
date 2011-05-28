@@ -1,4 +1,5 @@
 // requires aws_utility.js
+// requires jquery.cookie.js
 /**
  * authenticate with server and get session token
  * @param username username login name 
@@ -17,7 +18,8 @@ var authenticate = function(username, password) {
       dataType: 'json',
       async: false,
       success: function (data) { 
-         token = data.token; 
+         token = data.token;
+         setAuthToken(token); 
       },
       error: function(jqXHR, textStatus, errorThrown) { 
       }
@@ -27,4 +29,26 @@ var authenticate = function(username, password) {
 */
    });
    return token; 
+}
+/**
+ * Logout 
+ */
+var logout = function() { 
+   deleteAuthToken();
+}
+/**
+ * Get the auth token for use in AndWellness APIs
+ */  
+var getAuthToken = function() { 
+   return $.cookie("token"); 
 } 
+
+// helper methods, do not call directly
+var setAuthToken = function(token) { 
+   //$.cookie("token", token, { expires: 1 } );
+   // omit expiry date, a session cookie, deleted when browse is closed 
+   $.cookie("token", token, { expires: 1 } ); 
+} 
+var deleteAuthToken = function() { 
+   $.cookie("token", token, { expires: -1} );
+}

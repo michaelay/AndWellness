@@ -27,8 +27,10 @@
 
 <script src="http://m.ucla.edu/assets/js.php"></script>
 <script src="js/jquery-1.6.1.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
 <script src="js/aws_campaign.js"></script>
 <script src="js/aws_utility.js"></script>
+<script src="js/aws_auth.js"></script>
 <script>
    var enableButton = function(btnObj) { 
       $(btnObj).removeClass("aws-button-disabled");
@@ -44,6 +46,7 @@
     * enable the next survye and button set 
     */
    var onClickNext = function(eventObj) { 
+      console.log("next");
       eventObj.preventDefault();
       if (isButtonDisabled(eventObj.currentTarget)) { 
          alert("Please complete this page before proceeding"); 
@@ -51,11 +54,12 @@
       } 
       var surveyID = eventObj.data[0];
       $currentSurvey = $("#survey > #survey"+surveyID); 
-      $currentButtonSet = $currentSurvey.next(); 
-      $nextSurvey= $currentButtonSet.next(); 
-      $nextButtonSet = $nextSurvey.next(); 
+      $currentButtonSet = $currentSurvey.next("div"); 
+      $nextSurvey= $currentButtonSet.next("form"); 
+      $nextButtonSet = $nextSurvey.next("div"); 
       // check if next survey is there
       if ($nextSurvey) { 
+         console.log($nextSurvey);
          $nextSurvey.show(); 
          $nextButtonSet.show(); 
          $currentSurvey.hide();
@@ -63,15 +67,16 @@
       } 
    };
    var onClickPrev = function(eventObj) { 
+      console.log("prev");
       eventObj.preventDefault();
       if (isButtonDisabled(eventObj.currentTarget)) { 
          return; 
       } 
       var surveyID = eventObj.data[0];
       var $currentSurvey = $("#survey > #survey" + surveyID);
-      var $currentButtonSet = $currentSurvey.next(); 
-      var $prevButtonSet = $currentSurvey.prev(); 
-      var $prevSurvey = $prevButtonSet.prev(); 
+      var $currentButtonSet = $currentSurvey.next("div"); 
+      var $prevButtonSet = $currentSurvey.prev("div"); 
+      var $prevSurvey = $prevButtonSet.prev("form"); 
 
       if ($prevSurvey) { 
          $prevSurvey.show();
@@ -98,6 +103,74 @@
       enableButton(eventObj.data[0]); 
    };
    var onSingleChoiceChange = function(eventObj) { 
+      enableButton(eventObj.data[0]); 
+   };
+   // used in onclicksubmit and onclicksave
+   var prepareFormData = function($surveyEl) { 
+      data = {
+              c: '123', 
+              cv: '123', 
+              d: '123'            
+             };
+      var responses = []; 
+      $surveyEl.children("form").each(function() {
+         console.log($(this));
+         // find the type and value   
+         //console.log($(this).children("input[name='type']").attr("value"));
+         var type = $(this).find("input[name='type']").attr("value");
+         var promptId = $(this).find("input[name='prompt_id']").attr("value");
+         // different handling for each type 
+         var value = null; 
+         switch (type) { 
+         case "timestamp": 
+            break; 
+         case "number": 
+            value = $(this).find('select[name="v"]').val();
+            break; 
+         case "hours_before_now": 
+            break; 
+         case "text": 
+            value = $(this).find('textarea').val();
+            break; 
+         case "multi_choice": 
+         case "multi_choice_custom": 
+            value = [];
+            $(this).find('input:checkbox:checked').each(function() { 
+               value.push($(this).val());
+            });
+            break; 
+         case "single_choice": 
+         case "single_choice_custom": 
+            value = $(this).find('input:radio:checked').val();
+            break; 
+         case "photo":
+            break;
+         } 
+         console.log(type);
+         console.log(value);
+         responses.push({prompt_id: promptId,
+                         value: value});
+      });
+      console.log(JSON.stringify(responses));
+      return data;
+   } 
+   var onClickSubmit = function(eventObj) {
+      var $surveyEl = eventObj.data[0];
+      $dataString = prepareFormData($surveyEl);
+      // send it 
+   }; 
+   var onClickSave = function(eventObj) {
+      var $surveyEl = eventObj.data[0];
+      $dataString = prepareFormData($surveyEl);
+      // save on local storage
+   };
+   var onPhotoChange = function(eventObj) { 
+      // validate input 
+      var urlInput = eventObj.currentTarget;
+      var url = urlInput.value;
+      // TODO: validate URL
+      var $img = eventObj.data[1]; 
+      $img.attr("src", url);
       enableButton(eventObj.data[0]); 
    };
 /*
@@ -238,7 +311,7 @@ $(document).ready(function() {
       case "number": 
          var min;
          var max;
-         var contentHTML = '<select>\n';
+         var contentHTML = '<select name="v">\n';
          $survey_properties.children("property").each(function() { 
             var label = $(this).find("label").text();
             var value = $(this).find("value").text();
@@ -277,20 +350,11 @@ $(document).ready(function() {
             } 
          });
 
-         $formContent = $('<textarea></textarea>');
-         //var contentHTML = null;
+         $formContent = $('<textarea name="v"></textarea>');
          if (survey_default != null) { 
             $formContent.html(survey_default);
          }
          enableButton($lastButton);
-         //$formContent.change([currentSurveyID, $newForm, $newButtonSet], onTextChange); 
-/*
-            contentHTML += '<textarea>'+survey_default+'</textarea>\n';
-         } else {  
-            contentHTML += '<textarea></textarea>\n';
-         } 
-         $formContent = $(contentHTML);
-*/
          break; 
       case "multi_choice": 
       case "multi_choice_custom": 
@@ -304,7 +368,7 @@ $(document).ready(function() {
             var choiceValue = $(this).find("value").text();
             choiceValue = choiceValue?choiceValue:choiceKey;
             var $li = $('<li class=".center" style="float:right;width:48%;"></li>');
-            var $checkbox = $('<input type="checkbox" name="choice" value="'+choiceValue+'"/>');
+            var $checkbox = $('<input type="checkbox" name="v" value="'+choiceValue+'"/>');
             $checkbox.attr('id', 'cb'+surveyID+'_'+choiceValue);
             $checkbox.change([$lastButton], onMultiChoiceChange); // use closure to pass in $lastButton
             $li.append($checkbox); 
@@ -327,7 +391,7 @@ $(document).ready(function() {
             choiceValue = choiceValue?choiceValue:choiceKey;
 
             var $li = $('<li class=".center" style="float:right;width:48%;"></li>');
-            var $radio = $('<input type="radio" name="choice" value="'+choiceValue+'"/>');
+            var $radio = $('<input type="radio" name="v" value="'+choiceValue+'"/>');
             $radio.attr('id', 'rd'+surveyID+'_'+choiceValue);
             $radio.change([$lastButton], onSingleChoiceChange); // use closure to pass in $lastButton
             $li.append($radio); 
@@ -340,6 +404,7 @@ $(document).ready(function() {
          // if on phone gap, use camera, 
          // otherwise, ask for image upload.
          var contentHTML = null; 
+         console.log($.hasPhoneGap());
          if ($.hasPhoneGap()) { 
             contentHTML += '\
                <p class="center">\
@@ -349,10 +414,19 @@ $(document).ready(function() {
                   <a href=# class="button-first" onClick="onClickTakePhoto()">Take photo</a>\
                   <a href=# class="button-last" onClick="onClickChoosePhoto()">Choose from Library</a>\
                </div>\n';
+            $formContent = $(contentHTML); 
          } else { 
-            contentHTML += '<label>photo upload form</label>';
+            //$formContent = $('');
+            $formContent = $('<p class="center">Please provide the image URL. (You can use <a href="http://www.tinypic.com/">tinypic.com<a/>) </p>');
+            //$formContent.append($('<p class="center">Please provide the image URL. (You can use <a href="http://www.tinypic.com/">tinypic.com<a/>) </p>'));
+            var $img = $('<img alt="no image" src="img/no_image.png" />');
+            var $inputContent = $('<input type="url" name="v" />');
+             
+            $inputContent.change([$lastButton, $img], onPhotoChange); 
+            $formContent.append($inputContent);
+            $formContent.append($img);
+            //contentHTML += '<input type="url" name="v" />';
          }
-         $formContent = $(contentHTML); 
          break; 
       default: 
          $formContent = $('<label>Unknown prompt type</label>');
@@ -360,6 +434,8 @@ $(document).ready(function() {
       } 
 
       $newForm.append($formContent);
+      $newForm.append($('<input type="hidden" name="type" value="'+survey_promptType+'" />\
+                         <input type="hidden" name="prompt_id" value="'+survey_id+'" />'));
 
       if (currentSurveyID != 1) { 
          $newForm.hide();
@@ -371,6 +447,26 @@ $(document).ready(function() {
 
       currentSurveyID++;
    });
+
+   // add a submit page
+   var $submit = $('\
+      <div class="content-full content-padded">\
+         <h1 class="content-first light">Survey completed</h1>\
+         <p class="center">Thank you for your participation. Please pick an option below.</p>\
+      </div>');
+   var $submit_buttons = $('<div class="content-button center"></div>');
+   var $submit_button = $('<a href=#><div class="label">Submit now</div></a>');
+   var $save_button = $('<a href=#><div class="label">Save and submit later</div></a>');
+   $submit_button.attr('id', 'submit-btn');
+   $submit_button.click([$surveyEl], onClickSubmit);
+   $save_button.attr('id', 'save-btn');
+   $save_button.click([$surveyEl], onClickSave);
+   $submit_buttons.append($submit_button);
+   $submit_buttons.append($save_button);
+   $submit.append($submit_buttons);
+   $surveyEl.append($submit);
+
+
 });
 </script>
 
