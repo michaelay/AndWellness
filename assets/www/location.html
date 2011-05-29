@@ -6,11 +6,40 @@
 <body>
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
-   <h1 class="light">Location</h1>
-   <ol id="survey-list">
+   <ol>
+   <li class="menu-first"> 
+    <a style="background:none" onclick="func1()">Location Tracing</a>
+    <input type="checkbox" name="loc" value="loc" style="float:right;width:95%;margin-left:auto;margin-right:32px;display:block" id="chkbox" onclick="func()"/>
+    <a style="background:none" onclick="func1()"><span id="txt1" class="smallprint">Track and upload user location changes</span></a>
+   </li>
+   <li class="menu-last"> 
+    <a style="background:none;color:grey" onclick="func2()" id="up">Upload always</a>
+    <input type="checkbox" name="up" value="up" style="float:right;width:95%;margin-left:auto;margin-right:32px;display:block" id="chkbox_up" 
+																onclick="return false;"/>
+    <a style="background:none" onclick="func2()"><span id="txt2" class="smallprint">Periodically upload even when the user has not changed the location</span></a>
+   </li>
    </ol>
 </div>
+<script>
+function func1(){ document.getElementById("chkbox").click();};
+function func2(){ document.getElementById("chkbox_up").click();};
+function func() 
+{
+	if (document.getElementById("chkbox").checked == true) 
+	{
+	      document.getElementById("up").style.color = "#2685BB"; 
+	      document.getElementById("chkbox_up").onclick = function(){return true;}; 	
+	}
+	else
+	{ 
+		document.getElementById("up").style.color = "grey";
+		document.getElementById("chkbox_up").click(); 
+		document.getElementById("chkbox_up").onclick = function(){return false;}; 
+	} 
+};
+</script>
 <a class="button-full button-padded" href="setting.html">Back</a>
+<a href="index.html" class="button-full button-padded">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
 </body>
 </html>

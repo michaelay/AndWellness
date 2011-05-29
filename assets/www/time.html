@@ -1,0 +1,53 @@
+<html>
+<head>
+   <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
+   <script src="http://m.ucla.edu/assets/js.php"></script>
+   <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
+</head>
+<body>
+<h1 id="header" class="header center">AndWellness</h1>
+<div class="menu-full menu-detailed menu-padded">
+<ol>
+   <li class="menu-first"> 
+    <a href="tt.html" onclick="return popitup('tt.html')">Trigger Time
+    <br /><span class="smallprint" id="time"></span></a>
+   </li>
+   <li> 
+    <a href="repeat.html" style="background:none">Repeat
+    <br /><span class="smallprint">jhvjdb</span></a>
+   </li>
+   <li> 
+    <a href="range.html" style="background:none">Time range
+    <input type="checkbox" name="range" value="range" style="float:right;width:95%;margin-left:auto;margin-right:32px;display:block"/>
+    <br /><span class="smallprint">Enforce a range for the trigger time</span></a>
+   </li>
+   <li class="menu-last"> 
+    <a href="tt.html">Trigger Time
+    <br /><span class="smallprint">jhvjdb</span></a>
+   </li>
+</ol>
+</div>
+<a class="button-full button-padded" href="createnew.html">Back</a>
+<a href="index.html" class="button-full button-padded">Logout</a>
+<script type="text/javascript">
+var a_p = "";
+var d = new Date();
+var curr_hour = d.getHours();
+if (curr_hour < 12){a_p = "AM";}
+else {a_p = "PM";}
+if (curr_hour == 0){curr_hour = 12;}
+if (curr_hour > 12){curr_hour = curr_hour - 12;}
+var curr_min = d.getMinutes();
+curr_min = curr_min + "";
+if (curr_min.length == 1){curr_min = "0" + curr_min;}
+document.getElementById("time").innerHTML= curr_hour + " : " + curr_min + " " + a_p;
+</script>
+<script type="text/javascript">
+function popitup(url) {
+	newwindow=window.open(url,'name','height=200,width=150');
+	if (window.focus) {newwindow.focus()}
+	return false;
+}
+</script>
+</body>
+</html>
