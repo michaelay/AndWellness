@@ -17,8 +17,15 @@
 <script src="js/jquery-1.6.1.min.js"></script>
 <script src="js/aws_campaign.js"></script>
 <script src="js/aws_utility.js"></script>
+<script src="js/aws_auth.js"></script>
+<script src="js/jquery.cookie.js"></script>
 <script>
 $(document).ready(function() { 
+   // check user login 
+   if (getLogin() == null) { 
+      window.location.replace("index.html"); 
+   }
+ 
    var loader = new CampaignXMLLoader(); 
    var xmlString = loader.loadDefaultCampaign(); 
 

@@ -1,5 +1,17 @@
 // requires aws_utility.js
 // requires jquery.cookie.js
+var bcryptPassword = function(password) { 
+   var cryptKey = "$2a$04$r8zKliEptVkzoiQgD833Oe";
+   var hash = null;
+   try {
+      bcrypt = new bCrypt();
+      hash = bcrypt.hashpw(password, cryptKey);
+   } catch(err) {
+      alert(err);
+      return;
+   } 
+   return hash;
+}; 
 /**
  * authenticate with server and get session token
  * @param username username login name 
@@ -19,9 +31,16 @@ var authenticate = function(username, password) {
       async: false,
       success: function (data) { 
          token = data.token;
-         setAuthToken(token); 
+         // stored in session cookie
+         $.cookie('u', username); 
+         $.cookie('p', bcryptPassword(password));
+         $.cookie('t', token);
       },
       error: function(jqXHR, textStatus, errorThrown) { 
+         // remove cookie otherwise
+         $.cookie('u', "", { expires: -1} ); 
+         $.cookie('p', "", { expires: -1} );
+         $.cookie('t', "", { expires: -1} );
       }
 /*
       complete: function(jqXHR, textStatus) { 
@@ -29,26 +48,55 @@ var authenticate = function(username, password) {
 */
    });
    return token; 
-}
+};
 /**
  * Logout 
  */
 var logout = function() { 
-   deleteAuthToken();
-}
+   $.cookie('u', "", { expires: -1} );
+   $.cookie('p', "", { expires: -1} );
+   $.cookie('t', "", { expires: -1} );
+};
+var getLogin = function() { 
+   var u = $.cookie('u');
+   var p = $.cookie('p');
+   var t = $.cookie('t');
+   if (u && p && t) {
+      return [u, p, t]; 
+   } else { 
+      return null;
+   } 
+}; 
 /**
  * Get the auth token for use in AndWellness APIs
  */  
 var getAuthToken = function() { 
-   return $.cookie("token"); 
-} 
+   return $.cookie("t"); 
+};
+var getUsername = function() { 
+   return $.cookie("u"); 
+}; 
+var getPasswordHash = function() { 
+   return $.cookie("p"); 
+};  
 
 // helper methods, do not call directly
+/*
 var setAuthToken = function(token) { 
-   //$.cookie("token", token, { expires: 1 } );
    // omit expiry date, a session cookie, deleted when browse is closed 
-   $.cookie("token", token, { expires: 1 } ); 
+   $.cookie("token", token);
 } 
 var deleteAuthToken = function() { 
-   $.cookie("token", token, { expires: -1} );
+   $.cookie("token", "", { expires: -1} );
 }
+*/
+
+/**
+ * Upload image 
+ */ 
+var uploadImage = function(url, uuid, campaignId, ci) { 
+   // get u, p
+   var u = getUsername(); 
+   var p = getPasswordHash();
+   // TODO: do that upload using sync ajax    
+}; 

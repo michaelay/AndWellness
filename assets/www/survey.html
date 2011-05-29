@@ -31,7 +31,9 @@
 <script src="js/aws_campaign.js"></script>
 <script src="js/aws_utility.js"></script>
 <script src="js/aws_auth.js"></script>
+<script src="js/detect_timezone.js"></script>
 <script>
+   var positionObj = null; 
    var enableButton = function(btnObj) { 
       $(btnObj).removeClass("aws-button-disabled");
    }
@@ -106,12 +108,30 @@
       enableButton(eventObj.data[0]); 
    };
    // used in onclicksubmit and onclicksave
-   var prepareFormData = function($surveyEl) { 
-      data = {
-              c: '123', 
-              cv: '123', 
-              d: '123'            
-             };
+   var prepareFormData = function(eventObj) { 
+      var $surveyEl = eventObj.data[0];
+      var date = new Date(); 
+      var timezone = jzTimezoneDetector.determine_timezone().timezone;
+ 
+      var dEntry = { 
+               date: toISOString(date),
+               time: date.getTime(),
+               timezone: timezone.olson_tz,
+               location_status: ((positionObj==null)?'unavailable':'valid'),
+               location: { 
+                          latitude: ((positionObj==null)?0:positionObj.coords.latitude),
+                          longitude: ((positionObj==null)?0:positionObj.coords.longitude), 
+                          provider: ((positionObj==null)?"":"GPS"), 
+                          accuracy: ((positionObj==null)?0:positionObj.coords.accuracy),
+                          timestamp: ((positionObj==null)?0:positionObj.timestamp)
+                         },
+               survey_id: eventObj.data[3], 
+               survey_launch_context: { // launch or lauch ? 
+                                       launch_time: ''
+                                      } , 
+               //responses: '' // set later 
+              }; 
+               
       var responses = []; 
       $surveyEl.children("form").each(function() {
          console.log($(this));
@@ -144,24 +164,43 @@
             value = $(this).find('input:radio:checked').val();
             break; 
          case "photo":
+            var url = $(this).find('img').attr('src');
+            // upload this img and get the UUID
+            // create uuid even if no image?
+            var uuid = randomUUID();
+            // store photo for later upload
+            if (url != "") { 
+               savePhoto(uuid, url);
+            } 
+            value = uuid; 
             break;
          } 
-         console.log(type);
-         console.log(value);
          responses.push({prompt_id: promptId,
                          value: value});
       });
       console.log(JSON.stringify(responses));
+      dEntry.responses = JSON.stringify(responses);
+      var data = {
+                  c: eventObj.data[1],
+                  cv: eventObj.data[2],
+                  u: getUsername(),
+                  p: getPasswordHash(), 
+                  ci: 'html5',
+                  d: dEntry
+                  };
+      saveSurveyResult(data); 
       return data;
    } 
    var onClickSubmit = function(eventObj) {
-      var $surveyEl = eventObj.data[0];
-      $dataString = prepareFormData($surveyEl);
+      // prepare form store both photo and datastring. 
+      // not a good design here
+      // TODO: consider refactoring later on
+      clearAll();
+      $dataString = prepareFormData(eventObj);
       // send it 
    }; 
    var onClickSave = function(eventObj) {
-      var $surveyEl = eventObj.data[0];
-      $dataString = prepareFormData($surveyEl);
+      $dataString = prepareFormData(eventObj);
       // save on local storage
    };
    var onPhotoChange = function(eventObj) { 
@@ -183,6 +222,14 @@
 
 $(document).ready(function() { 
 
+   // check user login 
+   if (getLogin() == null) { 
+      window.location.replace("index.html"); 
+   } 
+
+   // start location 
+   navigator.geolocation.getCurrentPosition(function(position) { positionObj = position; });
+
    // load and parse campaign XML
    var loader = new CampaignXMLLoader(); 
    var xmlString = loader.loadDefaultCampaign(); 
@@ -190,6 +237,8 @@ $(document).ready(function() {
    var id = $.getUrlVars()['id'];
    id = id.replace(/#$/, '');
 
+   var campaignName = $(xmlString).find("campaignName").text(); 
+   var campaignVersion = $(xmlString).find("campaignVersion").text();
    var $survey = $(xmlString).find("surveys > survey > id:contains('"+id+"')").parent();
    var $surveyEl = $("#survey");
    $("#desc-title").html($survey.find("title_t").text());
@@ -408,7 +457,7 @@ $(document).ready(function() {
          if ($.hasPhoneGap()) { 
             contentHTML += '\
                <p class="center">\
-               <img alt="no image" src="img/no_image.png" />\
+               <img alt="no image" src="" />\
                </p>\
                <div class="button-full button-padded button-light">\
                   <a href=# class="button-first" onClick="onClickTakePhoto()">Take photo</a>\
@@ -416,10 +465,8 @@ $(document).ready(function() {
                </div>\n';
             $formContent = $(contentHTML); 
          } else { 
-            //$formContent = $('');
             $formContent = $('<p class="center">Please provide the image URL. (You can use <a href="http://www.tinypic.com/">tinypic.com<a/>) </p>');
-            //$formContent.append($('<p class="center">Please provide the image URL. (You can use <a href="http://www.tinypic.com/">tinypic.com<a/>) </p>'));
-            var $img = $('<img alt="no image" src="img/no_image.png" />');
+            var $img = $('<img alt="no image" src="" />');
             var $inputContent = $('<input type="url" name="v" />');
              
             $inputContent.change([$lastButton, $img], onPhotoChange); 
@@ -456,13 +503,9 @@ $(document).ready(function() {
       </div>');
    var $submit_buttons = $('<div class="content-button center"></div>');
    var $submit_button = $('<a href=#><div class="label">Submit now</div></a>');
-   var $save_button = $('<a href=#><div class="label">Save and submit later</div></a>');
    $submit_button.attr('id', 'submit-btn');
-   $submit_button.click([$surveyEl], onClickSubmit);
-   $save_button.attr('id', 'save-btn');
-   $save_button.click([$surveyEl], onClickSave);
+   $submit_button.click([$surveyEl, campaignName, campaignVersion, id], onClickSubmit);
    $submit_buttons.append($submit_button);
-   $submit_buttons.append($save_button);
    $submit.append($submit_buttons);
    $surveyEl.append($submit);
 
