@@ -13,12 +13,22 @@
     <input type="text" name="password" id="password" />
     <input type="button" name="login" id="login" value="Login" />
 </form>
+<a href="test_login.html">test</a>
 <script src="http://m.ucla.edu/assets/js.php?webkit_libs=transitions"></script>
 <script src="js/jquery-1.6.1.min.js"></script>
+<script src="js/aws_auth.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/bCrypt.js"></script>
 <script>
 $(document).ready(function() {
    $("#login").click(function() { 
-      window.location.href = "surveylist.html";
+      var username = $("#username").val(); 
+      var password = $("#password").val();
+      if (authenticate(username, password) != null) {  
+         window.location.replace("surveylist.html");
+      } else { 
+         alert("Login failed, please try again."); 
+      } 
    });
 });
 </script>
