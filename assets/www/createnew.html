@@ -2,6 +2,11 @@
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
+   <script src="http://m.ucla.edu/assets/js.php?webkit_libs=transitions"></script>
+   <script src="js/jquery-1.6.1.min.js"></script>
+   <script src="js/aws_auth.js"></script>
+   <script src="js/jquery.cookie.js"></script>
+   <script src="js/bCrypt.js"></script>
 </head>
 <body>
 <h1 id="header" class="header center">AndWellness</h1>
@@ -17,7 +22,10 @@
    </ol>
 </div>
 <a class="button-full button-padded" href="setting.html">Back</a>
-<a href="index.html" class="button-full button-padded">Logout</a>
+<a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
+<script>
+$(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
+</script>
 </body>
 </html>
