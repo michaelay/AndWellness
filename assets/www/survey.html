@@ -27,6 +27,7 @@
 <a href="setting.html" class="button-full button-padded">Settings</a>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
+<script src="js/phonegap.0.9.5.js"></script>
 <script src="js/jquery-1.6.1.min.js"></script>
 <script src="js/jquery.cookie.js"></script>
 <script src="js/aws_campaign.js"></script>
@@ -92,15 +93,43 @@
       // just move for now... handle data later
       onClickNext(eventObj);
    };
-   var onClickTakePhoto = function() { 
+   var onClickTakePhoto = function(eventObj) { 
       // allow to choose from camera or photo library
       //navigator.camera.getPicture( cameraSuccess, cameraError, [ cameraOptions ] );
-      console.log("camera");
+      var $img = eventObj.data[1];
+      navigator.camera.getPicture( function(url) {
+      //                              alert(url);
+                                      $img.attr("src", url);
+                                      enableButton(eventObj.data[0]); 
+                                   } , 
+                                   function(message) { 
+                                     alert("Failed to take photo due to ["+message+"], please try again.");
+                                   } , 
+                                   { 
+                                     quality: 10, 
+                                     destinationType: navigator.camera.DestinationType.FILE_URI,
+                                     allowEdit: true
+                                   } );
    };   
-   var onClickChoosePhoto = function() { 
+   var onClickChoosePhoto = function(eventObj) { 
       // allow to choose from camera or photo library
       //navigator.camera.getPicture( cameraSuccess, cameraError, [ cameraOptions ] );
-      console.log("choose from library");
+      var $img = eventObj.data[1]; 
+      navigator.camera.getPicture( function(url) { 
+      //                              alert(url);
+                                      $img.attr("src", url); 
+                                      enableButton(eventObj.data[0]); 
+                                   }, 
+                                   function(message) { 
+                                     alert("Failed to take photo due to ["+message+"], please try again.");
+                                   }, 
+                                   { 
+                                     quality: 10, 
+                                     destinationType: navigator.camera.DestinationType.FILE_URI,
+                                     allowEdit: true,
+                                     sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY 
+                                   });
+      
    };   
    var onMultiChoiceChange = function(eventObj) { 
       enableButton(eventObj.data[0]); 
@@ -222,6 +251,9 @@
 */
 
 $(document).ready(function() { 
+
+   var hasPhoneGap = false; 
+   document.addEventListener("deviceready",function(){ hasPhoneGap = true; },false);
 
    // check user login 
    if (getLogin() == null) { 
@@ -454,25 +486,32 @@ $(document).ready(function() {
          // if on phone gap, use camera, 
          // otherwise, ask for image upload.
          var contentHTML = null; 
-         console.log($.hasPhoneGap());
          if ($.hasPhoneGap()) { 
-            contentHTML += '\
-               <p class="center">\
-               <img alt="no image" src="" />\
-               </p>\
-               <div class="button-full button-padded button-light">\
-                  <a href=# class="button-first" onClick="onClickTakePhoto()">Take photo</a>\
-                  <a href=# class="button-last" onClick="onClickChoosePhoto()">Choose from Library</a>\
-               </div>\n';
-            $formContent = $(contentHTML); 
+            $formContent = $('<div class="center"></div>');
+            var $imgdiv = $('<div></div>');
+            var $img = $('<img alt="no image" src="" width="300"/>');
+            var $buttons = $('<div class="button-full button-padded button-light"></div>');
+            var $takePhotoButton = $('<a href=# class="button-first">Take photo</a>');
+            var $choosePhotoButton = $('<a href=# class="button-last">Library</a>');
+
+            $takePhotoButton.click([$lastButton, $img], onClickTakePhoto);
+            $choosePhotoButton.click([$lastButton, $img], onClickChoosePhoto);
+            $buttons.append($takePhotoButton);
+            $buttons.append($choosePhotoButton);
+
+            $imgdiv.append($img);
+            $formContent.append($imgdiv);
+            $formContent.append($buttons);
          } else { 
-            $formContent = $('<p class="center">Please provide the image URL. (You can use <a href="http://www.tinypic.com/">tinypic.com<a/>) </p>');
+            $formContent = $('<div class="center"><p>Please provide the image URL. (You can use <a href="http://www.tinypic.com/">tinypic.com<a/>)</p></div>');
+            var $imgdiv = $('<div></div>');
             var $img = $('<img alt="no image" src="" />');
             var $inputContent = $('<input type="url" name="v" />');
              
             $inputContent.change([$lastButton, $img], onPhotoChange); 
+            $imgdiv.append($img);
+            $formContent.append($imgdiv);
             $formContent.append($inputContent);
-            $formContent.append($img);
             //contentHTML += '<input type="url" name="v" />';
          }
          break; 

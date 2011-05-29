@@ -14,13 +14,20 @@ $.extend({
     return $.getUrlVars()[name];
   },
   hasPhoneGap: function() { 
-    console.log(typeof device);
-    console.log(typeof device == "undefined");
-    console.log(typeof device == undefined);
-    console.log(typeof device != "undefined");
-    console.log("done test");
-    return (typeof device != "undefined");
-  } 
+/*
+   try {
+      return 'device' in window && window['device'] !== null;
+   } catch (e) {
+      return false;
+   }
+*/
+   // do sth nasty here. mahahaha
+   if (navigator.userAgent.toLowerCase().search("android") > -1) { 
+      return true;
+   } else {
+      return false;
+   } 
+  }
 });
 /*example 
 var allVars = $.getUrlVars();

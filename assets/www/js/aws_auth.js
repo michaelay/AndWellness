@@ -100,3 +100,4 @@ var uploadImage = function(url, uuid, campaignId, ci) {
    var p = getPasswordHash();
    // TODO: do that upload using sync ajax    
 }; 
+//var uploadSurvey = 
