@@ -39,6 +39,7 @@ TimeTrigger.prototype.set = function(dataObj, successCallback, failureCallback) 
 
 TimeTrigger.prototype.getAll = function(successCallback, failureCallback) {
    var resultObj = { 
+                    result: "success"
                     triggers: [
                                { label: "plalash1", timestamp: 1306795504, survey_id: "exerciseAndActivity", repeat: ["M","T","W","TH","F","ST","S"] },
                                { label: "plalash_eat", timestamp: 1306795504, survey_id: "foodButton", repeat: ["ST", "S"] }
