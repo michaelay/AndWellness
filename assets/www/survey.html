@@ -37,6 +37,7 @@
 <script src="plugin/PhotoUploader.js"></script>
 <!--script src="js/ajaxfileupload.js"></script-->
 <script>
+   var $submit = null;
    var positionObj = null; 
    var enableButton = function(btnObj) { 
       $(btnObj).removeClass("aws-button-disabled");
@@ -63,11 +64,15 @@
       $nextSurvey= $currentButtonSet.next("form"); 
       $nextButtonSet = $nextSurvey.next("div"); 
       // check if next survey is there
-      if ($nextSurvey) { 
+      if ($nextSurvey.length > 0) { 
          $nextSurvey.show(); 
          $nextButtonSet.show(); 
          $currentSurvey.hide();
          $currentButtonSet.hide(); 
+      } else { 
+         $currentSurvey.hide();
+         $currentButtonSet.hide(); 
+         $submit.show();
       } 
    };
    var onClickPrev = function(eventObj) { 
@@ -81,7 +86,7 @@
       var $prevButtonSet = $currentSurvey.prev("div"); 
       var $prevSurvey = $prevButtonSet.prev("form"); 
 
-      if ($prevSurvey) { 
+      if ($prevSurvey.length > 0) { 
          $prevSurvey.show();
          $prevButtonSet.show();
          $currentSurvey.hide();  
@@ -556,7 +561,7 @@ $(document).ready(function() {
    });
 
    // add a submit page
-   var $submit = $('\
+   $submit = $('\
       <div class="content-full content-padded">\
          <h1 class="content-first light">Survey completed</h1>\
          <p class="center">Thank you for your participation. Please pick an option below.</p>\
@@ -567,6 +572,7 @@ $(document).ready(function() {
    $submit_button.click([$surveyEl, campaignName, campaignVersion, id], onClickSubmit);
    $submit_buttons.append($submit_button);
    $submit.append($submit_buttons);
+   $submit.hide();
    $surveyEl.append($submit);
 
 
