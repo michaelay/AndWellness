@@ -56,5 +56,5 @@ PhoneGap.addConstructor(function() {
 PhoneGap.addPlugin('locationtrigger', new trigger());
  
 //Register the native class of plugin with PhoneGap
-PluginManager.addService("LocationTrigger","com.andwellness.trigger.time.LocationTrigger");
+PluginManager.addService("LocationTrigger","edu.ucla.cens.andwellness.mobile.plugin.LocationTrigger");
 });
