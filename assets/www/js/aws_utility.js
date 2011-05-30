@@ -104,13 +104,19 @@ function randomUUID() {
 function clearAll() { 
    localStorage.clear();
 } 
-
+/*
 function savePhoto(uuid, url) {
    var allPhoto = getAllPhoto(); 
    allPhoto.push([uuid, url]);
    // save it back 
    console.log("savephoto");
    console.log(allPhoto);
+   localStorage.setItem("photo", JSON.stringify(allPhoto)); 
+} 
+*/
+function savePhoto(data) { 
+   var allPhoto = getAllPhoto(); 
+   allPhoto.push(data); 
    localStorage.setItem("photo", JSON.stringify(allPhoto)); 
 } 
 function saveSurveyResult(newResult) {
@@ -153,5 +159,8 @@ function pad2zeros(n) {
 }
 function toISOString(d) {
    return d.getUTCFullYear() + '-' +  padzero(d.getUTCMonth() + 1) + '-' + padzero(d.getUTCDate()) + 'T' + padzero(d.getUTCHours()) + ':' +  padzero(d.getUTCMinutes()) + ':' + padzero(d.getUTCSeconds()) + '.' + pad2zeros(d.getUTCMilliseconds()) + 'Z';
+}
+function toDateString(d) {
+   return d.getUTCFullYear() + '-' +  padzero(d.getUTCMonth() + 1) + '-' + padzero(d.getUTCDate()) + ' ' + padzero(d.getUTCHours()) + ':' +  padzero(d.getUTCMinutes()) + ':' + padzero(d.getUTCSeconds());
 }
 

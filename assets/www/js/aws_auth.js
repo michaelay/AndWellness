@@ -92,12 +92,65 @@ var deleteAuthToken = function() {
 */
 
 /**
- * Upload image 
+ * Upload photo 
  */ 
-var uploadImage = function(url, uuid, campaignId, ci) { 
-   // get u, p
-   var u = getUsername(); 
-   var p = getPasswordHash();
-   // TODO: do that upload using sync ajax    
+var uploadPhoto = function(dataObj) { 
+   // create an invisible form and submit the data
+   var result = false; 
+   if ($.hasPhoneGap()) { 
+      var uploader = new PhotoUploader(); 
+      uploader.upload(dataObj); 
+      result = true;
+   } else { 
+      // post to proxy 
+      var post_data = "c=" + dataObj.c
+                    + "&u=" + dataObj.u
+                    + "&p=" + dataObj.p
+                    + "&i=" + dataObj.i
+                    + "&ci=" + dataObj.ci
+                    + "&url=" + dataObj.url;
+      $.ajax({
+         url: 'proxy/photoupload.php',
+         data: post_data,   
+         type: 'POST', 
+         dataType: 'json', 
+         async: false, 
+         success: function(data) {
+            console.log("proxy upload completed");
+            result = true;  
+         },
+         error: function(jqXHR, textStatus, errorThrown) { 
+            console.log("proxy upload failed");
+            console.log(jqXHR);
+            console.log(textStatus);
+            console.log(errorThrown);
+            result = false; 
+         } 
+      });
+      return result;
+   } 
 }; 
-//var uploadSurvey = 
+// upload one single survey 
+var uploadSurvey = function(dataObj) {
+   var post_data = "c=" + dataObj.c
+                 + "&cv=" + dataObj.cv
+                 + "&u=" + dataObj.u
+                 + "&p=" + dataObj.p
+                 + "&ci=" + dataObj.ci
+                 + "&d=" + dataObj.d;
+   $.ajax({
+      url: 'https://students.andwellness.org/app/u/survey',
+      data: post_data,
+      type: 'POST', 
+      dataType: 'json',
+      async: false,
+      success: function(data) {
+         if (data.result != "success") { 
+            alert("failed with error: " + data.errors[0].text);
+         } 
+      }, 
+      error: function(jqXHR, textStatus, errorThrown) { 
+         alert("failed to upload survey");
+      }
+   }); 
+};
