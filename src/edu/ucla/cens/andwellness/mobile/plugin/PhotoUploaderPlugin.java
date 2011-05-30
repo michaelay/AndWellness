@@ -37,13 +37,7 @@ public class PhotoUploaderPlugin extends Plugin {
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;
 
-		Log.v("PLUGIN", action);
-		Log.v("PLUGIN", data.toString());
-		Log.v("PLUGIN", callbackId);
 		if (action.equals("upload")) { 
-			Log.v("PLUGIN", "upload action");
-
-			Log.v("PLUGIN", data.toString());
 			try { 
 				JSONObject dataObject = data.getJSONObject(0);
 				
