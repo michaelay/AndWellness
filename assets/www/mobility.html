@@ -58,9 +58,9 @@ function check(){};
 function func1() { document.getElementById("chkbox").click();};
 function func2() { document.getElementById("srate").style.display = "block";};
 function func3() { document.getElementById("srate").style.display = "none";};
-function func4() { document.getElementById("rate_val").innerHTML = "1 minute";}
-function func5() { document.getElementById("rate_val").innerHTML = "30 seconds";}
-function func6() { document.getElementById("rate_val").innerHTML = "15 seconds";}
+function func4() { document.getElementById("rate_val").innerHTML = "1 minute"; document.getElementById("srate").style.display = "none";}
+function func5() { document.getElementById("rate_val").innerHTML = "30 seconds"; document.getElementById("srate").style.display = "none";}
+function func6() { document.getElementById("rate_val").innerHTML = "15 seconds"; document.getElementById("srate").style.display = "none";}
 function func()
 {
 	if (document.getElementById("chkbox").checked == true) {
