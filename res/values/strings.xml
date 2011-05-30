@@ -2,4 +2,9 @@
 <resources>
     <string name="hello">Hello World, andwellness!</string>
     <string name="app_name">AndWellnessMobile</string>
+    
+    <string-array name="trigger_builtin_places">
+        <item>Home</item>
+        <item>Work</item>
+    </string-array>
 </resources>
