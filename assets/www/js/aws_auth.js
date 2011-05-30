@@ -96,15 +96,39 @@ var deleteAuthToken = function() {
  */ 
 var uploadPhoto = function(dataObj) { 
    // create an invisible form and submit the data
-   var post_data = "c=" + dataObj.c
-                 + "&u=" + dataObj.u
-                 + "&p=" + dataObj.p
-                 + "&i=" + dataObj.i
-                 + "&ci=" + dataObj.ci;
-   var uploader = new PhotoUploader(); 
-   uploader.upload(dataObj); 
-
-   // TODO: use proxy when web only
+   var result = false; 
+   if ($.hasPhoneGap()) { 
+      var uploader = new PhotoUploader(); 
+      uploader.upload(dataObj); 
+      result = true;
+   } else { 
+      // post to proxy 
+      var post_data = "c=" + dataObj.c
+                    + "&u=" + dataObj.u
+                    + "&p=" + dataObj.p
+                    + "&i=" + dataObj.i
+                    + "&ci=" + dataObj.ci
+                    + "&url=" + dataObj.url;
+      $.ajax({
+         url: 'proxy/photoupload.php',
+         data: post_data,   
+         type: 'POST', 
+         dataType: 'json', 
+         async: false, 
+         success: function(data) {
+            console.log("proxy upload completed");
+            result = true;  
+         },
+         error: function(jqXHR, textStatus, errorThrown) { 
+            console.log("proxy upload failed");
+            console.log(jqXHR);
+            console.log(textStatus);
+            console.log(errorThrown);
+            result = false; 
+         } 
+      });
+      return result;
+   } 
 }; 
 // upload one single survey 
 var uploadSurvey = function(dataObj) {

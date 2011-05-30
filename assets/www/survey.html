@@ -181,6 +181,7 @@
             break; 
          case "number": 
             value = parseInt($(this).find('select[name="v"]').val());
+            //value = parseInt($(this).find('input[name="v"]').val());
             break; 
          case "hours_before_now": 
             break; 
@@ -430,6 +431,7 @@ $(document).ready(function() {
             }  
          } 
          contentHTML += '</select>\n';
+         //var contentHTML = '<input type="number" min="'+min+'" max="'+max+'" step="1" value="'+(survey_default==null?'':survey_default)+'" />';
          $formContent = $(contentHTML);
          enableButton($lastButton);
          break; 
