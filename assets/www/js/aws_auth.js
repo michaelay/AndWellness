@@ -100,4 +100,27 @@ var uploadImage = function(url, uuid, campaignId, ci) {
    var p = getPasswordHash();
    // TODO: do that upload using sync ajax    
 }; 
-//var uploadSurvey = 
+// upload one single survey 
+var uploadSurvey = function(dataObj) {
+   var post_data = "c=" + dataObj.c
+                 + "&cv=" + dataObj.cv
+                 + "&u=" + dataObj.u
+                 + "&p=" + dataObj.p
+                 + "&ci=" + dataObj.ci
+                 + "&d=" + dataObj.d;
+   $.ajax({
+      url: 'https://students.andwellness.org/app/u/survey',
+      data: post_data,
+      type: 'POST', 
+      dataType: 'json',
+      async: false,
+      success: function(data) {
+         if (data.result != "success") { 
+            alert("failed with error: " + data.errors[0].text);
+         } 
+      }, 
+      error: function(jqXHR, textStatus, errorThrown) { 
+         alert("failed to upload survey");
+      }
+   }); 
+};

@@ -50,7 +50,6 @@
     * enable the next survye and button set 
     */
    var onClickNext = function(eventObj) { 
-      console.log("next");
       eventObj.preventDefault();
       if (isButtonDisabled(eventObj.currentTarget)) { 
          alert("Please complete this page before proceeding"); 
@@ -63,7 +62,6 @@
       $nextButtonSet = $nextSurvey.next("div"); 
       // check if next survey is there
       if ($nextSurvey) { 
-         console.log($nextSurvey);
          $nextSurvey.show(); 
          $nextButtonSet.show(); 
          $currentSurvey.hide();
@@ -71,7 +69,6 @@
       } 
    };
    var onClickPrev = function(eventObj) { 
-      console.log("prev");
       eventObj.preventDefault();
       if (isButtonDisabled(eventObj.currentTarget)) { 
          return; 
@@ -142,31 +139,37 @@
       var $surveyEl = eventObj.data[0];
       var date = new Date(); 
       var timezone = jzTimezoneDetector.determine_timezone().timezone;
+      //var dateString = toISOString(date);
+      var dateString = toDateString(date);
  
       var dEntry = { 
-               date: toISOString(date),
+               date: dateString,
                time: date.getTime(),
                timezone: timezone.olson_tz,
-               location_status: ((positionObj==null)?'unavailable':'valid'),
-               location: { 
-                          latitude: ((positionObj==null)?0:positionObj.coords.latitude),
-                          longitude: ((positionObj==null)?0:positionObj.coords.longitude), 
-                          provider: ((positionObj==null)?"":"GPS"), 
-                          accuracy: ((positionObj==null)?0:positionObj.coords.accuracy),
-                          timestamp: ((positionObj==null)?0:positionObj.timestamp)
-                         },
                survey_id: eventObj.data[3], 
                survey_launch_context: { // launch or lauch ? 
-                                       launch_time: ''
+                                       active_triggers: [],
+                                       launch_time: dateString
                                       } , 
                //responses: '' // set later 
               }; 
+      if (positionObj == null) { 
+         dEntry.location_status = 'unavailable'; 
+      } else { 
+         dEntry.location_status = 'valid'; 
+         dEntry.location = { 
+            latitude: positionObj.coords.latitude,
+            longitude: positionObj.coords.longitude, 
+            provider: "gps", 
+            accuracy: positionObj.coords.accuracy,
+            timestamp: toDateString(new Date(positionObj.timestamp))
+         };
+      }
+         
                
       var responses = []; 
       $surveyEl.children("form").each(function() {
-         console.log($(this));
          // find the type and value   
-         //console.log($(this).children("input[name='type']").attr("value"));
          var type = $(this).find("input[name='type']").attr("value");
          var promptId = $(this).find("input[name='prompt_id']").attr("value");
          // different handling for each type 
@@ -175,7 +178,7 @@
          case "timestamp": 
             break; 
          case "number": 
-            value = $(this).find('select[name="v"]').val();
+            value = parseInt($(this).find('select[name="v"]').val());
             break; 
          case "hours_before_now": 
             break; 
@@ -186,12 +189,12 @@
          case "multi_choice_custom": 
             value = [];
             $(this).find('input:checkbox:checked').each(function() { 
-               value.push($(this).val());
+               value.push(parseInt($(this).val()));
             });
             break; 
          case "single_choice": 
          case "single_choice_custom": 
-            value = $(this).find('input:radio:checked').val();
+            value = parseInt($(this).find('input:radio:checked').val());
             break; 
          case "photo":
             var url = $(this).find('img').attr('src');
@@ -209,14 +212,14 @@
                          value: value});
       });
       console.log(JSON.stringify(responses));
-      dEntry.responses = JSON.stringify(responses);
+      dEntry.responses = responses;
       var data = {
                   c: eventObj.data[1],
                   cv: eventObj.data[2],
                   u: getUsername(),
                   p: getPasswordHash(), 
                   ci: 'html5',
-                  d: dEntry
+                  d: JSON.stringify([dEntry])
                   };
       saveSurveyResult(data); 
       return data;
@@ -226,8 +229,12 @@
       // not a good design here
       // TODO: consider refactoring later on
       clearAll();
-      $dataString = prepareFormData(eventObj);
-      // send it 
+      // both photo and survey is saved in the below function call
+      dataObj = prepareFormData(eventObj);
+      alert("Result is saved, you can upload it in the setting > status page");
+      //window.location.replace("surveylist.html");
+      // debug: actually submit the form 
+      //uploadSurvey(dataObj);
    }; 
    var onClickSave = function(eventObj) {
       $dataString = prepareFormData(eventObj);
@@ -280,7 +287,6 @@ $(document).ready(function() {
    var currentSurveyID = 1; 
    var $surveyList = $survey.find("contentList").children(); 
    var numSurvey = $surveyList.length;
-   console.log(numSurvey);
    //$survey.find("contentList").children().each(function() {
    $surveyList.each(function() {
       var promptText = $(this).find("promptText").text();
