@@ -104,13 +104,19 @@ function randomUUID() {
 function clearAll() { 
    localStorage.clear();
 } 
-
+/*
 function savePhoto(uuid, url) {
    var allPhoto = getAllPhoto(); 
    allPhoto.push([uuid, url]);
    // save it back 
    console.log("savephoto");
    console.log(allPhoto);
+   localStorage.setItem("photo", JSON.stringify(allPhoto)); 
+} 
+*/
+function savePhoto(data) { 
+   var allPhoto = getAllPhoto(); 
+   allPhoto.push(data); 
    localStorage.setItem("photo", JSON.stringify(allPhoto)); 
 } 
 function saveSurveyResult(newResult) {

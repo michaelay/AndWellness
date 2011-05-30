@@ -92,13 +92,19 @@ var deleteAuthToken = function() {
 */
 
 /**
- * Upload image 
+ * Upload photo 
  */ 
-var uploadImage = function(url, uuid, campaignId, ci) { 
-   // get u, p
-   var u = getUsername(); 
-   var p = getPasswordHash();
-   // TODO: do that upload using sync ajax    
+var uploadPhoto = function(dataObj) { 
+   // create an invisible form and submit the data
+   var post_data = "c=" + dataObj.c
+                 + "&u=" + dataObj.u
+                 + "&p=" + dataObj.p
+                 + "&i=" + dataObj.i
+                 + "&ci=" + dataObj.ci;
+   var uploader = new PhotoUploader(); 
+   uploader.upload(dataObj); 
+
+   // TODO: use proxy when web only
 }; 
 // upload one single survey 
 var uploadSurvey = function(dataObj) {

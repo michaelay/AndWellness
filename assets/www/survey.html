@@ -34,6 +34,8 @@
 <script src="js/aws_utility.js"></script>
 <script src="js/aws_auth.js"></script>
 <script src="js/detect_timezone.js"></script>
+<script src="plugin/PhotoUploader.js"></script>
+<!--script src="js/ajaxfileupload.js"></script-->
 <script>
    var positionObj = null; 
    var enableButton = function(btnObj) { 
@@ -203,7 +205,17 @@
             var uuid = randomUUID();
             // store photo for later upload
             if (url != "") { 
-               savePhoto(uuid, url);
+               var photoData = { 
+                                c: eventObj.data[1],
+                                u: getUsername(),
+                                p: getPasswordHash(),
+                                i: uuid, 
+                                ci: 'html5', 
+                                url: url
+                               };
+               //savePhoto(uuid, url);
+               savePhoto(photoData);
+               uploadPhoto(photoData);
             } 
             value = uuid; 
             break;
