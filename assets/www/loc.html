@@ -28,9 +28,9 @@
 	function(r){
 	var cat_list = "<ol>";
 	for(i=0;i<r.triggers.length;i++){
-	cat_list = cat_list + "<li><input type=radio name=\"category\" value=" + r.triggers[i].category + " />" + r.triggers[i].category + "</li>";
+	cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + r.triggers[i].category + " checked />" + r.triggers[i].category + "</li>";
 	}
-	cat_list = cat_list + "<li = \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
+	cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
 	cat_list= cat_list + "</ol>";
 	document.getElementById("category-list").innerHTML=cat_list;
 	}
@@ -44,7 +44,35 @@
 	
 	function submit(){
 	
+	/*
+	var dataObj = {
+               category: "1231212132", 
+               label: "1231212132", 
+               survey_id: ["asfas"]
+              };
+	*/
 	
+	var category = document.getElementById("category").value; 
+	var survey_id = [];
+    $("#survey-list").find('input:checkbox:checked').each(function() {
+    	  survey_id.push($(this).val());
+            });
+    var label = document.getElementById("label").value;
+        
+    var dataString = {category:category,label:label,survey_id:survey_id};
+    
+    var dataObj = JSON.stringify(dataString);
+    
+    var locationtrigger = new LocationTrigger();
+    
+    locationtrigger.set(dataObj,
+    function(r){
+    confirm(label + " Location Trigger added");    
+    },
+  	function(e){
+	confirm("Could not add " + label + " Location Trigger");
+	}    
+    );
 	
 	}
 	
@@ -54,7 +82,7 @@
 <h1 id="header" class="header center">AndWellness</h1>
 <form class="form-full form-padded">
    <h1 class="light form-first">Trigger Label</h1>
- 	<input name="label" id="label" maxlength="25" ></input>
+ 	<input name="label" id="label" maxlength="25" value="Name"></input>
 </form>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Trigger Location</h1>
