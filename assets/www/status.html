@@ -15,23 +15,23 @@
    <ol>
    <li class="menu-first"> 
     <a style="background:none">Current user: <span class="smallprint" id="user"></span><br/>
-    <input type="button" name="change_password" value="Change Password" style="float:left;width:15%;margin-left:auto;margin-right:32px;display:block" 
-	onclick="func()"/> <br/><br/></a>	
+    <input type="button" name="change_password" value="Change Password" style="float:left;width:15%;display:block" 
+   onclick="func()"/> <br/><br/></a>   
    </li>
    <li> 
     <a style="background:none"># of survey responses not yet uploaded: <span class="smallprint" id="survey_up"></span><br/>
-    <input type="button" name="survey_up" value="Upload Now" style="float:left;width:15%;margin-left:auto;margin-right:32px;display:block" onclick="func1()"/>
-    <br/><br/></a>	
+    <input type="button" name="survey_up" value="Upload Now" style="float:left;width:15%;display:block" onClick="func1()"/>
+    <br/><br/></a>   
    </li>
    <li> 
     <a style="background:none"># of mobility data points not yet uploaded: <span class="smallprint" id="mobility_up"></span><br/>
-    <input type="button" name="mobility_up" value="Upload Now" style="float:left;width:15%;margin-left:auto;margin-right:32px;display:block" onclick="func2()"/>
-    <br/><br/></a>	
+    <input type="button" name="mobility_up" value="Upload Now" style="float:left;width:15%;display:block" onclick="func2()"/>
+    <br/><br/></a>   
    </li>
    <li class="menu-last"> 
    <a style="background:none"># of photos not yet uploaded: <span class="smallprint" id="image_up"></span><br/>
-    <input type="button" name="image_up" value="Upload Now" style="float:left;width:15%;margin-left:auto;margin-right:32px;display:block" onclick="func3()"/>
-    <br/><br/></a>	
+    <input type="button" name="image_up" value="Upload Now" style="float:left;width:15%;display:block" onclick="func3()"/>
+    <br/><br/></a>   
    </li>
   </ol>
 </div>
@@ -39,14 +39,14 @@
 <div class="menu-full menu-detailed menu-padded">
 <h1 class="light" style="text-align:left">Change Password</h1>
 <ol>
-	<li class="menu-first">
-		<a style="background:none">Type the new password: <br/>
-		<input type="password" name="new_pwd" style="float:left;width:15%;margin-left:auto;margin-right:32px;display:block" /></a><br/>
-	</li>
-	<li class="menu-last">
-		<a style="background:none">Retype the new password: <br/>
-		<input type="password" name="re_new_pwd" style="float:left;width:15%;margin-left:auto;margin-right:32px;display:block" /></a><br/>
-	</li>
+   <li class="menu-first">
+      <a style="background:none">Type the new password: <br/>
+      <input type="password" name="new_pwd" style="float:left;width:15%;display:block" /></a><br/>
+   </li>
+   <li class="menu-last">
+      <a style="background:none">Retype the new password: <br/>
+      <input type="password" name="re_new_pwd" style="float:left;width:15%;display:block" /></a><br/>
+   </li>
    </ol>
 </div>
 <div class="button-full button-padded">
@@ -54,18 +54,25 @@
 <a class="button-last" onclick="cancel()">Cancel</a>
 </div>
 </div>
+<span id="test">
+</span>
 <a class="button-full button-padded" href="setting.html">Back</a>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
 <script>
 function check()
 {
-	document.getElementById("user").innerHTML = $.cookie('u');
+   document.getElementById("user").innerHTML = $.cookie('u');
         document.getElementById("survey_up").innerHTML = (getAllSurveyResult()).length;
-	//document.getElementById("mobility_up").innerHTML = count(/*function placeholder*/);
-	document.getElementById("image_up").innerHTML = (getAllPhoto()).length;
-};
-function func1() {};
+   //document.getElementById("mobility_up").innerHTML = count(/*function placeholder*/);
+   document.getElementById("image_up").innerHTML = (getAllPhoto()).length;
+return true;
+}
+function func1() 
+{
+   responses = getAllSurveyResult();
+   document.getElementById("test").innerHTML = responses.length;
+}
 function func2() {};
 function func3() {};
 function func() 
@@ -81,4 +88,3 @@ $(document).ready(function() { if (getLogin() == null) { window.location.replace
 </script>
 </body>
 </html>
-
