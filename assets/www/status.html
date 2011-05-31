@@ -33,7 +33,7 @@
     <input type="button" name="image_up" value="Upload Now" style="float:left;width:15%;margin-left:auto;margin-right:32px;display:block" onclick="func3()"/>
     <br/><br/></a>	
    </li>
-</ol>
+  </ol>
 </div>
 <div id="ch_pwd" style="display: none">
 <div class="menu-full menu-detailed menu-padded">
@@ -47,7 +47,7 @@
 		<a style="background:none">Retype the new password: <br/>
 		<input type="password" name="re_new_pwd" style="float:left;width:15%;margin-left:auto;margin-right:32px;display:block" /></a><br/>
 	</li>
-</ol>
+   </ol>
 </div>
 <div class="button-full button-padded">
 <a class="button-first" onclick="submit()">Submit</a>
@@ -70,8 +70,8 @@ function func2() {};
 function func3() {};
 function func() 
 {
-	document.getElementById("ch_pwd").style.display = "block";
-	
+   document.getElementById("ch_pwd").style.display = "block";
+
 };
 function submit() {};
 function cancel() {document.getElementById("ch_pwd").style.display = "none";};
@@ -81,3 +81,4 @@ $(document).ready(function() { if (getLogin() == null) { window.location.replace
 </script>
 </body>
 </html>
+

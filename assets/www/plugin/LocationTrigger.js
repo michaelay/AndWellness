@@ -38,6 +38,7 @@ LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallba
  
 LocationTrigger.prototype.getAll = function(dataObj, successCallback, failureCallback) {
    var resultObj = { 
+                    result: "success",
                     triggers: [ 
                                { category: "home", label: "plalash1", latitude: 123.123, longitude: 123.12, survey_id: "exerciseAndActivity", repeat: ["M","T","W","TH","F","ST","S"] },
                                { category: "work", label: "plalash1", latitude: 123.123, longitude: 123.12, survey_id: "foodButton", repeat: ["M","T"] },
@@ -56,5 +57,5 @@ PhoneGap.addConstructor(function() {
 PhoneGap.addPlugin('locationtrigger', new trigger());
  
 //Register the native class of plugin with PhoneGap
-PluginManager.addService("LocationTrigger","com.andwellness.trigger.time.LocationTrigger");
+PluginManager.addService("LocationTrigger","edu.ucla.cens.andwellness.mobile.plugin.LocationTrigger");
 });
