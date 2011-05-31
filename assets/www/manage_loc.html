@@ -16,9 +16,16 @@
 	function(r){
 	var cat_list = "<ol>";
 	for(i=0;i<r.triggers.length;i++){
-	cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + r.triggers[i].category + " />" + r.triggers[i].category + "</li>";
+	temp.push(r.triggers[i].category);
 	}
-	cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
+	var category = temp.unique();
+	alert(category);
+		
+	for(i=0;i<category.length;i++){
+	cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
+	}
+	
+	//cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
 	cat_list= cat_list + "</ol>";
 	document.getElementById("category-list").innerHTML=cat_list;
 	}
