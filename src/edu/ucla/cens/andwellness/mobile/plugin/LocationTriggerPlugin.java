@@ -40,7 +40,7 @@ public class LocationTriggerPlugin extends Plugin {
 //				long longitude = dataObject.getLong("longitude");
 //				JSONArray repeatArray = dataObject.getJSONArray("repeat");
 				
-			    FileOutputStream out = new FileOutputStream("/sdcard/location_temp.jpg");
+//			    FileOutputStream out = new FileOutputStream("/sdcard/location_temp.jpg");
 			   
 
 				
