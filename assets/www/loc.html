@@ -46,8 +46,7 @@
 	
 	/*
 	var dataObj = {
-               category: "1231212132", 
-               label: "1231212132", 
+               category: "1231212132",
                survey_id: ["asfas"]
               };
 	*/
@@ -57,9 +56,8 @@
     $("#survey-list").find('input:checkbox:checked').each(function() {
     	  survey_id.push($(this).val());
             });
-    var label = document.getElementById("label").value;
         
-    var dataString = {category:category,label:label,survey_id:survey_id};
+    var dataString = {category:category,survey_id:survey_id};
     
     var dataObj = JSON.stringify(dataString);
     
@@ -67,10 +65,10 @@
     
     locationtrigger.set(dataObj,
     function(r){
-    confirm(label + " Location Trigger added");    
+    confirm("Location Trigger added");    
     },
   	function(e){
-	confirm("Could not add " + label + " Location Trigger");
+	confirm("Could not add Location Trigger");
 	}    
     );
 	
@@ -80,10 +78,6 @@
 </head>
 <body onLoad="location_trigger()">
 <h1 id="header" class="header center">AndWellness</h1>
-<form class="form-full form-padded">
-   <h1 class="light form-first">Trigger Label</h1>
- 	<input name="label" id="label" maxlength="25" value="Name"></input>
-</form>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Trigger Location</h1>
    <div id="category-list"></div>
