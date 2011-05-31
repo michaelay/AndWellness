@@ -99,10 +99,10 @@ public class LocationTrigger extends TriggerBase {
 		return desc.getLocation();
 	}
 
-	@Override
-	public int getIcon() {
-		return R.drawable.map;
-	}
+//	@Override
+//	public int getIcon() {
+//		return R.drawable.map;
+//	}
 	
 	@Override
 	public void launchTriggerCreateActivity(Context context, boolean adminMode) {
