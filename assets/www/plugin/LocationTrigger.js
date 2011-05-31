@@ -17,11 +17,7 @@ var LocationTrigger = function() {
 /*
 var dataObj = {
                category: "1231212132", 
-               label: "1231212132", 
-               survey_id: "asfas"
-               latitude: 123.11,
-               longitude: 123.12,
-               repeat: []
+               survey_id: ["asfas"]
               };
 */
 LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
@@ -47,27 +43,28 @@ LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallba
    //alert("2");
 };
  
+LocationTrigger.prototype.removelocation = function(dataObj, successCallback, failureCallback) {
+       var resultObj = { result: "success" }; 
+       successCallback(resultObj);    
+};
+
 LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
 /*
    var resultObj = { 
                     result: "success",
                     triggers: [ 
-                               { category: "home", label: "plalash1", latitude: 123.123, longitude: 123.12, survey_id: "exerciseAndActivity", repeat: ["M","T","W","TH","F","ST","S"] },
-                               { category: "work", label: "plalash1", latitude: 123.123, longitude: 123.12, survey_id: "foodButton", repeat: ["M","T"] },
+                               { category: "Home", latitude: 123.123, longitude: 123.12, survey_id: ["exerciseAndActivity"]},
+                               { category: "Work", latitude: 123.123, longitude: 123.12, survey_id: ["foodButton","exerciseAndActivity"]},
+                               { category: "Work", latitude: 123.123, longitude: 123.12, survey_id: ["foodButton"]}
                               ] 
                    };
 */
    var resultObj = null; 
-   return PhoneGap.exec(function(result) { 
-                           resultObj = result; 
-                        }, 
-                        function(result) { 
-                           resultObj = { result: "failure" }; 
-                        }, 
+   return PhoneGap.exec(successCallback,
+                        failureCallback,
                         'LocationTriggerPlugin',
                         'getAll',
                         []); 
-   successCallback(resultObj);
 } ;
 /**
  * <ul>
