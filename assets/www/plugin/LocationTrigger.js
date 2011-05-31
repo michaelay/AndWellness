@@ -20,8 +20,7 @@ var dataObj = {
                label: "1231212132", 
                survey_id: "asfas"
                latitude: 123.11,
-               longitude: 123.12,
-               repeat: []
+               longitude: 123.12
               };
 */
 LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
@@ -40,8 +39,8 @@ LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
    var resultObj = { 
                     result: "success",
                     triggers: [ 
-                               { category: "Home", label: "plalash1", latitude: 123.123, longitude: 123.12, survey_id: "exerciseAndActivity", repeat: ["M","T","W","TH","F","ST","S"] },
-                               { category: "Work", label: "plalash1", latitude: 123.123, longitude: 123.12, survey_id: "foodButton", repeat: ["M","T"] },
+                               { category: "Home", label: "plalash1", latitude: 123.123, longitude: 123.12, survey_id: ["exerciseAndActivity"]},
+                               { category: "Work", label: "plalash1", latitude: 123.123, longitude: 123.12, survey_id: ["foodButton","exerciseAndActivity"]},
                               ] 
                    };
    successCallback(resultObj);

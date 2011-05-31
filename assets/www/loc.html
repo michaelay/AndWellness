@@ -10,13 +10,25 @@
 	<script src="js/jquery.cookie.js"></script>
 	<script src="plugin/LocationTrigger.js"></script>
 	<script>
-	function get_location_list(){
+	function location_trigger(){
+	
+	var loader = new CampaignXMLLoader(); 
+   	var xmlString = loader.loadDefaultCampaign(); 
+
+   	// print out the titles 
+   	$(xmlString).find("survey").each(function() { 
+      var title = $(this).children("title_t").text();
+      var id = $(this).children("id").text();
+      $("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' />'+title+'</li>'); 
+   	});
+   	$("#survey-list:last-child").addClass("menu-last");
+		
 	var locationtrigger = new LocationTrigger();
 	locationtrigger.getAll(
 	function(r){
 	var cat_list = "<ol>";
 	for(i=0;i<r.triggers.length;i++){
-	cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + r.triggers[i].category + " />" + r.triggers[i].category + "</li>";
+	cat_list = cat_list + "<li><input type=radio name=\"category\" value=" + r.triggers[i].category + " />" + r.triggers[i].category + "</li>";
 	}
 	cat_list = cat_list + "<li = \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
 	cat_list= cat_list + "</ol>";
@@ -28,10 +40,17 @@
 	}
 			
 	);	
-	}	
+	}
+	
+	function submit(){
+	
+	
+	
+	}
+	
 	</script>
 </head>
-<body onLoad="get_location_list()">
+<body onLoad="location_trigger()">
 <h1 id="header" class="header center">AndWellness</h1>
 <form class="form-full form-padded">
    <h1 class="light form-first">Trigger Label</h1>
@@ -41,10 +60,15 @@
    <h1 class="light form-first">Trigger Location</h1>
    <div id="category-list"></div>
 </div>
+<div class="menu-full menu-detailed menu-padded">
+   <h1 class="light form-first">Surveys</h1>
+   <ol id="survey-list"></ol>
+</div>
 <div class="button-full button-padded">
-    <a href="createnew.html" class="button-first">Done</a>
+    <a href="createnew.html" class="button-first" onClick="submit()">Done</a>
     <a href="createnew.html" class="button-last">Cancel</a>
 </div>
+
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
 <script>
