@@ -10,8 +10,8 @@
 	<script src="js/jquery.cookie.js"></script>
 	<script src="plugin/LocationTrigger.js"></script>
 	<script>
-	function location_trigger(){
 	
+	function location_trigger(){
 	var loader = new CampaignXMLLoader(); 
    	var xmlString = loader.loadDefaultCampaign(); 
 
@@ -22,13 +22,19 @@
       $("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' />'+title+'</li>'); 
    	});
    	$("#survey-list:last-child").addClass("menu-last");
-		
+	
 	var locationtrigger = new LocationTrigger();
 	locationtrigger.getAll(
 	function(r){
 	var cat_list = "<ol>";
+	var temp = [];
 	for(i=0;i<r.triggers.length;i++){
-	cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + r.triggers[i].category + " checked />" + r.triggers[i].category + "</li>";
+	temp.push(r.triggers[i].category);
+	}
+	var category = temp.unique();
+		
+	for(i=0;i<category.length;i++){
+	cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
 	}
 	cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
 	cat_list= cat_list + "</ol>";
@@ -36,7 +42,7 @@
 	}
 	,
 	function(e){
-	confirm(e);
+	alert(e);
 	}
 			
 	);	
@@ -65,10 +71,10 @@
     
     locationtrigger.set(dataObj,
     function(r){
-    confirm("Location Trigger added");    
+    alert("Location Trigger added");    
     },
   	function(e){
-	confirm("Could not add Location Trigger");
+	alert("Could not add Location Trigger");
 	}    
     );
 	
