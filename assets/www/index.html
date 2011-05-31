@@ -43,10 +43,8 @@ $(document).ready(function() {
 
  document.addEventListener('deviceready', function() {
        
-   alert("1");
    var dObj = {}; 
    window.plugins.locationtrigger.set(dObj, function(r) { alert(r); }, function() { alert("failed"); }  );
-   alert("2");
    window.plugins.locationtrigger.getAll(function(r) { alert(r); }, function() { alert("failed"); }  );
 /*
          window.plugins.directorylisting.list("/sdcard",

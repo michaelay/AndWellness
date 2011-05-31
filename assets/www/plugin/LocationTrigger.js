@@ -49,7 +49,6 @@ LocationTrigger.prototype.removelocation = function(dataObj, successCallback, fa
 };
 
 LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
-/*
    var resultObj = { 
                     result: "success",
                     triggers: [ 
@@ -58,13 +57,15 @@ LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
                                { category: "Work", latitude: 123.123, longitude: 123.12, survey_id: ["foodButton"]}
                               ] 
                    };
-*/
+   successCallback(resultObj);
+/*
    var resultObj = null; 
    return PhoneGap.exec(successCallback,
                         failureCallback,
                         'LocationTriggerPlugin',
                         'getAll',
                         []); 
+*/
 } ;
 /**
  * <ul>
