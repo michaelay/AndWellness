@@ -54,6 +54,8 @@ public abstract class TriggerBase {
 
 		//Call the notifier to display the notification
 		//Pass the notification description corresponding to this trigger
+		String notifDesc = db.getNotifDescription(trigId);
+		db.close();
 //		Notifier.notifyNewTrigger(context, trigId, db.getNotifDescription(trigId));
 //		db.close();
 	}
@@ -231,20 +233,20 @@ public abstract class TriggerBase {
 		
 		//Save the trigger desc. Use default desc for notification, action
 		// and run time
-//		int trigId = (int) db.addTrigger(this.getTriggerType(), trigDesc,
-//					  			   		TriggerActionDesc.getDefaultDesc(),
-//					  			   		NotifDesc.getDefaultDesc(context),
-//					  			   		TriggerRunTimeDesc.getDefaultDesc());
+		int trigId = (int) db.addTrigger(this.getTriggerType(), trigDesc,
+					  			   		TriggerActionDesc.getDefaultDesc(),
+					  			   		NotifDesc.getDefaultDesc(context),
+					  			   		TriggerRunTimeDesc.getDefaultDesc());
 		
-//		String actDesc = db.getActionDescription(trigId);
-//		db.close();
+		String actDesc = db.getActionDescription(trigId);
+		db.close();
 	
 		//If the action has a positive number of surveys, 
 		//start the trigger. 
-////		TriggerActionDesc desc = new TriggerActionDesc();
-////		if(desc.loadString(actDesc) && desc.getCount() > 0) {
-////			startTrigger(context, trigId, trigDesc);
-//		}	
+		TriggerActionDesc desc = new TriggerActionDesc();
+		if(desc.loadString(actDesc) && desc.getCount() > 0) {
+			startTrigger(context, trigId, trigDesc);
+		}	
 	}
 	
 	/*
@@ -301,7 +303,7 @@ public abstract class TriggerBase {
 	 * Get the resource id of the icon which represents this trigger
 	 * type. This icon will be used by the main trigger list.
 	 */
-	public abstract int getIcon();
+//	public abstract int getIcon();
 	
 	/*
 	 * Get the display name for this trigger type. This name is used to

@@ -2,6 +2,10 @@
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
+<!--
+   <link rel="stylesheet" href="css/default.css" type="text/css">
+   <link rel="stylesheet" href="css/default-basic.css" type="text/css">
+-->
 </head>
 <body>
 <h1 id="header" class="header center">AndWellness</h1>
@@ -14,10 +18,15 @@
     <input type="button" name="login" id="login" value="Login" />
 </form>
 <script src="http://m.ucla.edu/assets/js.php?webkit_libs=transitions"></script>
+<!--
+<script src="js/ucla.js"></script>
+-->
 <script src="js/jquery-1.6.1.min.js"></script>
 <script src="js/aws_auth.js"></script>
 <script src="js/jquery.cookie.js"></script>
 <script src="js/bCrypt.js"></script>
+<script src="js/phonegap.0.9.5.js"></script>
+<script src="plugin/LocationTrigger.js"></script>
 <script>
 $(document).ready(function() {
    $("#login").click(function() { 
@@ -29,6 +38,20 @@ $(document).ready(function() {
          alert("Login failed, please try again."); 
       } 
    });
+   
+});
+
+ document.addEventListener('deviceready', function() {
+       
+   var dObj = {}; 
+   window.plugins.locationtrigger.set(dObj, function(r) { alert(r); }, function() { alert("failed"); }  );
+   window.plugins.locationtrigger.getAll(function(r) { alert(r); }, function() { alert("failed"); }  );
+/*
+         window.plugins.directorylisting.list("/sdcard",
+             function(r){printResult(r)},
+             function(e){log(e)}
+          );
+*/
 });
 </script>
 </body>

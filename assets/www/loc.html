@@ -10,8 +10,8 @@
 	<script src="js/jquery.cookie.js"></script>
 	<script src="plugin/LocationTrigger.js"></script>
 	<script>
-	function location_trigger(){
 	
+	function location_trigger(){
 	var loader = new CampaignXMLLoader(); 
    	var xmlString = loader.loadDefaultCampaign(); 
 
@@ -22,24 +22,29 @@
       $("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' />'+title+'</li>'); 
    	});
    	$("#survey-list:last-child").addClass("menu-last");
+  
+	   var locationtrigger = new LocationTrigger();
+	   locationtrigger.getAll(
+	      function(r){
+         alert(r);
+	      var cat_list = "<ol>";
+	      var temp = [];
+	      for(i=0;i<r.triggers.length;i++){
+	         temp.push(r.triggers[i].category);
+	      }
+	      var category = temp.unique();
 		
-	var locationtrigger = new LocationTrigger();
-	locationtrigger.getAll(
-	function(r){
-	var cat_list = "<ol>";
-	for(i=0;i<r.triggers.length;i++){
-	cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + r.triggers[i].category + " checked />" + r.triggers[i].category + "</li>";
-	}
-	cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
-	cat_list= cat_list + "</ol>";
-	document.getElementById("category-list").innerHTML=cat_list;
-	}
-	,
-	function(e){
-	confirm(e);
-	}
-			
-	);	
+	      for(i=0;i<category.length;i++){
+	            cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
+	      }
+	      cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
+	      cat_list= cat_list + "</ol>";
+	      document.getElementById("category-list").innerHTML=cat_list;
+	      } ,
+	      function(e){
+	         alert(e);
+	      }
+	   );	
 	}
 	
 	function submit(){
@@ -65,10 +70,10 @@
     
     locationtrigger.set(dataObj,
     function(r){
-    confirm("Location Trigger added");    
+    alert("Location Trigger added");    
     },
   	function(e){
-	confirm("Could not add Location Trigger");
+	alert("Could not add Location Trigger");
 	}    
     );
 	
@@ -94,7 +99,9 @@
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
 <script>
-$(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
+$(document).ready(function() { 
+   if (getLogin() == null) { window.location.replace("index.html"); }
+});
 </script>
 </body>
 </html>

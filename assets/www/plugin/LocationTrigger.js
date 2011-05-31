@@ -21,51 +21,29 @@ var dataObj = {
               };
 */
 LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
+   var resultObj = null; 
+   return PhoneGap.exec(function(result) { 
+                           //resultObj = result; 
+                           alert("success");
+                           //successCallback(result);
+                        }, 
+                        function(result) { 
+                           //resultObj = { result: "failure" }; 
+                           alert("failed");
+                           //failureCallback(result);
+                        }, 
+                        'LocationTriggerPlugin',
+                        'set',
+                        [dataObj]); 
 /*
-   return PhoneGap.exec(successCallback,    //Callback which will be called when adding time trigger is successful
-                        failureCallback,     //Callback which will be called when adding a time trigger encounters an error
-                        'LocationTrigger',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
-                        'add',              //Telling the plugin, which action we want to perform
-                        [time]);        //Passing a list of arguments to the plugin, in this case this is the time to be added
-*/
    var resultObj = { result: "success" }; 
-   successCallback(resultObj);    
+*/
+   //alert("1");
+   //successCallback(resultObj);
+   //alert("2");
 };
  
-/*
-var dataObj = {
-               category: "1231212132", 
-               latitude: 23424,
-               longitude: 2234
-              };
-*/
-LocationTrigger.prototype.addlocation = function(dataObj, successCallback, failureCallback) {
-    /*
-       return PhoneGap.exec(successCallback,    //Callback which will be called when adding time trigger is successful
-                            failureCallback,     //Callback which will be called when adding a time trigger encounters an error
-                            'LocationTrigger',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
-                            'add',              //Telling the plugin, which action we want to perform
-                            [time]);        //Passing a list of arguments to the plugin, in this case this is the time to be added
-    */
-       var resultObj = { result: "success" }; 
-       successCallback(resultObj);    
-};
-
-/*
-var dataObj = {
-               category: "1231212132", 
-               latitude: 23424,
-               longitude: 2234
-              };
-*/
 LocationTrigger.prototype.removelocation = function(dataObj, successCallback, failureCallback) {
-    /*
-       return PhoneGap.exec(successCallback,    //Callback which will be called when adding time trigger is successful
-                            failureCallback,     //Callback which will be called when adding a time trigger encounters an error
-                            'LocationTrigger',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
-                            'add',              //Telling the plugin, which action we want to perform
-                            [time]);        //Passing a list of arguments to the plugin, in this case this is the time to be added
-    */
        var resultObj = { result: "success" }; 
        successCallback(resultObj);    
 };
@@ -80,6 +58,14 @@ LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
                               ] 
                    };
    successCallback(resultObj);
+/*
+   var resultObj = null; 
+   return PhoneGap.exec(successCallback,
+                        failureCallback,
+                        'LocationTriggerPlugin',
+                        'getAll',
+                        []); 
+*/
 } ;
 /**
  * <ul>
@@ -89,8 +75,8 @@ LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
  */
 PhoneGap.addConstructor(function() {
 //Register the javascript plugin with PhoneGap
-PhoneGap.addPlugin('locationtrigger', new trigger());
+PhoneGap.addPlugin('locationtrigger', new LocationTrigger());
  
 //Register the native class of plugin with PhoneGap
-PluginManager.addService("LocationTrigger","edu.ucla.cens.andwellness.mobile.plugin.LocationTrigger");
+PluginManager.addService("LocationTriggerPlugin","edu.ucla.cens.andwellness.mobile.plugin.LocationTriggerPlugin");
 });
