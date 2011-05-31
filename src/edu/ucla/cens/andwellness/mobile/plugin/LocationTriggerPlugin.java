@@ -3,6 +3,8 @@
  */
 package edu.ucla.cens.andwellness.mobile.plugin;
 
+import java.io.FileOutputStream;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +20,7 @@ import edu.ucla.cens.andwellness.triggers.types.location.LocTrigDesc;
  *
  */
 public class LocationTriggerPlugin extends Plugin {
-
+	
 	/* (non-Javadoc)
 	 * @see com.phonegap.api.Plugin#execute(java.lang.String, org.json.JSONArray, java.lang.String)
 	 */
@@ -29,30 +31,29 @@ public class LocationTriggerPlugin extends Plugin {
 		if (action.equals("set")) { 
 			JSONObject dataObject;
 			try {
+								
 				dataObject = data.getJSONObject(0);
-				String category = dataObject.getString("category");
-				String label = dataObject.getString("label");
-				String surveyId = dataObject.getString("survey_id");
-				long latitude = dataObject.getLong("latitude");
-				long longitude = dataObject.getLong("longitude");
-				JSONArray repeatArray = dataObject.getJSONArray("repeat");
+//				String category = dataObject.getString("category");
+//				String label = dataObject.getString("label");
+//				String surveyId = dataObject.getString("survey_id");
+//				long latitude = dataObject.getLong("latitude");
+//				long longitude = dataObject.getLong("longitude");
+//				JSONArray repeatArray = dataObject.getJSONArray("repeat");
+				
+			    FileOutputStream out = new FileOutputStream("/sdcard/location_temp.jpg");
+			   
+
 				
 				
-				LocTrigDesc trigDesc = new LocTrigDesc();
-				trigDesc.setRangeEnabled(false);
-				trigDesc.setTriggerAlways(false);
-				trigDesc.setLocation(label);
-				trigDesc.setMinReentryInterval(120);
+//				LocTrigDesc trigDesc = new LocTrigDesc();
+//				trigDesc.setRangeEnabled(false);
+//				trigDesc.setTriggerAlways(false);
+//				trigDesc.setLocation(label);
+//				trigDesc.setMinReentryInterval(120);
 				
 				
-//				TriggerDB db = db.open();
-//				db.addTrigger(trigType, trigDescript, trigActDesc, notifDescript, rtDescript)
-//				db.close();
 				JSONObject apiResult = new JSONObject();
 				apiResult.put("result", "success");
-//				} else { 
-//					apiResult.put("result", "failure");
-//				}
 				result = new PluginResult(Status.OK, apiResult); 
 				
 			} catch (JSONException e) {
