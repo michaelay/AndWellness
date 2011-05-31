@@ -48,7 +48,8 @@
    print_r($response);
    
 ?>
-<form method="POST" ENCTYPE="multipart/form-data" action="https://students.andwellness.org/app/u/image">
+<form method="POST" enctype="multipart/form-data" action="https://students.andwellness.org/app/u/image" >
+   <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
    <input type="text" name="c" value="NIH" />
    <input type="text" name="u" value="reel.purism" />
    <input type="text" name="p" value="$2a$04$r8zKliEptVkzoiQgD833OeU9.H5iLJHnhJMGg12lAh.l4.xnVAdg." />

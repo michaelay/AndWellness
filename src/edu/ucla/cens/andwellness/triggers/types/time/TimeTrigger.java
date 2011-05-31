@@ -149,10 +149,10 @@ public class TimeTrigger extends TriggerBase {
 		return ret;
 	}
 
-	@Override
-	public int getIcon() {
-		return R.drawable.clock;
-	}
+//	@Override
+//	public int getIcon() {
+//		return R.drawable.clock;
+//	}
 
 	@Override
 	public JSONObject getPreferences(Context context) {
