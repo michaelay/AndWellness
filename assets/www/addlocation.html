@@ -1,0 +1,236 @@
+<html>
+<head>
+   <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
+   <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
+   <link rel="stylesheet" href="css/aws.css" type="text/css">
+	<script src="http://m.ucla.edu/assets/js.php"></script>
+	<script src="js/jquery-1.6.1.min.js"></script>
+	<script src="js/aws_campaign.js"></script>
+	<script src="js/aws_utility.js"></script>
+	<script src="js/aws_auth.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="plugin/LocationTrigger.js"></script>
+	<script src="plugin/gmaps.js"></script>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript">
+
+var poly;
+	var geocoder;
+	var map;
+	var marker;
+	var initialLocation;
+	var browserSupportFlag =  new Boolean();
+ 	var cat_name = gup("name");
+ 	var cat_id = gup("id");
+ 	
+  function initialize() {
+    
+  	document.getElementById("category").innerHTML = cat_name;
+  
+  	geocoder = new google.maps.Geocoder();
+    var losAng = new google.maps.LatLng(34.0522222, -118.2427778);
+    var myOptions = {
+      zoom: 11,
+      center: losAng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+ 
+ // Try W3C Geolocation method (Preferred)
+  if(navigator.geolocation) {
+    browserSupportFlag = true;
+    navigator.geolocation.getCurrentPosition(function(position) {
+      initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+      contentString = "Location found using W3C standard";
+      map.setCenter(initialLocation);
+    }, function() {
+      handleNoGeolocation(browserSupportFlag);
+    });
+  } else if (google.gears) {
+    // Try Google Gears Geolocation
+    browserSupportFlag = true;
+    var geo = google.gears.factory.create('beta.geolocation');
+    geo.getCurrentPosition(function(position) {
+      initialLocation = new google.maps.LatLng(position.latitude,position.longitude);
+      contentString = "Location found using Google Gears";
+      map.setCenter(initialLocation);
+    }, function() {
+      handleNoGeolocation(browserSupportFlag);
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    browserSupportFlag = false;
+    handleNoGeolocation(browserSupportFlag);
+  }
+   
+    map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+ 
+    // Add a listener for the click event
+    google.maps.event.addListener(map, 'click', addLatLngClick);
+    
+  }
+  
+  function handleNoGeolocation(errorFlag) {
+  if (errorFlag == true) {
+    initialLocation = newyork;
+    contentString = "Error: The Geolocation service failed.";
+  } else {
+    initialLocation = siberia;
+    contentString = "Error: Your browser doesn't support geolocation. Are you in Siberia?";
+  }
+  map.setCenter(initialLocation);
+  infowindow.setContent(contentString);
+  infowindow.setPosition(initialLocation);
+  infowindow.open(map);
+}
+   
+   function delLatLng(event){
+   
+   var marker = this;
+   var latLng = event.latLng;
+   
+   geocoder.geocode({'latLng': latLng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[1]) {
+				var conf = confirm("Remove " + results[1].formatted_address + " from "+cat_name+" ?");
+		  if(conf){
+          marker.setMap(null);
+          map.setCenter(event.latLng,1);
+        }
+        
+        }  
+   
+   	}
+   	   
+    });
+   
+   
+   }
+   
+  function addLatLngSearch() {
+    var address = document.getElementById("address").value;
+    document.getElementById("address").value = "" ;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+      
+  		var conf = confirm("Add " + results[0].formatted_address + " to "+cat_name+" ?");
+		 
+		var image = "img/trigger_loc_marker_red.png"; 
+		 
+        if(conf){
+         marker = new google.maps.Marker({
+              position: results[0].geometry.location,
+              map: map,
+              icon: image
+          });
+          map.setCenter(results[0].geometry.location);
+          google.maps.event.addListener(marker, 'click', delLatLng);
+        }    
+      
+      } else if(address != ""){
+        alert("Could not find the address. Please Try again.");
+      }
+    });
+  } 
+    
+  function addLatLngClick(event) {
+ 	
+ 	var latLng;
+ 	
+ 	if(event)
+ 	latLng = event.latLng;
+ 	else
+ 	latLng = initialLocation;
+ 
+	geocoder.geocode({'latLng': latLng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+      
+        if (results[1]) {
+		
+		var conf = confirm("Add " + results[1].formatted_address + " to "+cat_name+" ?");
+		 
+		var image = "img/trigger_loc_marker_red.png"; 
+		 
+        if(conf){
+         marker = new google.maps.Marker({
+              position: latLng, 
+              map: map,
+              icon: image
+          });
+          map.setCenter(latLng,1);
+          google.maps.event.addListener(marker, 'click', delLatLng);
+        }
+          
+        } else {
+          alert("No results found");
+        }
+      } else {
+        alert("Could not locate the point. Please Try again.");
+      }
+    }); 
+        
+  }
+	</script>
+ 
+</head>
+<body onLoad="initialize()">
+<h1 id="header" class="header center">AndWellness</h1>
+<form class="form-full form-padded">
+   <h1 class="light form-first" id="category"></h1>
+   <label id="inst">Click on the map to add a location.<br />Click on a marker to remove it.</label>
+   <div id="map_box" align="center"><div id="map_canvas"></div></div>
+</form>
+<div class="menu-full menu-detailed menu-padded" id="map_search">
+   <ol>
+   <li class="menu-first">
+   <a onClick="addLatLngSearch()" style="background:url(img/search-button.png) no-repeat scroll 90% center transparent"><input type="text" id="address" /></a>
+   </li>
+   <li class="menu-last">
+   <a onClick="addLatLngClick()">Add Current Location</a> 
+   </li>
+   </ol>
+</div>
+
+<div class="button-full button-padded">
+    <a href="createnew.html" class="button-first" onClick="submit()">Done</a>
+    <a class="button-last" onClick="history.go(-1);return true;">Cancel</a>
+</div>
+<a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
+<script src="http://m.ucla.edu/assets/js.php"></script>
+<script>
+$(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
+
+function submit(){
+	
+	/*
+	var dataObj = {
+               category: "1231212132",
+               lat: 123123,
+               lng: 1232               
+              };
+	*/
+	
+	var category = document.getElementById("category").value; 
+	var survey_id = [];
+    $("#survey-list").find('input:checkbox:checked').each(function() {
+    	  survey_id.push($(this).val());
+            });
+        
+    var dataString = {category:category,survey_id:survey_id};
+    
+    var dataObj = JSON.stringify(dataString);
+    
+    var locationtrigger = new LocationTrigger();
+    
+    locationtrigger.set(dataObj,
+    function(r){
+    alert("Location Trigger added");    
+    },
+  	function(e){
+	alert("Could not add Location Trigger");
+	}    
+    );
+	
+	}
+</script>
+</body>
+</html>

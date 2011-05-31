@@ -48,7 +48,7 @@ LocationTrigger.prototype.addlocation = function(dataObj, successCallback, failu
                             [time]);        //Passing a list of arguments to the plugin, in this case this is the time to be added
     */
        var resultObj = { result: "success" }; 
-       successCallback(resultObj);    
+       successCallback(resultObj);  
 };
 
 /*
@@ -77,7 +77,8 @@ LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
                                { category: "Home", latitude: 123.123, longitude: 123.12, survey_id: ["exerciseAndActivity"]},
                                { category: "Work", latitude: 123.123, longitude: 123.12, survey_id: ["foodButton","exerciseAndActivity"]},
                                { category: "Work", latitude: 123.123, longitude: 123.12, survey_id: ["foodButton"]}
-                              ] 
+                              ]
+   
                    };
    successCallback(resultObj);
 } ;

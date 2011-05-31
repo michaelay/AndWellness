@@ -1,3 +1,5 @@
+// get unique element array
+
 Array.prototype.unique = function() {    
     var o = {}, i, l = this.length, r = [];
         for(i=0; i<l;i+=1) 
@@ -7,6 +9,20 @@ Array.prototype.unique = function() {
     return r;
     
 };
+
+// get url parameters
+
+function gup( name )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
 
 $.extend({
   getUrlVars: function(){
