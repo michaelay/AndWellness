@@ -24,12 +24,12 @@ LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallba
    var resultObj = null; 
    return PhoneGap.exec(function(result) { 
                            //resultObj = result; 
-                           alert("success");
+                           //alert("success");
                            //successCallback(result);
                         }, 
                         function(result) { 
                            //resultObj = { result: "failure" }; 
-                           alert("failed");
+                           //alert("failed");
                            //failureCallback(result);
                         }, 
                         'LocationTriggerPlugin',
