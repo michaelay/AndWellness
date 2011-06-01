@@ -45,7 +45,7 @@ public class LocationTriggerPlugin extends Plugin {
 		
 		if (action.equals("set") || action.equals("addloc")) {
 			
-			JSONObject dataObject;
+			
 			JSONArray ObjArr = null;
 			String myString = null;
 			String EXTFILENAME = null;
@@ -56,26 +56,28 @@ public class LocationTriggerPlugin extends Plugin {
 			EXTFILENAME = "locations.txt";
 			
 			try {
-				dataObject = data.getJSONObject(0);
-				
-				try {
-					ObjArr = readFromExternal(EXTFILENAME);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
 				
 				if(action.equals("addloc"))
 				{
+					JSONObject dataObject;
+					dataObject = data.getJSONObject(0);
+					
+					try {
+						ObjArr = readFromExternal(EXTFILENAME);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
 						if(dataObject.getString("category").equals("Home"))
 						{
 							ObjArr.put(0, dataObject);
 							if(ObjArr.isNull(1)){
 								JSONObject temp = new JSONObject();
-								JSONArray location = new JSONArray();
 								temp.put("category", "Work");
-								temp.put("locations", location);
+								JSONArray location = new JSONArray();
+								temp.put("locations", location);									
 								ObjArr.put(1, temp);
 							}
 						}	
@@ -84,15 +86,17 @@ public class LocationTriggerPlugin extends Plugin {
 							ObjArr.put(1, dataObject);
 							if(ObjArr.isNull(0)){
 								JSONObject temp = new JSONObject();
-								JSONArray location = new JSONArray();
 								temp.put("category", "Home");
+								JSONArray location = new JSONArray();
 								temp.put("locations", location);
 								ObjArr.put(0, temp);
 							}
 						}
-						
+				}			
+				else if(action.equals("set"))
+				{
+					ObjArr = data.getJSONArray(0);	
 				}
-				
 				
 				myString = ObjArr.toString();
 				try {

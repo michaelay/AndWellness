@@ -13,46 +13,67 @@
 	<script src="js/jquery.cookie.js"></script>
 	<script src="plugin/LocationTrigger.js"></script>
 	<script>
+	
 	document.addEventListener('deviceready', function() {
-	var loader = new CampaignXMLLoader(); 
-   	var xmlString = loader.loadDefaultCampaign(); 
-
-   	// print out the titles 
-   	$(xmlString).find("survey").each(function() { 
-      var title = $(this).children("title_t").text();
-      var id = $(this).children("id").text();
-      $("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' />'+title+'</li>'); 
-   	});
-   	$("#survey-list:last-child").addClass("menu-last");
-  
-  /*
-	   var locationtrigger = new LocationTrigger();
-	   locationtrigger.getlocation(
+	
+	var surveyids = "";
+	var loc_trig = [];
+	
+	var listnum = -1;
+	var cat_name;
+	
+	if(gup("surveyid")){
+	listnum = gup("surveyid");
+	cat_name = gup("name");
+	}
+	
+	window.plugins.locationtrigger.get(
 	      function(r){
-	      var cat_list = "<ol>";
-	      var temp = [];
-	      for(i=0;i<r.locations.length;i++){
-	         temp.push(r.locations[i].category);
+	      for(i=0;i<r.triggers.length;i++){
+	      
+	      		if(i != listnum){
+	      			loc_trig.push(r.triggers[i]);
+	      			}	      			
 	      }
-	      var category = temp.unique();
-		
-	      for(i=0;i<category.length;i++){
-	            cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
+	      
+	      if( listnum >=0){
+	      
+	      	for(i=0;i<r.triggers[listnum].survey_id.length;i++)
+	      	{
+	      		surveyids = surveyids + r.triggers[listnum].survey_id[i] + " ";	
+	      	}
 	      }
-	      cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
-	      cat_list= cat_list + "</ol>";
-	      document.getElementById("category-list").innerHTML=cat_list;
+	      
+	    var loader = new CampaignXMLLoader();
+   		var xmlString = loader.loadDefaultCampaign(); 
+	
+	   	// print out the titles 
+   		$(xmlString).find("survey").each(function() { 
+      	var title = $(this).children("title_t").text();
+      	var id = $(this).children("id").text();
+      			 		
+ 		if(listnum && (surveyids.indexOf(id))>=0)
+ 			$("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' checked />'+title+'</li>');
+ 		else    
+    		$("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' />'+title+'</li>');   		
+  
+  		if(cat_name){
+  		$("#"+cat_name).attr('checked', 'checked');
+  		document.getElementById("delete-button").style.display = "block";
+  		} 
+   		
+   		});
+   		$("#survey-list:last-child").addClass("menu-last");
+	    
+	     
+	      
 	      } ,
-	      function(e){
+	      function(e){	      
 	         alert(e);
 	      }
-	   );
-	*/
-	   	
-	}, true);
+	   );		
 	
-	
-	document.addEventListener('deviceready', function() {
+		
     var btn = document.getElementById("done");
 	btn.onclick = function(){
 	
@@ -63,8 +84,6 @@
               };
 	*/
 	
-	//var category = document.getElementById("category").value; 
-	
 	var category = [];
     	$("#category-list").find('input:radio:checked').each(function() { category.push($(this).val());});
     	
@@ -73,16 +92,11 @@
     	  survey_id.push($(this).val());
             });
         
-    var dataString = {category:category,survey_id:survey_id};
+    var dataObj = {category:category,survey_id:survey_id};
     
-    var dataObj = JSON.stringify(dataString);
-   // alert(dataObj);
-    var locationtrigger = new LocationTrigger();
-
-    var dataObj = {category:category,survey_id:survey_id};    
-
-    
-    window.plugins.locationtrigger.set(dataObj,
+    loc_trig.push(dataObj);
+        
+    window.plugins.locationtrigger.set(loc_trig,
     	function(r){
     	alert("Location Trigger added");    
     	},
@@ -93,8 +107,28 @@
 	
 	
 	}
-	
 	btn.disabled=false;
+	
+	var del = document.getElementById("delete");
+	del.onclick = function(){
+	    
+	    var conf = confirm("Do you want to delete this trigger?");
+	    
+	    if(conf)
+	    {
+    		window.plugins.locationtrigger.set(loc_trig,
+    		function(r){
+    		alert("Location Trigger deleted");    
+    		},
+  			function(e){
+			alert("Could not delete Location Trigger");
+			}    
+    		);
+    		window.location.replace("trigger.html");
+		}
+			
+	
+	}
 	
 	}, true);
 	
@@ -104,24 +138,24 @@
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Trigger Location</h1>
-   <div id="category-list">
-   <ol>
-   <li><input type="radio" id="category" name="category" value="Home" checked>Home</input>
+   <ol id="category-list">
+   <li><input type="radio" id="Home" name="category" value="Home" checked>Home</input>
    </li>
-   <li><input type="radio" id="category" name="category" value="Work">Work</input>
+   <li><input type="radio" id="Work" name="category" value="Work">Work</input>
    </li>
    <li class= "menu-last"><a href="manage_loc.html">Manage Locations</a></li>
-   </li>
    </ol>
-   </div>
 </div>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Surveys</h1>
    <ol id="survey-list"></ol>
 </div>
+<div id="delete-button" style="display:none;">
+<a class="button-full button-light button-padded" id="delete">Delete Trigger</a>
+</div>
 <div class="button-full button-padded">
-    <a href="createnew.html" id="done" class="button-first">Done</a>
-    <a href="createnew.html" class="button-last">Cancel</a>
+    <a href="trigger.html" id="done" class="button-first">Done</a>
+    <a href="trigger.html" class="button-last">Cancel</a>
 </div>
 
 <a href="index.html" disabled class="button-full button-padded" onclick="logout()">Logout</a>

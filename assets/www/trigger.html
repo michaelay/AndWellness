@@ -15,18 +15,22 @@
 <script src="plugin/TimeTrigger.js"></script>
 <script>
 document.addEventListener('deviceready', function() {
-var locationtrigger = new LocationTrigger();
-locationtrigger.get(
+
+window.plugins.locationtrigger.get(
 	      function(r){
+	      
+	      if(r.triggers.length != 0){
+	      
 	      var temp = [];
-	      var cat_list = "<ol>";
+	      var cat_list = "<ol>";	      
+	      
 	      for(i=0;i<r.triggers.length;i++){
 	       temp.push(r.triggers[i].category);
 	      }
 	      var category = temp;
 	      for(i=0;i<category.length;i++){
-	           // cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
-	        cat_list = cat_list + "<li><a href=\"loc.html?id="+i+"\">" + category[i] + "<br/>"; 
+	       
+	    cat_list = cat_list + "<li><a href=\"loc.html?name="+category[i]+"&surveyid="+i+"\">" + category[i] + "<br/>"; 
 		cat_list = cat_list + "<span class=\"smallprint\">";
 		var surv_list = r.triggers[i].survey_id;
 		var list = "";
@@ -35,14 +39,22 @@ locationtrigger.get(
 		}
 	      cat_list = cat_list + "</ol>";
 	      document.getElementById("loctrigger-list").innerHTML=cat_list;
+	      }
+	      else
+	      {
+	      	document.getElementById("location").style.display = "none";
+	      }
+	      
 	      } ,
 	      function(e){
-	         alert(e);
+	         alert(e.result);
 	      }
 	   );
-var timetrigger = new TimeTrigger();
-timetrigger.getAll(
+
+window.plugins.timetrigger.getAll(
 	      function(r){
+	      
+	      if(r.triggers.length != 0){
 	      var temp = [];
 	      var cat_list = "<ol>";
 	      for(i=0;i<r.triggers.length;i++){
@@ -50,11 +62,16 @@ timetrigger.getAll(
 	      }
 	      var category = temp;
 	      for(i=0;i<category.length;i++){
-	           // cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
-	        cat_list = cat_list + "<li><a href=\"time.html?id="+i+"\">" + category[i] + "</a></li>";
-		}
+	      cat_list = cat_list + "<li><a href=\"time.html?id="+i+"\">" + category[i] + "</a></li>";
+			}
 	      cat_list = cat_list + "</ol>";
 	      document.getElementById("timetrigger-list").innerHTML=cat_list;
+	      }
+	      else
+	      {
+	      	document.getElementById("time").style.display = "none";
+	      }
+	      
 	      } ,
 	      function(e){
 	         alert(e);
@@ -65,20 +82,20 @@ timetrigger.getAll(
 </head>
 <body>
 <h1 id="header" class="header center">AndWellness</h1>
-<div class="menu-full menu-detailed menu-padded">
+<div class="menu-full menu-detailed menu-padded"> 
    <ol>
-   <li class="menu-last"> 
-   <a href="createnew.html" style="background:url(./add-button.gif) no-repeat scroll 95% center transparent">Add New Trigger</a>
+   <li>
+   <a href="createnew.html" style="background:url(./add-button.gif) no-repeat scroll 95% center">Add New Trigger</a>
    </li>
    </ol>
 </div>
 
-<div class="menu-full menu-detailed menu-padded">
-<h1>Location triggers</h1>	
+<div class="menu-full menu-detailed menu-padded" id="location">
+<h1>Location Triggers</h1>	
    <div id="loctrigger-list"></div>
 </div>
-<div class="menu-full menu-detailed menu-padded">
-<h1>Time triggers</h1>	
+<div class="menu-full menu-detailed menu-padded" id="time">
+<h1>Time Triggers</h1>	
    <div id="timetrigger-list"></div>
 </div>
 <a class="button-full button-padded" href="setting.html">Back</a>
