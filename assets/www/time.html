@@ -82,10 +82,8 @@ function submit()
 	var survey_id = [];
    	$("#survey-list").find('input:checkbox:checked').each(function() { survey_id.push($(this).val());});
         
-    	var dataString = {time:time,repeat:repeat,survey_id:survey_id};
-    
-    	var dataObj = JSON.stringify(dataString);
-    	//alert(dataObj);    
+    	var dataObj = {time:time,repeat:repeat,survey_id:survey_id};
+        
 	    var timetrigger = new TimeTrigger();
     
 	    timetrigger.set(dataObj,

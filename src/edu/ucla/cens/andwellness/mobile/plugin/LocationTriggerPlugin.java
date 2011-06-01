@@ -6,11 +6,13 @@ package edu.ucla.cens.andwellness.mobile.plugin;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Writer;
 
@@ -30,10 +32,7 @@ import com.phonegap.api.PluginResult.Status;
  */
 public class LocationTriggerPlugin extends Plugin {
 	
-    String myString = null;
-    String EXTFILENAME = "blah.txt";
-    File root = Environment.getExternalStorageDirectory();
-    File myfile = new File(root, EXTFILENAME);
+ 
 	
 	/* (non-Javadoc)
 	 * @see com.phonegap.api.Plugin#execute(java.lang.String, org.json.JSONArray, java.lang.String)
@@ -44,11 +43,24 @@ public class LocationTriggerPlugin extends Plugin {
 		
 		if (action.equals("set")) { 
 			JSONObject dataObject;
+			JSONArray ObjArr = null;
+			String myString = null;
+			String EXTFILENAME = "location_triggers.txt";
+			
 			try {
 								
-				myString = data.getString(0);
 				dataObject = data.getJSONObject(0);
-								
+				
+				try {
+					ObjArr = readFromExternal(EXTFILENAME);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				ObjArr.put(dataObject);
+				
+				myString = ObjArr.toString();
 				
 				//String category = dataObject.getString("category");
 				//String surveyId = dataObject.getString("survey_id");
@@ -60,21 +72,52 @@ public class LocationTriggerPlugin extends Plugin {
 			   
 				
 				try {
-					writeToExternal();
+					writeToExternal(EXTFILENAME, myString);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			
-				//JSONObject apiResult = new JSONObject();
-				//apiResult.put("result", "success");
-				result = new PluginResult(Status.OK, dataObject); 
+				JSONObject apiResult = new JSONObject();
+				apiResult.put("result", "success");
+				result = new PluginResult(Status.OK, apiResult); 
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else if (action.equals("getAll")) { 
+		}else if (action.equals("get")){
+		
+			String EXTFILENAME = "location_triggers.txt";
+			JSONArray ObjArr = null;
+			try {
+				ObjArr = readFromExternal(EXTFILENAME);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			JSONObject dataObj = new JSONObject();
+			
+			try {
+				dataObj.put("result", "success");
+				dataObj.put("triggers", ObjArr);
+				result = new PluginResult(Status.OK, dataObj);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				JSONObject apiResult = new JSONObject();
+				try {
+					apiResult.put("result", "failed");
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				result = new PluginResult(Status.JSON_EXCEPTION, apiResult);
+			}
+			
+			
+		}else if (action.equals("getAll")) { 
 			JSONObject apiResult = new JSONObject();
 			try {
 				apiResult.put("result", "success");
@@ -107,10 +150,12 @@ public class LocationTriggerPlugin extends Plugin {
 		return result;
 	}
 	
-	private void writeToExternal() throws IOException {
+	private void writeToExternal(String filename, String myString) throws IOException {
 		// TODO Auto-generated method stub
 		
 		try {
+			File root = Environment.getExternalStorageDirectory();
+			File myfile = new File(root, filename);
 			OutputStream out = new FileOutputStream(myfile, false);
 			out.write(myString.getBytes());
 			out.close();
@@ -118,6 +163,40 @@ public class LocationTriggerPlugin extends Plugin {
 			//e.printStackTrace();
 		}
 		
+	}
+	
+	private JSONArray readFromExternal(String filename) throws IOException {
+	
+	   StringBuilder contents = new StringBuilder();
+	   
+	   try {
+	   File root = Environment.getExternalStorageDirectory();
+	   File myfile = new File(root, filename);
+ 	   FileInputStream fileIS = new FileInputStream(myfile);
+ 	   BufferedReader buf = new BufferedReader(new InputStreamReader(fileIS));
+ 	   String readString = new String();
+ 	  while (( readString = buf.readLine()) != null){
+          contents.append(readString);
+          contents.append(System.getProperty("line.separator"));
+        }
+	   }
+	   catch (FileNotFoundException e) {
+			//e.printStackTrace();
+		}
+	
+	   JSONArray JSONArr = null;
+ 	  
+	try {
+		if(contents.toString().length()!=0)
+		 JSONArr = new JSONArray(contents.toString());
+		else
+		 JSONArr = new JSONArray();
+	} catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+ 	  
+ 	 return JSONArr;
 	}
 
 }
