@@ -111,6 +111,8 @@ function onClickImageUpload(eventObj) {
       numToUpload++;
       uploadPhoto(dataObj, 
                   function(r) { 
+                     console.log("success");
+                     console.log(r);
                      if (r.result == "success") { 
                         numToUpload--;
                         if (numToUpload == 0) { 

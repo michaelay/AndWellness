@@ -107,6 +107,7 @@ var uploadPhoto = function(dataObj, successCallback, failureCallback) {
          success: function(data) {
             console.log("proxy upload completed");
             result = true;  
+            successCallback(data);
          },
          error: function(jqXHR, textStatus, errorThrown) { 
             console.log("proxy upload failed");
@@ -114,6 +115,7 @@ var uploadPhoto = function(dataObj, successCallback, failureCallback) {
             console.log(textStatus);
             console.log(errorThrown);
             result = false; 
+            failureCallback(errorThrown);
          } 
       });
       return result;
