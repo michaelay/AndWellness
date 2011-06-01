@@ -94,10 +94,10 @@ function onClickSurveyUpload(eventObj)
       }
    }
    if (success != true) { 
-      alert("upload failed, please check network connection and try again");
+      alert("Upload Failed. Please check Network Connection and Try again.");
    } else { 
       clearSurveyResult();
-      alert("upload completed");
+      alert("Upload Completed");
    } 
    populateData();
 }
@@ -118,12 +118,12 @@ function onClickImageUpload(eventObj) {
                         if (numToUpload == 0) { 
                            clearPhoto();
                            populateData();
-                           alert("photo upload completed");
+                           alert("Photo Upload Completed");
                         }  
                      } 
                   },
                   function(e) { 
-                     alert("upload failed, please check network connection and try again");
+                     alert("Upload Failed. Please check Network Connection and Try again.");
                   });
    }
    populateData();

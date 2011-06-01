@@ -61,7 +61,7 @@
    var onClickNext = function(eventObj) { 
       eventObj.preventDefault();
       if (isButtonDisabled(eventObj.currentTarget)) { 
-         alert("Please complete this page before proceeding"); 
+         alert("Please complete this page before proceeding."); 
          return; 
       } 
       var surveyID = eventObj.data[0];
@@ -113,7 +113,7 @@
                                       enableButton(eventObj.data[0]); 
                                    } , 
                                    function(message) { 
-                                     alert("Failed to take photo due to ["+message+"], please try again.");
+                                     alert("Failed to take photo due to ["+message+"]. Please Try again.");
                                    } , 
                                    { 
                                      quality: 10, 
@@ -131,7 +131,7 @@
                                       enableButton(eventObj.data[0]); 
                                    }, 
                                    function(message) { 
-                                     alert("Failed to take photo due to ["+message+"], please try again.");
+                                     alert("Failed to take photo due to ["+message+"]. Please Try again.");
                                    }, 
                                    { 
                                      quality: 10, 
@@ -257,7 +257,7 @@
       //clearAll();
       // both photo and survey is saved in the below function call
       dataObj = prepareFormData(eventObj);
-      alert("Result is saved, you can upload it in the setting > status page");
+      alert("Result is saved. You can Upload it from Settings -> Status page.");
       window.location.replace("surveylist.html");
       // debug: actually submit the form 
       //uploadSurvey(dataObj);
