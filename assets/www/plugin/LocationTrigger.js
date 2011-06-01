@@ -21,6 +21,7 @@ var dataObj = {
               };
 */
 LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
+
    var resultObj = null;
    return PhoneGap.exec(successCallback, 
                         failureCallback, 

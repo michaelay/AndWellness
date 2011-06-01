@@ -73,7 +73,14 @@
     	  survey_id.push($(this).val());
             });
         
+    var dataString = {category:category,survey_id:survey_id};
+    
+    var dataObj = JSON.stringify(dataString);
+   // alert(dataObj);
+    var locationtrigger = new LocationTrigger();
+
     var dataObj = {category:category,survey_id:survey_id};    
+
     
     window.plugins.locationtrigger.set(dataObj,
     	function(r){
