@@ -145,12 +145,20 @@ function savePhoto(data) {
    allPhoto.push(data); 
    localStorage.setItem("photo", JSON.stringify(allPhoto)); 
 } 
+function clearPhoto() { 
+   var allPhoto = new Array();
+   localStorage.setItem("photo", JSON.stringify(allPhoto));
+} 
 function saveSurveyResult(newResult) {
    var allResult = getAllSurveyResult(); 
    //allResult = new Array();
    allResult.push(newResult);
    console.log(allResult);
    localStorage.setItem("survey", JSON.stringify(allResult)); 
+}
+function clearSurveyResult() { 
+   var allResult = new Array();
+   localStorage.setItem("survey", JSON.stringify(allResult));
 } 
 
 // return array of uuid->url
