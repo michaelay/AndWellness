@@ -221,7 +221,7 @@
                                };
                //savePhoto(uuid, url);
                savePhoto(photoData);
-               uploadPhoto(photoData);
+               //uploadPhoto(photoData);
             } 
             value = uuid; 
             break;
@@ -248,7 +248,7 @@
       // prepare form store both photo and datastring. 
       // not a good design here
       // TODO: consider refactoring later on
-      clearAll();
+      //clearAll();
       // both photo and survey is saved in the below function call
       dataObj = prepareFormData(eventObj);
       alert("Result is saved, you can upload it in the setting > status page");
