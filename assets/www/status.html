@@ -89,13 +89,12 @@ function onClickSurveyUpload(eventObj)
    var success = true; 
    for (var i=0; i<len; i++) { 
       var surveyResult = responses[i]; 
-      console.log(surveyResult);
       if (!uploadSurvey(surveyResult)) { 
          success = false; 
       }
    }
    if (success != true) { 
-      alert("upload failed, please try again");
+      alert("upload failed, please check network connection and try again");
    } else { 
       clearSurveyResult();
       alert("upload completed");
@@ -106,20 +105,25 @@ function onClickSurveyUpload(eventObj)
 function onClickImageUpload(eventObj) {
    var dataArray = getAllPhoto(); 
    var len = dataArray.length; 
-   var success = true; 
+   var numToUpload = 0;
    for (var i=0; i<len; i++) { 
       var dataObj = dataArray[i]; 
-      console.log(dataObj); 
-      if (!uploadPhoto(dataObj)) { 
-         success = false; 
-      } 
+      numToUpload++;
+      uploadPhoto(dataObj, 
+                  function(r) { 
+                     if (r.result == "success") { 
+                        numToUpload--;
+                        if (numToUpload == 0) { 
+                           clearPhoto();
+                           populateData();
+                           alert("photo upload completed");
+                        }  
+                     } 
+                  },
+                  function(e) { 
+                     alert("upload failed, please check network connection and try again");
+                  });
    }
-   if (success != true) { 
-      alert("upload failed, please try again");
-   } else { 
-      clearPhoto();
-      alert("upload completed");
-   } 
    populateData();
 };
 /*

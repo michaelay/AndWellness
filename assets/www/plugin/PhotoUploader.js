@@ -9,7 +9,11 @@ var PhotoUploader = function() {
  * @param failureCallback 
  */
 PhotoUploader.prototype.upload = function(dataObj,successCallback, failureCallback) {
-    return PhoneGap.exec(function(result) { 
+    return PhoneGap.exec(
+                         successCallback,
+                         failureCallback,
+/*
+                         function(result) { 
                            if (result.result == "success") {
                               alert("image upload success");
                            } else { 
@@ -19,9 +23,11 @@ PhotoUploader.prototype.upload = function(dataObj,successCallback, failureCallba
                          function(error) { 
                            alert("image upload connection failed");
                          },
+*/
                          'PhotoUploaderPlugin',
                          'upload',           //Telling the plugin, which action we want to perform
                          [dataObj]);        //Passing a list of arguments to the plugin.
+   return ret;
 };
 
 /**
