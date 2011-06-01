@@ -34,7 +34,10 @@
 	      var category = temp.unique();
 		
 	      for(i=0;i<category.length;i++){
-	            cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
+			if(i == 0)
+	          cat_list = cat_list + "<li><input type=\"radio\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
+			else
+		    cat_list = cat_list + "<li><input type=\"radio\" name=\"category\" value=" + category[i] + "/>" + category[i] + "</li>";
 	      }
 	      cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
 	      cat_list= cat_list + "</ol>";
@@ -55,16 +58,16 @@
               };
 	*/
 	
-	var category = document.getElementById("category").value; 
+	//var category = document.getElementById("category").value; 
+	var category = [];
+    	$("#category-list").find('input:radio:checked').each(function() { category.push($(this).val());});
 	var survey_id = [];
-    $("#survey-list").find('input:checkbox:checked').each(function() {
-    	  survey_id.push($(this).val());
-            });
+   	$("#survey-list").find('input:checkbox:checked').each(function() { survey_id.push($(this).val());});
         
     var dataString = {category:category,survey_id:survey_id};
     
     var dataObj = JSON.stringify(dataString);
-    
+   // alert(dataObj);
     var locationtrigger = new LocationTrigger();
     
     locationtrigger.set(dataObj,
