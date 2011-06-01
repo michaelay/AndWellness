@@ -121,6 +121,7 @@
   function addLatLngClick(event) {
  	
  	var latLng;
+ 	var conf = true;
  	
  	if(event)
  	latLng = event.latLng;
@@ -132,14 +133,13 @@
       
         if (results[1]) {
 		
-		if(!oldLocations){
-		alert("here");
+		if(event){
 		conf = confirm("Add " + results[1].formatted_address + " to "+cat_name+" ?");
 		}
 		
 		var image = "img/trigger_loc_marker_red.png"; 
 		 
-        if(conf || (oldLocations != "")){
+        if(conf){
          marker = new google.maps.Marker({
          	  address: results[1].formatted_address,
               position: latLng,
