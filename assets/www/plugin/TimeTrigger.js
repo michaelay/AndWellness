@@ -10,43 +10,38 @@ var TimeTrigger = function() {
  * @param successCallback The callback which will be called when directory listing is successful
  * @param failureCallback The callback which will be called when directory listing encouters an error
  */
-/*
-var dataObj = {
-               time: 123122, 
-               label: "1231212132", 
-               repeat: [],               
-               survey_id: "asdfas",
-              };
-{ 
-   result: "success"
-} 
 
-{ results: "failure" } 
-*/ 
 TimeTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
-/*
- return PhoneGap.exec(successCallback,    //Callback which will be called when adding time trigger is successful
- failureCallback,     //Callback which will be called when adding a time trigger encounters an error
- 'TimeTrigger',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
- 'add',              //Telling the plugin, which action we want to perform
- [time]);        //Passing a list of arguments to the plugin, in this case this is the time to be added
-*/
-   var resultObj = {
-                     result: "success"
-                   };
-   successCallback(resultObj); 
-};
 
-TimeTrigger.prototype.getAll = function(successCallback, failureCallback) {
-   var resultObj = { 
+    return PhoneGap.exec(successCallback, 
+                         failureCallback, 
+                         'TimeTriggerPlugin',
+                         'set',
+                         [dataObj]);
+    
+ }
+
+TimeTrigger.prototype.get = function(successCallback, failureCallback) {
+   
+   /* var resultObj = { 
                     result: "success",
                     triggers: [
-                               { label: "plalash1", timestamp: 1306795504, survey_id: "exerciseAndActivity", repeat: ["M","T","W","TH","F","ST","S"] },
-                               { label: "plalash_eat", timestamp: 1306795504, survey_id: "foodButton", repeat: ["ST", "S"] }
+                               { time: "2312", survey_id: ["exerciseAndActivity","foodButton"], repeat: ["Monday","Tuesday"] },
+                               { time: "1126", survey_id: ["foodButton"], repeat: ["Saturday","Sunday"] }
                
                               ]
                    };
-   successCallback(resultObj);
+    
+    successCallback(resultObj); */
+    
+    return PhoneGap.exec(successCallback,    //Callback which will be called when adding time trigger is successful
+            failureCallback,     //Callback which will be called when adding a time trigger encounters an error
+            'TimeTriggerPlugin',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
+            'get',              //Telling the plugin, which action we want to perform
+            []);        //Passing a list of arguments to the plugin, in this case this is the time to be added
+     
+    
+    
 } 
 
 /**

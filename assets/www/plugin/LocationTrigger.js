@@ -51,11 +51,6 @@ LocationTrigger.prototype.getlocation = function(successCallback, failureCallbac
    
 };
 
-LocationTrigger.prototype.removelocation = function(dataObj, successCallback, failureCallback) {
-       var resultObj = { result: "success" }; 
-       successCallback(resultObj);    
-};
-
 LocationTrigger.prototype.get = function(successCallback, failureCallback) {
    /*
     var resultObj = { 

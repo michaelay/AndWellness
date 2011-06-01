@@ -30,13 +30,13 @@ window.plugins.locationtrigger.get(
 	      var category = temp;
 	      for(i=0;i<category.length;i++){
 	       
-	    cat_list = cat_list + "<li><a href=\"loc.html?name="+category[i]+"&surveyid="+i+"\">" + category[i] + "<br/>"; 
-		cat_list = cat_list + "<span class=\"smallprint\">";
-		var surv_list = r.triggers[i].survey_id;
-		var list = "";
-		for(j=0;j<surv_list.length;j++) list = list + surv_list[j] + "&nbsp;";
-		cat_list=cat_list+ list +"</span></a></li>";
-		}
+	    	cat_list = cat_list + "<li><a href=\"loc.html?name="+category[i]+"&triggerid="+i+"\">" + category[i] + "<br/>"; 
+			cat_list = cat_list + "<span class=\"smallprint\">";
+			var surv_list = r.triggers[i].survey_id;
+			var list = "";
+			for(j=0;j<surv_list.length;j++) list = list + surv_list[j] + "&nbsp;";
+			cat_list=cat_list+ list +"</span></a></li>";
+			}
 	      cat_list = cat_list + "</ol>";
 	      document.getElementById("loctrigger-list").innerHTML=cat_list;
 	      }
@@ -51,18 +51,33 @@ window.plugins.locationtrigger.get(
 	      }
 	   );
 
-window.plugins.timetrigger.getAll(
+window.plugins.timetrigger.get(
 	      function(r){
-	      
 	      if(r.triggers.length != 0){
 	      var temp = [];
-	      var cat_list = "<ol>";
+	      var disp = [];
+	      var cat_list = "<ol>";	      
+	      
 	      for(i=0;i<r.triggers.length;i++){
-	       temp.push(r.triggers[i].label);
+	       var hr = r.triggers[i].time[0]+r.triggers[i].time[1];
+	       var min = r.triggers[i].time[2]+r.triggers[i].time[3];
+	       var ampm = "AM";
+	       if(hr>=13){
+	          	hr = hr - 12;
+	          	ampm = "PM";
+	          }
+		   disp.push(hr+":"+min+" "+ampm);
+	       temp.push(r.triggers[i].time);
 	      }
 	      var category = temp;
 	      for(i=0;i<category.length;i++){
-	      cat_list = cat_list + "<li><a href=\"time.html?id="+i+"\">" + category[i] + "</a></li>";
+	       
+	    	cat_list = cat_list + "<li><a href=\"time.html?name="+category[i]+"&triggerid="+i+"\">" + disp[i] + "<br/>"; 
+			cat_list = cat_list + "<span class=\"smallprint\">";
+			var surv_list = r.triggers[i].survey_id;
+			var list = "";
+			for(j=0;j<surv_list.length;j++) list = list + surv_list[j] + "&nbsp;";
+			cat_list=cat_list+ list +"</span></a></li>";
 			}
 	      cat_list = cat_list + "</ol>";
 	      document.getElementById("timetrigger-list").innerHTML=cat_list;

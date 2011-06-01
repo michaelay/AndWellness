@@ -1,17 +1,150 @@
 <html>
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
+   <link rel="stylesheet" href="css/default.css" type="text/css">
+   <link rel="stylesheet" href="css/default-basic.css" type="text/css">
+   <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
    <script src="http://m.ucla.edu/assets/js.php"></script>
-   <script src="http://m.ucla.edu/assets/js.php"></script>
+<script type="text/javascript" charset="utf-8" src="js/phonegap.0.9.5.js"></script>
 <script src="js/jquery-1.6.1.min.js"></script>
 <script src="js/aws_campaign.js"></script>
 <script src="js/aws_utility.js"></script>
 <script src="js/aws_auth.js"></script>
 <script src="js/jquery.cookie.js"></script>
-   <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
 <script src="plugin/TimeTrigger.js"></script>
+<script>
+
+document.addEventListener('deviceready', function() {
+	
+	var surveyids = "";
+	var repeat = "";
+	var time_trig = [];
+	
+	var listnum = -1;
+	var cat_name;
+	
+	if(gup("triggerid")){
+	listnum = gup("triggerid");
+	cat_name = gup("name");
+	}
+	
+	window.plugins.timetrigger.get(
+	      function(r){
+	      for(i=0;i<r.triggers.length;i++){
+	      
+	      		if(i != listnum){
+	      			time_trig.push(r.triggers[i]);
+	      			}	      			
+	      }
+	      
+	      if( listnum >=0){
+	      
+	      	for(i=0;i<r.triggers[listnum].survey_id.length;i++)
+	      	{
+	      		surveyids = surveyids + r.triggers[listnum].survey_id[i] + " ";
+	      	}
+	      	
+	      	for(i=0;i<r.triggers[listnum].repeat.length;i++)
+	      	{
+	      		repeat = repeat + r.triggers[listnum].repeat[i] + " ";
+	      	}
+	      	
+	      }
+	      
+	    var loader = new CampaignXMLLoader();
+   		var xmlString = loader.loadDefaultCampaign(); 
+	
+	   	// print out the titles 
+   		$(xmlString).find("survey").each(function() { 
+      	var title = $(this).children("title_t").text();
+      	var id = $(this).children("id").text();
+      			 		
+ 		if(listnum && (surveyids.indexOf(id))>=0)
+ 			$("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' checked />'+title+'</li>');
+ 		else    
+    		$("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' />'+title+'</li>');   		
+  
+		  
+  		$("#week-list").find("input:checkbox").each(function(){
+  			if(listnum && (repeat.indexOf($(this).val()))>=0)
+  			{	
+ 				$("#"+$(this).val()).attr('checked', 'checked');
+ 			}
+ 			});
+     		
+     		  
+	  	if(cat_name){
+  		//$("#"+cat_name).attr('checked', 'checked');
+  		document.getElementById("delete-button").style.display = "block";
+  		} 	
+     		
+   		});
+
+   		
+   		$("#survey-list:last-child").addClass("menu-last");	     
+	      
+	      } ,
+	      function(e){	      
+	         alert(e);
+	      }
+	   );		
+	
+		
+    var btn = document.getElementById("done");
+	btn.onclick = function(){
+	
+	var time = document.getElementById("hours").value + document.getElementById("minutes").value;
+	var repeat = [];
+    	$("#week-list").find('input:checkbox:checked').each(function() { repeat.push($(this).val());});
+	var survey_id = [];
+   	$("#survey-list").find('input:checkbox:checked').each(function() { survey_id.push($(this).val());});
+        
+    var dataObj = {time:time,repeat:repeat,survey_id:survey_id};
+    
+    time_trig.push(dataObj);
+        
+    window.plugins.timetrigger.set(time_trig,
+    	function(r){
+    	alert("Time Trigger added");    
+    	},
+  		function(e){
+		alert("Could not add Time Trigger");
+		}    
+    );
+	
+	
+	}
+	btn.disabled=false;
+	
+	var del = document.getElementById("delete");
+	del.onclick = function(){
+	    
+	    var conf = confirm("Do you want to delete this trigger?");
+	    
+	    if(conf)
+	    {
+    		window.plugins.timetrigger.set(time_trig,
+    		function(r){
+    		alert("Time Trigger deleted");    
+    		},
+  			function(e){
+			alert("Could not delete Time Trigger");
+			}    
+    		);
+    		window.location.replace("trigger.html");
+		}
+			
+	
+	}
+	
+	}, true);
+	
+
+</script>
+
+
 </head>
-<body onLoad="time_trigger()">
+<body>
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light menu-first"> Trigger Time</h1>
@@ -39,63 +172,28 @@
 	</li>
 	</ol>
 </div>
-<div class="menu-full menu-detailed menu-padded">
+<div class="menu-full menu-detailed menu-padded" id="week-list">
 	<h1 class="light form-first">Repeat</h1>
 	<ol>
-	<li><input id="mon" type="checkbox" name="mon" value="M" /> Monday</li>
-	<li><input id="tue" type="checkbox" name="tue" value="T"/> Tuesday</li>
-	<li><input id="wed" type="checkbox" name="wed" value="W"/> Wednesday</li>        <li><input id="thurs" type="checkbox" name="thurs" value="TH"/> Thursday </li>
-	<li><input id="fri" type="checkbox" name="fri" value="F" /> Friday</li>          <li><input id="sat" type="checkbox" name="sat" value="ST" /> Saturday </li>
-	<li><input id="sun" type="checkbox" name="sun" value="S"/> Sunday</li>
+	<li><input id="Monday" type="checkbox" name="mon" value="Monday" /> Monday</li>
+	<li><input id="Tuesday" type="checkbox" name="tue" value="Tuesday"/> Tuesday</li>
+	<li><input id="Wednesday" type="checkbox" name="wed" value="Wednesday"/> Wednesday</li>        <li><input id="Thursday" type="checkbox" name="thurs" value="Thursday"/> Thursday </li>
+	<li><input id="Friday" type="checkbox" name="fri" value="Friday" /> Friday</li>          <li><input id="Saturday" type="checkbox" name="sat" value="Saturday" /> Saturday </li>
+	<li><input id="Sunday" type="checkbox" name="sun" value="Sunday"/> Sunday</li>
 	</ol>
 </div>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Surveys</h1>
    <ol id="survey-list"></ol>
 </div>
+<div id="delete-button" style="display:none;">
+<a class="button-full button-light button-padded" id="delete">Delete Trigger</a>
+</div>
 <div class="button-full button-padded">
-    <a href="createnew.html" class="button-first" onClick="submit()">Done</a>
-    <a class="button-last" onClick="history.go(-1);return true;">Cancel</a>
+    <a href="trigger.html" class="button-first" id="done">Done</a>
+    <a class="button-last" href="createnew.html">Cancel</a>
 </div>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
-<script type="text/javascript">
-function time_trigger()
-{ 
-	var loader = new CampaignXMLLoader(); 
-   	var xmlString = loader.loadDefaultCampaign(); 
-
-   	// print out the titles 
-   	$(xmlString).find("survey").each(function() { 
-      var title = $(this).children("title_t").text();
-      var id = $(this).children("id").text();
-      $("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' />'+title+'</li>'); 
-   	});
-   	$("#survey-list:last-child").addClass("menu-last");
-};
-</script>
-<script type="text/javascript">
-function submit()
-{
-	var time = document.getElementById("hours").value + ":" + document.getElementById("minutes").value;
-	var repeat = [];
-    	$("#repeat").find('input:checkbox:checked').each(function() { repeat.push($(this).val());});
-	var survey_id = [];
-   	$("#survey-list").find('input:checkbox:checked').each(function() { survey_id.push($(this).val());});
-        
-    	var dataObj = {time:time,repeat:repeat,survey_id:survey_id};
-        
-	    var timetrigger = new TimeTrigger();
-    
-	    timetrigger.set(dataObj,
-	    function(r){
-	    alert("Time Trigger added");    
-	    },
-	  	function(e){
-		alert("Could not add Time Trigger");
-		}    
-	    );
-};
-</script>
 <script>
 $(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
 </script>
