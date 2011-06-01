@@ -14,10 +14,11 @@
 <body onLoad="time_trigger()">
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
-<ol>
-   <li class="menu-first"> 
-    <a style="background:none">Trigger Time (in 24 hour format)<br />
-    	<select name="hours" id="hours">
+   <h1 class="light menu-first"> Trigger Time</h1>
+   <ol>
+   <li id="inst" class="smallprint" style="text-align:center;">24 hour format</li>
+   <li align="center" style="text-align:center;">
+   <select name="hours" id="hours">
 		<script type="text/javascript">
 				for(i=0;i<=23;i++)
 				{ 
@@ -35,18 +36,18 @@
 				}
 		</script>
 	</select>
-    </a>
-   </li>
-   <li class="menu-last"> 
-    <a style="background:none">Repeat<br />
-	<ol id="repeat">
-	<input id="mon" type="checkbox" name="mon" value="M" /> Monday<br/>          <input id="tue" type="checkbox" name="tue" value="T"/> Tuesday <br/>
-	<input id="wed" type="checkbox" name="wed" value="W"/> Wednesday<br/>        <input id="thurs" type="checkbox" name="thurs" value="TH"/> Thursday <br/>
-	<input id="fri" type="checkbox" name="fri" value="F" /> Friday<br/>          <input id="sat" type="checkbox" name="sat" value="ST" /> Saturday <br/>
-	<input id="sun" type="checkbox" name="sun" value="S"/> Sunday<br/> </ol>
-    </a>
-   </li>
-</ol>
+	</li>
+	</ol>
+</div>
+<div class="menu-full menu-detailed menu-padded">
+	<h1 class="light form-first">Repeat</h1>
+	<ol>
+	<li><input id="mon" type="checkbox" name="mon" value="M" /> Monday</li>
+	<li><input id="tue" type="checkbox" name="tue" value="T"/> Tuesday</li>
+	<li><input id="wed" type="checkbox" name="wed" value="W"/> Wednesday</li>        <li><input id="thurs" type="checkbox" name="thurs" value="TH"/> Thursday </li>
+	<li><input id="fri" type="checkbox" name="fri" value="F" /> Friday</li>          <li><input id="sat" type="checkbox" name="sat" value="ST" /> Saturday </li>
+	<li><input id="sun" type="checkbox" name="sun" value="S"/> Sunday</li>
+	</ol>
 </div>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Surveys</h1>
