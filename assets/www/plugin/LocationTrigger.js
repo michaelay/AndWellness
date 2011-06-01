@@ -21,20 +21,29 @@ var dataObj = {
               };
 */
 LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
+<<<<<<< HEAD
     var resultObj = null;
    return PhoneGap.exec(function(result) { 
                            //resultObj = result; 
                           alert("success");
                           // successCallback(result);
+=======
+   var resultObj = null;
+   return PhoneGap.exec(function(result) { 
+                           resultObj = result; 
+                           alert(resultObj);
+                           //successCallback(result);
+>>>>>>> 73bad1749dd96604b2e39113934793f3ae2212fd
                         }, 
-                        function(result) { 
+                        function(result) {
                            //resultObj = { result: "failure" }; 
-                           alert("failed");
+                           //alert("failed");
                            //failureCallback(result);
                         }, 
                         'LocationTriggerPlugin',
                         'set',
                         [dataObj]);
+   
 }
 /*
    var resultObj = { result: "success" }; 
@@ -60,7 +69,7 @@ LocationTrigger.prototype.removelocation = function(dataObj, successCallback, fa
        successCallback(resultObj);    
 };
 
-LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
+LocationTrigger.prototype.get = function(successCallback, failureCallback) {
    var resultObj = { 
                     result: "success",
                     triggers: [ 

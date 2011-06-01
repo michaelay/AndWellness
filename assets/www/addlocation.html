@@ -4,6 +4,7 @@
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
    <link rel="stylesheet" href="css/aws.css" type="text/css">
 	<script src="http://m.ucla.edu/assets/js.php"></script>
+	<script type="text/javascript" charset="utf-8" src="js/phonegap.0.9.5.js"></script>
 	<script src="js/jquery-1.6.1.min.js"></script>
 	<script src="js/aws_campaign.js"></script>
 	<script src="js/aws_utility.js"></script>
@@ -22,6 +23,8 @@ var poly;
 	var browserSupportFlag =  new Boolean();
  	var cat_name = gup("name");
  	var cat_id = gup("id");
+ 	var losAng;
+ 	var markers = [];
  	
   function initialize() {
     
@@ -58,7 +61,7 @@ var poly;
     });
   } else {
     // Browser doesn't support Geolocation
-    browserSupportFlag = false;
+    browserSupportFlag = false;newyork
     handleNoGeolocation(browserSupportFlag);
   }
    
@@ -71,16 +74,13 @@ var poly;
   
   function handleNoGeolocation(errorFlag) {
   if (errorFlag == true) {
-    initialLocation = newyork;
+    initialLocation = losAng;
     contentString = "Error: The Geolocation service failed.";
   } else {
     initialLocation = siberia;
     contentString = "Error: Your browser doesn't support geolocation. Are you in Siberia?";
   }
   map.setCenter(initialLocation);
-  infowindow.setContent(contentString);
-  infowindow.setPosition(initialLocation);
-  infowindow.open(map);
 }
    
    function delLatLng(event){
@@ -94,7 +94,15 @@ var poly;
 				var conf = confirm("Remove " + results[1].formatted_address + " from "+cat_name+" ?");
 		  if(conf){
           marker.setMap(null);
-          map.setCenter(event.latLng,1);
+          map.setCenter(event.latLng,1);  
+          
+          for(var i = markers.length-1; i >= 0; i--){ 
+          		if(markers[i] == marker){ 
+        				markers.splice(i,1);   
+    			}
+         	} 
+         
+          
         }
         
         }  
@@ -118,10 +126,12 @@ var poly;
 		 
         if(conf){
          marker = new google.maps.Marker({
+         	  address: results[0].formatted_address,
               position: results[0].geometry.location,
               map: map,
               icon: image
           });
+          markers.push(marker);
           map.setCenter(results[0].geometry.location);
           google.maps.event.addListener(marker, 'click', delLatLng);
         }    
@@ -152,10 +162,12 @@ var poly;
 		 
         if(conf){
          marker = new google.maps.Marker({
+         	  address: results[1].formatted_address,
               position: latLng, 
               map: map,
               icon: image
           });
+          markers.push(marker);
           map.setCenter(latLng,1);
           google.maps.event.addListener(marker, 'click', delLatLng);
         }
@@ -182,7 +194,7 @@ var poly;
 <div class="menu-full menu-detailed menu-padded" id="map_search">
    <ol>
    <li class="menu-first">
-   <a onClick="addLatLngSearch()" style="background:url(img/search-button.png) no-repeat scroll 90% center transparent"><input type="text" id="address" /></a>
+   <a onClick="addLatLngSearch()" style="background:url(img/search-button.png) no-repeat scroll 95% center transparent"><input type="text" id="address" /></a>
    </li>
    <li class="menu-last">
    <a onClick="addLatLngClick()">Add Current Location</a> 

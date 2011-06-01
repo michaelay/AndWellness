@@ -32,15 +32,15 @@ var authenticate = function(username, password) {
       success: function (data) { 
          token = data.token;
          // stored in session cookie
-         $.cookie('u', username); 
-         $.cookie('p', bcryptPassword(password));
-         $.cookie('t', token);
+         sessionStorage.u = username; 
+         sessionStorage.p = bcryptPassword(password);
+         sessionStorage.t = token;
       },
       error: function(jqXHR, textStatus, errorThrown) { 
          // remove cookie otherwise
-         $.cookie('u', "", { expires: -1} ); 
-         $.cookie('p', "", { expires: -1} );
-         $.cookie('t', "", { expires: -1} );
+         sessionStorage.u = ""; 
+         sessionStorage.p = "";
+         sessionStorage.t = "";
       }
 /*
       complete: function(jqXHR, textStatus) { 
@@ -53,16 +53,16 @@ var authenticate = function(username, password) {
  * Logout 
  */
 var logout = function() { 
-   $.cookie('u', "", { expires: -1} );
-   $.cookie('p', "", { expires: -1} );
-   $.cookie('t', "", { expires: -1} );
+    sessionStorage.u = ""; 
+    sessionStorage.p = "";
+    sessionStorage.t = "";
 };
 var getLogin = function() { 
-   var u = $.cookie('u');
-   var p = $.cookie('p');
-   var t = $.cookie('t');
+   var u = sessionStorage.u;
+   var p = sessionStorage.p;
+   var t = sessionStorage.t;
    if (u && p && t) {
-      return [u, p, t]; 
+      return [u, p, t];
    } else { 
       return null;
    } 
@@ -71,25 +71,14 @@ var getLogin = function() {
  * Get the auth token for use in AndWellness APIs
  */  
 var getAuthToken = function() { 
-   return $.cookie("t"); 
+   return sessionStorage.t; 
 };
 var getUsername = function() { 
-   return $.cookie("u"); 
+   return sessionStorage.u; 
 }; 
 var getPasswordHash = function() { 
-   return $.cookie("p"); 
+   return sessionStorage.p; 
 };  
-
-// helper methods, do not call directly
-/*
-var setAuthToken = function(token) { 
-   // omit expiry date, a session cookie, deleted when browse is closed 
-   $.cookie("token", token);
-} 
-var deleteAuthToken = function() { 
-   $.cookie("token", "", { expires: -1} );
-}
-*/
 
 /**
  * Upload photo 
@@ -138,6 +127,7 @@ var uploadSurvey = function(dataObj) {
                  + "&p=" + dataObj.p
                  + "&ci=" + dataObj.ci
                  + "&d=" + dataObj.d;
+   var result = false; 
    $.ajax({
       url: 'https://students.andwellness.org/app/u/survey',
       data: post_data,
@@ -146,11 +136,15 @@ var uploadSurvey = function(dataObj) {
       async: false,
       success: function(data) {
          if (data.result != "success") { 
-            alert("failed with error: " + data.errors[0].text);
+            result = false; 
+            console.log(data);
+         } else { 
+            result = true;
          } 
       }, 
       error: function(jqXHR, textStatus, errorThrown) { 
-         alert("failed to upload survey");
+         result = false; 
       }
-   }); 
+   });
+   return result; 
 };

@@ -3,23 +3,37 @@
  */
 package edu.ucla.cens.andwellness.mobile.plugin;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Environment;
+
 import com.phonegap.api.Plugin;
 import com.phonegap.api.PluginResult;
 import com.phonegap.api.PluginResult.Status;
-
-import edu.ucla.cens.andwellness.triggers.types.location.LocTrigDesc;
 
 /**
  * @author mistralay
  *
  */
 public class LocationTriggerPlugin extends Plugin {
+	
+    String myString = null;
+    String EXTFILENAME = "blah.txt";
+    File root = Environment.getExternalStorageDirectory();
+    File myfile = new File(root, EXTFILENAME);
 	
 	/* (non-Javadoc)
 	 * @see com.phonegap.api.Plugin#execute(java.lang.String, org.json.JSONArray, java.lang.String)
@@ -32,29 +46,29 @@ public class LocationTriggerPlugin extends Plugin {
 			JSONObject dataObject;
 			try {
 								
+				myString = data.getString(0);
 				dataObject = data.getJSONObject(0);
-//				String category = dataObject.getString("category");
-//				String label = dataObject.getString("label");
-//				String surveyId = dataObject.getString("survey_id");
+								
+				
+				//String category = dataObject.getString("category");
+				//String surveyId = dataObject.getString("survey_id");
 //				long latitude = dataObject.getLong("latitude");
 //				long longitude = dataObject.getLong("longitude");
 //				JSONArray repeatArray = dataObject.getJSONArray("repeat");
 				
 //			    FileOutputStream out = new FileOutputStream("/sdcard/location_temp.jpg");
 			   
-
 				
-				
-//				LocTrigDesc trigDesc = new LocTrigDesc();
-//				trigDesc.setRangeEnabled(false);
-//				trigDesc.setTriggerAlways(false);
-//				trigDesc.setLocation(label);
-//				trigDesc.setMinReentryInterval(120);
-				
-				
-				JSONObject apiResult = new JSONObject();
-				apiResult.put("result", "success");
-				result = new PluginResult(Status.OK, apiResult); 
+				try {
+					writeToExternal();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+				//JSONObject apiResult = new JSONObject();
+				//apiResult.put("result", "success");
+				result = new PluginResult(Status.OK, dataObject); 
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -91,6 +105,19 @@ public class LocationTriggerPlugin extends Plugin {
 		
 		
 		return result;
+	}
+	
+	private void writeToExternal() throws IOException {
+		// TODO Auto-generated method stub
+		
+		try {
+			OutputStream out = new FileOutputStream(myfile, false);
+			out.write(myString.getBytes());
+			out.close();
+		} catch (FileNotFoundException e) {
+			//e.printStackTrace();
+		}
+		
 	}
 
 }
