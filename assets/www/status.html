@@ -3,7 +3,7 @@
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
 </head>
-<body onload="check()">
+<body>
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <ol>
@@ -16,7 +16,7 @@
    </li>
    <li> 
     <a style="background:none"># of survey responses not yet uploaded: <span class="smallprint" id="survey_up"></span><br/>
-    <input type="button" name="survey_up" value="Upload Now" style="float:left;width:15%;display:block" onClick="func1()"/>
+    <input type="button" name="survey_up" value="Upload Now" style="float:left;width:15%;display:block" onClick="onClickSurveyUpload()"/>
     <br/><br/></a>   
    </li>
    <li> 
@@ -67,17 +67,32 @@
 <script src="js/phonegap.0.9.5.js"></script>
 <script src="plugin/PhotoUploader.js"></script>
 <script>
-function check()
+function populateData()
 {
-   document.getElementById("user").innerHTML = $.cookie('u');
-   document.getElementById("survey_up").innerHTML = (getAllSurveyResult()).length;
-   document.getElementById("image_up").innerHTML = (getAllPhoto()).length;
+   $("#user").text(getUsername());
+   $("#survey_up").text(getAllSurveyResult().length);
+   $("#image_up").text(getAllPhoto().length);
    return true;
 }
-function func1() 
+function onClickSurveyUpload() 
 {
-   responses = getAllSurveyResult();
-   document.getElementById("test").innerHTML = responses.length;
+   var responses = getAllSurveyResult();
+   var len = responses.length;
+   var success = true; 
+   for (var i=0; i<len; i++) { 
+      var surveyResult = responses[i]; 
+      console.log(surveyResult);
+      if (!uploadSurvey(surveyResult)) { 
+         success = false; 
+      }
+   }
+   if (success != true) { 
+      alert("upload failed, please try again");
+   } else { 
+      clearSurveyResult();
+      alert("upload completed");
+   } 
+   populateData();
 }
 function func2() {};
 function func3() {};
@@ -92,7 +107,11 @@ function cancel() {
 };
 */
 // check login 
-$(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
+$(document).ready(function() { 
+   if (getLogin() == null) { window.location.replace("index.html"); }
+
+   populateData();
+});
 
 
 </script>
