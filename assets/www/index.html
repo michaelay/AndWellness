@@ -25,7 +25,7 @@
 <script src="plugin/LocationTrigger.js"></script>
 <script>
 $(document).ready(function() {
-   if (getLogin()) { 
+   if (getLogin() != null) { 
       window.location.replace("surveylist.html"); 
    } 
    $("#login").click(function() { 
