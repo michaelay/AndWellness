@@ -226,8 +226,10 @@
             value = uuid; 
             break;
          } 
-         responses.push({prompt_id: promptId,
-                         value: value});
+         if (value) { 
+            responses.push({prompt_id: promptId,
+                            value: value});
+         } 
       });
       console.log(JSON.stringify(responses));
       dEntry.responses = responses;
