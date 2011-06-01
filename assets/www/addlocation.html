@@ -16,9 +16,7 @@
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	<script type="text/javascript">
   
-  document.addEventListener('deviceready', function() {
-
-	var poly;
+  	var poly;
 	var geocoder;
 	var map;
 	var marker;
@@ -29,6 +27,10 @@
  	var cat_id = gup("id");
  	var losAng;
  	var markers = [];
+  
+	function initialize(){  
+
+	
     
   	document.getElementById("category").innerHTML = cat_name;
   
@@ -72,6 +74,7 @@
     // Add a listener for the click event
     google.maps.event.addListener(map, 'click', addLatLngClick);
     
+  }
   
   function handleNoGeolocation(errorFlag) {
   if (errorFlag == true) {
@@ -115,55 +118,25 @@
    
    }
    
-  function addLatLngSearch() {
-  
-    var address = document.getElementById("address").value;
-    alert("here");
-    document.getElementById("address").value = "" ;
-    geocoder.geocode( { 'address': address}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-      
-  		var conf = confirm("Add " + results[0].formatted_address + " to "+cat_name+" ?");
-		 
-		var image = "img/trigger_loc_marker_red.png"; 
-		 
-        if(conf){
-         marker = new google.maps.Marker({
-         	  address: results[0].formatted_address,
-              position: results[0].geometry.location,
-              map: map,
-              icon: image
-          });
-          markers.push(marker);
-          map.setCenter(results[0].geometry.location);
-          google.maps.event.addListener(marker, 'click', delLatLng);
-        }    
-      
-      } else if(address != ""){
-        alert("Could not find the address. Please Try again.");
-      }
-    });
-  } 
-    
   function addLatLngClick(event) {
  	
  	var latLng;
  	
  	if(event)
  	latLng = event.latLng;
- 	else if(oldLocations != "")
+ 	else if(oldLocations)
  	latLng = oldLocations;
- 	else if()
- 	latLng = initialLocation;
- 
+ 	
 	geocoder.geocode({'latLng': latLng}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
       
         if (results[1]) {
 		
-		if(oldLocations == "")
+		if(!oldLocations){
+		alert("here");
 		conf = confirm("Add " + results[1].formatted_address + " to "+cat_name+" ?");
-		 
+		}
+		
 		var image = "img/trigger_loc_marker_red.png"; 
 		 
         if(conf || (oldLocations != "")){
@@ -188,44 +161,8 @@
         
   }
   
-  function addLatLngCurr() {
- 	
- 	var latLng;
- 	
- 	latLng = initialLocation;
- 
-	geocoder.geocode({'latLng': latLng}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-      
-        if (results[1]) {
-		
-		if(oldLocations == "")
-		conf = confirm("Add " + results[1].formatted_address + " to "+cat_name+" ?");
-		 
-		var image = "img/trigger_loc_marker_red.png"; 
-		 
-        if(conf || (oldLocations != "")){
-         marker = new google.maps.Marker({
-         	  address: results[1].formatted_address,
-              position: latLng,
-              map: map,
-              icon: image
-          });
-          markers.push(marker);
-          map.setCenter(latLng,1);
-          google.maps.event.addListener(marker, 'click', delLatLng);
-        }
-          
-        } else {
-          alert("No results found");
-        }
-      } else {
-        alert("Could not locate the point. Please Try again.");
-      }
-    }); 
-        
-  }
   
+  document.addEventListener('deviceready', function() {
   var btn = document.getElementById("done");
   btn.onclick = function(){
 	
@@ -268,12 +205,12 @@
             	for(j=0;j<r.types[i].locations.length;j++)
       			{      
       				oldLocations = new google.maps.LatLng(r.types[i].locations[j].Ia, r.types[i].locations[j].Ja);
-      				addLatLngClick(); 
+      				addLatLngClick();
             	}
             }
       }
       
-      oldLocations = "";
+      oldLocations = false;
       
    }
    ,
@@ -289,10 +226,81 @@
    
 	,true);
   
+  
+   
+  function addLatLngSearch() {
+  
+    var address = document.getElementById("address").value;
+    document.getElementById("address").value = "" ;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+      
+  		var conf = confirm("Add " + results[0].formatted_address + " to "+cat_name+" ?");
+		 
+		var image = "img/trigger_loc_marker_red.png"; 
+		 
+        if(conf){
+         marker = new google.maps.Marker({
+         	  address: results[0].formatted_address,
+              position: results[0].geometry.location,
+              map: map,
+              icon: image
+          });
+          markers.push(marker);
+          map.setCenter(results[0].geometry.location);
+          google.maps.event.addListener(marker, 'click', delLatLng);
+        }    
+      
+      } else if(address != ""){
+        alert("Could not find the address. Please Try again.");
+      }
+    });
+  } 
+    
+  
+  function addLatLngCurr() {
+ 	
+ 	var latLng;
+ 	
+ 	latLng = initialLocation;
+ 
+	geocoder.geocode({'latLng': latLng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+      
+        if (results[1]) {
+		
+		if(oldLocations == "")
+		conf = confirm("Add " + results[1].formatted_address + " to "+cat_name+" ?");
+		 
+		var image = "img/trigger_loc_marker_red.png"; 
+		 
+        if(conf || (oldLocations != "")){
+         marker = new google.maps.Marker({
+         	  address: results[1].formatted_address,
+              position: latLng,
+              map: map,
+              icon: image
+          });
+          markers.push(marker);
+          map.setCenter(latLng,1);
+          google.maps.event.addListener(marker, 'click', delLatLng);
+        }
+          
+        } else {
+          alert("No results found");
+        }
+      } else {
+        alert("Could not locate the point. Please Try again.");
+      }
+    }); 
+        
+  }
+  
+  
 	</script>
  
 </head>
-<body>
+<body onload="initialize()">
 <h1 id="header" class="header center">AndWellness</h1>
 <form class="form-full form-padded">
    <h1 class="light form-first" id="category"></h1>
