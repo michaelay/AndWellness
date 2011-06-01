@@ -60,7 +60,11 @@
               };
 	*/
 	
-	var category = document.getElementById("category").value; 
+	//var category = document.getElementById("category").value; 
+	
+	var category = [];
+    	$("#category-list").find('input:radio:checked').each(function() { category.push($(this).val());});
+    	
 	var survey_id = [];
     $("#survey-list").find('input:checkbox:checked').each(function() {
     	  survey_id.push($(this).val());
