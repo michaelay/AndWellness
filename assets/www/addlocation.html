@@ -22,6 +22,7 @@ var poly;
 	var browserSupportFlag =  new Boolean();
  	var cat_name = gup("name");
  	var cat_id = gup("id");
+ 	var losAng;
  	
   function initialize() {
     
@@ -58,7 +59,7 @@ var poly;
     });
   } else {
     // Browser doesn't support Geolocation
-    browserSupportFlag = false;
+    browserSupportFlag = false;newyork
     handleNoGeolocation(browserSupportFlag);
   }
    
@@ -71,16 +72,13 @@ var poly;
   
   function handleNoGeolocation(errorFlag) {
   if (errorFlag == true) {
-    initialLocation = newyork;
+    initialLocation = losAng;
     contentString = "Error: The Geolocation service failed.";
   } else {
     initialLocation = siberia;
     contentString = "Error: Your browser doesn't support geolocation. Are you in Siberia?";
   }
   map.setCenter(initialLocation);
-  infowindow.setContent(contentString);
-  infowindow.setPosition(initialLocation);
-  infowindow.open(map);
 }
    
    function delLatLng(event){

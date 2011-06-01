@@ -233,20 +233,20 @@ public abstract class TriggerBase {
 		
 		//Save the trigger desc. Use default desc for notification, action
 		// and run time
-		int trigId = (int) db.addTrigger(this.getTriggerType(), trigDesc,
+		/*int trigId = (int) db.addTrigger(this.getTriggerType(), trigDesc,
 					  			   		TriggerActionDesc.getDefaultDesc(),
 					  			   		NotifDesc.getDefaultDesc(context),
-					  			   		TriggerRunTimeDesc.getDefaultDesc());
+					  			   		TriggerRunTimeDesc.getDefaultDesc());*/
 		
-		String actDesc = db.getActionDescription(trigId);
+		/*String actDesc = db.getActionDescription(trigId);
 		db.close();
 	
 		//If the action has a positive number of surveys, 
 		//start the trigger. 
 		TriggerActionDesc desc = new TriggerActionDesc();
 		if(desc.loadString(actDesc) && desc.getCount() > 0) {
-			startTrigger(context, trigId, trigDesc);
-		}	
+			startTrigger(context, trigId, trigDesc);*/
+		//}	
 	}
 	
 	/*

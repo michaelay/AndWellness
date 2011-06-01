@@ -32,15 +32,15 @@ var authenticate = function(username, password) {
       success: function (data) { 
          token = data.token;
          // stored in session cookie
-         $.cookie('u', username); 
-         $.cookie('p', bcryptPassword(password));
-         $.cookie('t', token);
+         sessionStorage.u = username; 
+         sessionStorage.p = bcryptPassword(password);
+         sessionStorage.t = token;
       },
       error: function(jqXHR, textStatus, errorThrown) { 
          // remove cookie otherwise
-         $.cookie('u', "", { expires: -1} ); 
-         $.cookie('p', "", { expires: -1} );
-         $.cookie('t', "", { expires: -1} );
+         sessionStorage.u = ""; 
+         sessionStorage.p = "";
+         sessionStorage.t = "";
       }
 /*
       complete: function(jqXHR, textStatus) { 
@@ -53,16 +53,16 @@ var authenticate = function(username, password) {
  * Logout 
  */
 var logout = function() { 
-   $.cookie('u', "", { expires: -1} );
-   $.cookie('p', "", { expires: -1} );
-   $.cookie('t', "", { expires: -1} );
+    sessionStorage.u = ""; 
+    sessionStorage.p = "";
+    sessionStorage.t = "";
 };
 var getLogin = function() { 
-   var u = $.cookie('u');
-   var p = $.cookie('p');
-   var t = $.cookie('t');
+   var u = sessionStorage.u;
+   var p = sessionStorage.p;
+   var t = sessionStorage.t;
    if (u && p && t) {
-      return [u, p, t]; 
+      return [u, p, t];
    } else { 
       return null;
    } 
@@ -71,13 +71,13 @@ var getLogin = function() {
  * Get the auth token for use in AndWellness APIs
  */  
 var getAuthToken = function() { 
-   return $.cookie("t"); 
+   return sessionStorage.t; 
 };
 var getUsername = function() { 
-   return $.cookie("u"); 
+   return sessionStorage.u; 
 }; 
 var getPasswordHash = function() { 
-   return $.cookie("p"); 
+   return sessionStorage.p; 
 };  
 
 /**
