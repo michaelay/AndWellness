@@ -40,13 +40,13 @@ LocationTrigger.prototype.addlocation = function(dataObj, successCallback, failu
       
 };
 
-LocationTrigger.prototype.getlocation = function(dataObj, successCallback, failureCallback) {
+LocationTrigger.prototype.getlocation = function(successCallback, failureCallback) {
     
     return PhoneGap.exec(successCallback,    //Callback which will be called when adding time trigger is successful
                          failureCallback,     //Callback which will be called when adding a time trigger encounters an error
                          'LocationTriggerPlugin',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
                          'getloc',              //Telling the plugin, which action we want to perform
-                         [dataObj]);        //Passing a list of arguments to the plugin, in this case this is the time to be added
+                         []);        //Passing a list of arguments to the plugin, in this case this is the time to be added
    
 };
 

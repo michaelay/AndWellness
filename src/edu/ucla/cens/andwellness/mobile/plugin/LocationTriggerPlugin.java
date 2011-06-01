@@ -37,6 +37,7 @@ public class LocationTriggerPlugin extends Plugin {
 	/* (non-Javadoc)
 	 * @see com.phonegap.api.Plugin#execute(java.lang.String, org.json.JSONArray, java.lang.String)
 	 */
+	@SuppressWarnings("null")
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;
@@ -64,7 +65,34 @@ public class LocationTriggerPlugin extends Plugin {
 					e1.printStackTrace();
 				}
 				
-				ObjArr.put(dataObject);
+				
+				if(action.equals("addloc"))
+				{
+						if(dataObject.getString("category").equals("Home"))
+						{
+							ObjArr.put(0, dataObject);
+							if(ObjArr.isNull(1)){
+								JSONObject temp = new JSONObject();
+								JSONArray location = new JSONArray();
+								temp.put("category", "Work");
+								temp.put("locations", location);
+								ObjArr.put(1, temp);
+							}
+						}	
+						else
+						{
+							ObjArr.put(1, dataObject);
+							if(ObjArr.isNull(0)){
+								JSONObject temp = new JSONObject();
+								JSONArray location = new JSONArray();
+								temp.put("category", "Home");
+								temp.put("locations", location);
+								ObjArr.put(0, temp);
+							}
+						}
+						
+				}
+				
 				
 				myString = ObjArr.toString();
 				try {
@@ -95,7 +123,7 @@ public class LocationTriggerPlugin extends Plugin {
 			String EXTFILENAME = null;
 			
 			if(action.equals("get"))
-			EXTFILENAME = "location_triggers.txt";
+			EXTFILENAME = "location_triggers.txt";	
 			else if(action.equals("getloc"))
 			EXTFILENAME = "locations.txt";
 			
@@ -103,6 +131,7 @@ public class LocationTriggerPlugin extends Plugin {
 			
 			try {
 				ObjArr = readFromExternal(EXTFILENAME);
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -117,7 +146,7 @@ public class LocationTriggerPlugin extends Plugin {
 				if(action.equals("get"))
 					dataObj.put("triggers", ObjArr);
 				else if(action.equals("getloc"))
-					dataObj.put("locations", ObjArr);
+					dataObj.put("types", ObjArr);
 					
 				result = new PluginResult(Status.OK, dataObj);
 			} catch (JSONException e) {

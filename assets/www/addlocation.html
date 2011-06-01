@@ -23,6 +23,7 @@
 	var map;
 	var marker;
 	var initialLocation;
+	var oldLocations;
 	var browserSupportFlag =  new Boolean();
  	var cat_name = gup("name");
  	var cat_id = gup("id");
@@ -115,7 +116,9 @@
    }
    
   function addLatLngSearch() {
+  
     var address = document.getElementById("address").value;
+    alert("here");
     document.getElementById("address").value = "" ;
     geocoder.geocode( { 'address': address}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
@@ -148,7 +151,9 @@
  	
  	if(event)
  	latLng = event.latLng;
- 	else
+ 	else if(oldLocations != "")
+ 	latLng = oldLocations;
+ 	else if()
  	latLng = initialLocation;
  
 	geocoder.geocode({'latLng': latLng}, function(results, status) {
@@ -156,14 +161,53 @@
       
         if (results[1]) {
 		
-		var conf = confirm("Add " + results[1].formatted_address + " to "+cat_name+" ?");
+		if(oldLocations == "")
+		conf = confirm("Add " + results[1].formatted_address + " to "+cat_name+" ?");
 		 
 		var image = "img/trigger_loc_marker_red.png"; 
 		 
-        if(conf){
+        if(conf || (oldLocations != "")){
          marker = new google.maps.Marker({
          	  address: results[1].formatted_address,
-              position: latLng, 
+              position: latLng,
+              map: map,
+              icon: image
+          });
+          markers.push(marker);
+          map.setCenter(latLng,1);
+          google.maps.event.addListener(marker, 'click', delLatLng);
+        }
+          
+        } else {
+          alert("No results found");
+        }
+      } else {
+        alert("Could not locate the point. Please Try again.");
+      }
+    }); 
+        
+  }
+  
+  function addLatLngCurr() {
+ 	
+ 	var latLng;
+ 	
+ 	latLng = initialLocation;
+ 
+	geocoder.geocode({'latLng': latLng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+      
+        if (results[1]) {
+		
+		if(oldLocations == "")
+		conf = confirm("Add " + results[1].formatted_address + " to "+cat_name+" ?");
+		 
+		var image = "img/trigger_loc_marker_red.png"; 
+		 
+        if(conf || (oldLocations != "")){
+         marker = new google.maps.Marker({
+         	  address: results[1].formatted_address,
+              position: latLng,
               map: map,
               icon: image
           });
@@ -213,8 +257,37 @@
     );
 	
 	}
+	  
+   window.plugins.locationtrigger.getlocation(
+   function(r){
+      for(i=0;i<r.types.length;i++)
+      {   
+      
+		if(r.types[i].category == cat_name)
+            {
+            	for(j=0;j<r.types[i].locations.length;j++)
+      			{      
+      				oldLocations = new google.maps.LatLng(r.types[i].locations[j].Ia, r.types[i].locations[j].Ja);
+      				addLatLngClick(); 
+            	}
+            }
+      }
+      
+      oldLocations = "";
+      
+   }
+   ,
+   function(e){
+   confirm(e);
+   }
+           
+   );
 	
-	},true);
+	
+	}
+	
+   
+	,true);
   
 	</script>
  
@@ -229,10 +302,10 @@
 <div class="menu-full menu-detailed menu-padded" id="map_search">
    <ol>
    <li class="menu-first">
-   <a onClick="addLatLngSearch()" style="background:url(img/search-button.png) no-repeat scroll 95% center transparent"><input type="text" id="address" /></a>
+   <a id="search" onClick="addLatLngSearch()" style="background:url(img/search-button.png) no-repeat scroll 95% center transparent"><input type="text" id="address" /></a>
    </li>
    <li class="menu-last">
-   <a onClick="addLatLngClick()">Add Current Location</a> 
+   <a id="current" onClick="addLatLngCurr()">Add Current Location</a> 
    </li>
    </ol>
 </div>

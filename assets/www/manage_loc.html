@@ -4,6 +4,7 @@
    <link rel="stylesheet" href="css/default.css" type="text/css">
    <link rel="stylesheet" href="css/default-basic.css" type="text/css">
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
+   <script type="text/javascript" charset="utf-8" src="js/phonegap.0.9.5.js"></script>
    <script src="http://m.ucla.edu/assets/js.php"></script>
    <script src="js/jquery-1.6.1.min.js"></script>
    <script src="js/aws_campaign.js"></script>
@@ -12,44 +13,28 @@
    <script src="js/jquery.cookie.js"></script>
    <script src="plugin/LocationTrigger.js"></script>
    <script>
-   function get_location_list(){
    
-   var locationtrigger = new LocationTrigger();
-   var temp =[];
+   document.addEventListener('deviceready', function() {
    
-   locationtrigger.getlocation(
-   function(r){
-      for(i=0;i<r.locations.length;i++){
-      temp.push(r.locations[i].category);  
-      }
-   var category = temp.unique();
+   var category =[];
    var count = [];
    
-      for(i=0;i<category.length;i++){
-      count[i] = 0; 
-      for(j=0;j<r.locations.length;j++){
-            if(category[i] == r.locations[j].category)
-            count[i] = count[i] + 1;   
+   window.plugins.locationtrigger.getlocation(
+   function(r){
+      for(i=0;i<r.types.length;i++)
+      $("#"+r.types[i].category).text(r.types[i].locations.length+" Locations already added");      
       }
-      //cat_list = cat_list + "<li><a href=\"addlocation.html?id="+ i +"&name="+category[i]+"\">" + category[i] + "<br /><span class=\"smallprint\">"+count[i]+" Locations already added</span></a></li>";
-      $("#"+category[i]).text(count[i]+" Locations already added");
-      }
-   
-   //cat_list= cat_list + "</ol>";
-   
-   //document.getElementById("category-list").innerHTML=cat_list;
-   
-   }
    ,
    function(e){
    confirm(e);
    }
-         
+           
    ); 
-   }  
+   }, true);
+   
    </script>
 </head>
-<body onLoad="get_location_list()">
+<body>
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Trigger Location</h1>
