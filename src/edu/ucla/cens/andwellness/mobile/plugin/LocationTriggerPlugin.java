@@ -42,7 +42,7 @@ public class LocationTriggerPlugin extends Plugin {
 		PluginResult result = null;
 		
 		
-		if (action.equals("addloc")) {
+		if (action.equals("set") || action.equals("addloc")) {
 			
 			JSONObject dataObject;
 			JSONArray ObjArr = null;
@@ -81,6 +81,14 @@ public class LocationTriggerPlugin extends Plugin {
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				JSONObject apiResult = new JSONObject();
+				try {
+					apiResult.put("result", "failed");
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				result = new PluginResult(Status.JSON_EXCEPTION, apiResult);
 			}
 		}else if (action.equals("get") || action.equals("getloc")){
 		

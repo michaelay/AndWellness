@@ -13,9 +13,10 @@
 	<script src="js/aws_auth.js"></script>
 	<script src="js/jquery.cookie.js"></script>
 	<script src="plugin/LocationTrigger.js"></script>
-	<script src="plugin/gmaps.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	<script type="text/javascript">
+  
+  document.addEventListener('deviceready', function() {
 
 	var poly;
 	var geocoder;
@@ -27,8 +28,6 @@
  	var cat_id = gup("id");
  	var losAng;
  	var markers = [];
- 	
-  function initialize() {
     
   	document.getElementById("category").innerHTML = cat_name;
   
@@ -72,7 +71,6 @@
     // Add a listener for the click event
     google.maps.event.addListener(map, 'click', addLatLngClick);
     
-  }
   
   function handleNoGeolocation(errorFlag) {
   if (errorFlag == true) {
@@ -184,25 +182,28 @@
         
   }
   
-  function submit(){
+  var btn = document.getElementById("done");
+  btn.onclick = function(){
 	
 	/*
 	var dataObj = {
-               category: "1231212132",
-               markers:[
-               			{address: results[0].formatted_address,
-              			position: results[0].geometry.location,
-              			map: map,
-              			icon: image}
+               category: "Home",
+               locations:[
+               				{"Ja":31313,"Ia":131313},
+							{"Ja":31313,"Ia":131313}
                			]
               };
 	*/
+	 
+	 var latLng = []; 
+	for(i=0;i<markers.length;i++)
+	{
+	latLng.push(markers[i].position);
+	}  
 	    
-    var dataObj = {category:cat_name,markers:markers};
-    
-    var locationtrigger = new LocationTrigger();
-    
-    locationtrigger.addlocation(dataObj,
+    var dataObj = {category:cat_name,locations:latLng};
+     
+    window.plugins.locationtrigger.addlocation(dataObj,
     function(r){
     alert("Location Trigger added");    
     },
@@ -212,11 +213,13 @@
     );
 	
 	}
+	
+	},true);
   
 	</script>
  
 </head>
-<body onLoad="initialize()">
+<body>
 <h1 id="header" class="header center">AndWellness</h1>
 <form class="form-full form-padded">
    <h1 class="light form-first" id="category"></h1>
@@ -235,8 +238,8 @@
 </div>
 
 <div class="button-full button-padded">
-    <a href="manage_loc.html" class="button-first" onClick="submit()">Done</a>
-    <a class="button-last" onClick="history.go(-1);return true;">Cancel</a>
+    <a href="manage_loc.html" id="done" class="button-first">Done</a>
+    <a class="button-last" href="manage_loc.html">Cancel</a>
 </div>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
