@@ -1,7 +1,10 @@
 <html>
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
+   <link rel="stylesheet" href="css/default.css" type="text/css">
+   <link rel="stylesheet" href="css/default-basic.css" type="text/css">
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
+   <script type="text/javascript" charset="utf-8" src="js/phonegap.0.9.5.js"></script>
    <script src="http://m.ucla.edu/assets/js.php"></script>
    <script src="js/jquery-1.6.1.min.js"></script>
    <script src="js/aws_campaign.js"></script>
@@ -10,51 +13,43 @@
    <script src="js/jquery.cookie.js"></script>
    <script src="plugin/LocationTrigger.js"></script>
    <script>
-   function get_location_list(){
    
-   var locationtrigger = new LocationTrigger();
-   var temp =[];
+   document.addEventListener('deviceready', function() {
    
-   locationtrigger.get(
-   function(r){
-   var cat_list = "<ol>";
-      for(i=0;i<r.triggers.length;i++){
-      temp.push(r.triggers[i].category);  
-      }
-   var category = temp.unique();
+   var category =[];
    var count = [];
    
-      for(i=0;i<category.length;i++){
-      count[i] = 0; 
-      for(j=0;j<r.triggers.length;j++){
-            if(category[i] == r.triggers[j].category)
-            count[i] = count[i] + 1;   
+   window.plugins.locationtrigger.getlocation(
+   function(r){
+      for(i=0;i<r.types.length;i++)
+      $("#"+r.types[i].category).text(r.types[i].locations.length+" Locations already added");      
       }
-      cat_list = cat_list + "<li><a href=\"addlocation.html?id="+ i +"&name="+category[i]+"\">" + category[i] + "<br /><span class=\"smallprint\">"+count[i]+" Locations already added</span></a></li>";
-      }
-   
-   //cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
-   cat_list= cat_list + "</ol>";
-   document.getElementById("category-list").innerHTML=cat_list;
-   }
    ,
    function(e){
    confirm(e);
    }
-         
+           
    ); 
-   }  
+   }, true);
+   
    </script>
 </head>
-<body onLoad="get_location_list()">
+<body>
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Trigger Location</h1>
-   <div id="category-list"></div>
+   <div id="category-list">
+   <ol>
+   <li>
+   <a href="addlocation.html?id=1&name=Home">Home<br /><span class="smallprint"><div id="Home">0 Locations already added</div></span></a>
+   </li>
+   <li><a href="addlocation.html?id=2&name=Work">Work<br /><span class="smallprint"><div id="Work">0 Locations already added</div></span></a>
+   </li>
+   </div>
 </div>
 <div class="button-full button-padded">
     <a href="createnew.html" class="button-first">Done</a>
-    <a onClick="history.go(-1);return true;" class="button-last">Cancel</a>
+    <a href="loc.html" class="button-last">Cancel</a>
 </div>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>

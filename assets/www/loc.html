@@ -1,6 +1,8 @@
 <html>
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
+   <link rel="stylesheet" href="css/default.css" type="text/css">
+   <link rel="stylesheet" href="css/default-basic.css" type="text/css">
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
 	<script src="http://m.ucla.edu/assets/js.php"></script>
 	<script type="text/javascript" charset="utf-8" src="js/phonegap.0.9.5.js"></script>
@@ -23,13 +25,14 @@
    	});
    	$("#survey-list:last-child").addClass("menu-last");
   
+  /*
 	   var locationtrigger = new LocationTrigger();
-	   locationtrigger.get(
+	   locationtrigger.getlocation(
 	      function(r){
 	      var cat_list = "<ol>";
 	      var temp = [];
-	      for(i=0;i<r.triggers.length;i++){
-	         temp.push(r.triggers[i].category);
+	      for(i=0;i<r.locations.length;i++){
+	         temp.push(r.locations[i].category);
 	      }
 	      var category = temp.unique();
 		
@@ -43,7 +46,9 @@
 	      function(e){
 	         alert(e);
 	      }
-	   );	
+	   );
+	*/
+	   	
 	}, true);
 	
 	
@@ -58,7 +63,11 @@
               };
 	*/
 	
-	var category = document.getElementById("category").value; 
+	//var category = document.getElementById("category").value; 
+	
+	var category = [];
+    	$("#category-list").find('input:radio:checked').each(function() { category.push($(this).val());});
+    	
 	var survey_id = [];
     $("#survey-list").find('input:checkbox:checked').each(function() {
     	  survey_id.push($(this).val());
@@ -95,7 +104,16 @@
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Trigger Location</h1>
-   <div id="category-list"></div>
+   <div id="category-list">
+   <ol>
+   <li><input type="radio" id="category" name="category" value="Home" checked>Home</input>
+   </li>
+   <li><input type="radio" id="category" name="category" value="Work">Work</input>
+   </li>
+   <li class= "menu-last"><a href="manage_loc.html">Manage Locations</a></li>
+   </li>
+   </ol>
+   </div>
 </div>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Surveys</h1>
@@ -103,7 +121,7 @@
 </div>
 <div class="button-full button-padded">
     <a href="createnew.html" id="done" class="button-first">Done</a>
-    <a class="button-last" onClick="history.go(-1);return true;">Cancel</a>
+    <a href="createnew.html" class="button-last">Cancel</a>
 </div>
 
 <a href="index.html" disabled class="button-full button-padded" onclick="logout()">Logout</a>

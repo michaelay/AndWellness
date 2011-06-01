@@ -1,6 +1,8 @@
 <html>
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
+   <link rel="stylesheet" href="css/default.css" type="text/css">
+   <link rel="stylesheet" href="css/default-basic.css" type="text/css">
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
 </head>
 <body>
@@ -87,13 +89,12 @@ function onClickSurveyUpload(eventObj)
    var success = true; 
    for (var i=0; i<len; i++) { 
       var surveyResult = responses[i]; 
-      console.log(surveyResult);
       if (!uploadSurvey(surveyResult)) { 
          success = false; 
       }
    }
    if (success != true) { 
-      alert("upload failed, please try again");
+      alert("upload failed, please check network connection and try again");
    } else { 
       clearSurveyResult();
       alert("upload completed");
@@ -104,20 +105,25 @@ function onClickSurveyUpload(eventObj)
 function onClickImageUpload(eventObj) {
    var dataArray = getAllPhoto(); 
    var len = dataArray.length; 
-   var success = true; 
+   var numToUpload = 0;
    for (var i=0; i<len; i++) { 
       var dataObj = dataArray[i]; 
-      console.log(dataObj); 
-      if (!uploadPhoto(dataObj)) { 
-         success = false; 
-      } 
+      numToUpload++;
+      uploadPhoto(dataObj, 
+                  function(r) { 
+                     if (r.result == "success") { 
+                        numToUpload--;
+                        if (numToUpload == 0) { 
+                           clearPhoto();
+                           populateData();
+                           alert("photo upload completed");
+                        }  
+                     } 
+                  },
+                  function(e) { 
+                     alert("upload failed, please check network connection and try again");
+                  });
    }
-   if (success != true) { 
-      alert("upload failed, please try again");
-   } else { 
-      clearPhoto();
-      alert("upload completed");
-   } 
    populateData();
 };
 /*

@@ -1,6 +1,8 @@
 <html>
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
+   <link rel="stylesheet" href="css/default.css" type="text/css">
+   <link rel="stylesheet" href="css/default-basic.css" type="text/css">
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
    <link rel="stylesheet" href="css/aws.css" type="text/css">
 </head>
@@ -26,7 +28,7 @@
 </div>
 -->
 <div class="button-full button-padded"> 
-   <a class="button-first" href="surveylist.html">Survey list</a>
+   <a class="button-first" href="surveylist.html">Home</a>
    <a href="setting.html" class="button-last">Settings</a>
 </div>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
@@ -256,7 +258,7 @@
       // both photo and survey is saved in the below function call
       dataObj = prepareFormData(eventObj);
       alert("Result is saved, you can upload it in the setting > status page");
-      //window.location.replace("surveylist.html");
+      window.location.replace("surveylist.html");
       // debug: actually submit the form 
       //uploadSurvey(dataObj);
    }; 
@@ -520,7 +522,7 @@ $(document).ready(function() {
          if ($.hasPhoneGap()) { 
             $formContent = $('<div class="center"></div>');
             var $imgdiv = $('<div></div>');
-            var $img = $('<img alt="no image" src="" width="300"/>');
+            var $img = $('<img alt="no image" src="" style="width:80%; margin-top:20px; margin-bottom:20px;"/>');
             var $buttons = $('<div class="button-full button-padded button-light"></div>');
             var $takePhotoButton = $('<a href=# class="button-first">Take photo</a>');
             var $choosePhotoButton = $('<a href=# class="button-last">Library</a>');
@@ -572,12 +574,16 @@ $(document).ready(function() {
          <h1 class="content-first light">Survey completed</h1>\
          <p class="center">Thank you for your participation. Please pick an option below.</p>\
       </div>');
+/*
    var $submit_buttons = $('<div class="content-button center"></div>');
    var $submit_button = $('<a href=#><div class="label">Submit now</div></a>');
+*/
+   var $submit_button = $('<a class="button-full button-padded button-light" href=#><div class="label">Submit now</div></a>');
    $submit_button.attr('id', 'submit-btn');
    $submit_button.click([$surveyEl, campaignName, campaignVersion, id], onClickSubmit);
-   $submit_buttons.append($submit_button);
-   $submit.append($submit_buttons);
+   //$submit_buttons.append($submit_button);
+   //$submit.append($submit_buttons);
+   $submit.append($submit_button);
    $submit.hide();
    $surveyEl.append($submit);
 

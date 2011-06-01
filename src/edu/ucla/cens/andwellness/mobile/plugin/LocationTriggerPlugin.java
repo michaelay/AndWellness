@@ -6,11 +6,13 @@ package edu.ucla.cens.andwellness.mobile.plugin;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Writer;
 
@@ -30,87 +32,147 @@ import com.phonegap.api.PluginResult.Status;
  */
 public class LocationTriggerPlugin extends Plugin {
 	
-    String myString = null;
-    String EXTFILENAME = "blah.txt";
-    File root = Environment.getExternalStorageDirectory();
-    File myfile = new File(root, EXTFILENAME);
+ 
 	
 	/* (non-Javadoc)
 	 * @see com.phonegap.api.Plugin#execute(java.lang.String, org.json.JSONArray, java.lang.String)
 	 */
+	@SuppressWarnings("null")
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;
 		
-		if (action.equals("set")) { 
+		
+		if (action.equals("set") || action.equals("addloc")) {
+			
 			JSONObject dataObject;
+			JSONArray ObjArr = null;
+			String myString = null;
+			String EXTFILENAME = null;
+			
+			if(action.equals("set"))
+			EXTFILENAME = "location_triggers.txt";
+			else if(action.equals("addloc"))
+			EXTFILENAME = "locations.txt";
+			
 			try {
-								
-				myString = data.getString(0);
 				dataObject = data.getJSONObject(0);
-								
-				
-				//String category = dataObject.getString("category");
-				//String surveyId = dataObject.getString("survey_id");
-//				long latitude = dataObject.getLong("latitude");
-//				long longitude = dataObject.getLong("longitude");
-//				JSONArray repeatArray = dataObject.getJSONArray("repeat");
-				
-//			    FileOutputStream out = new FileOutputStream("/sdcard/location_temp.jpg");
-			   
 				
 				try {
-					writeToExternal();
+					ObjArr = readFromExternal(EXTFILENAME);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+				if(action.equals("addloc"))
+				{
+						if(dataObject.getString("category").equals("Home"))
+						{
+							ObjArr.put(0, dataObject);
+							if(ObjArr.isNull(1)){
+								JSONObject temp = new JSONObject();
+								JSONArray location = new JSONArray();
+								temp.put("category", "Work");
+								temp.put("locations", location);
+								ObjArr.put(1, temp);
+							}
+						}	
+						else
+						{
+							ObjArr.put(1, dataObject);
+							if(ObjArr.isNull(0)){
+								JSONObject temp = new JSONObject();
+								JSONArray location = new JSONArray();
+								temp.put("category", "Home");
+								temp.put("locations", location);
+								ObjArr.put(0, temp);
+							}
+						}
+						
+				}
+				
+				
+				myString = ObjArr.toString();
+				try {
+					writeToExternal(EXTFILENAME, myString);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			
-				//JSONObject apiResult = new JSONObject();
-				//apiResult.put("result", "success");
-				result = new PluginResult(Status.OK, dataObject); 
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else if (action.equals("getAll")) { 
-			JSONObject apiResult = new JSONObject();
-			try {
+				JSONObject apiResult = new JSONObject();
 				apiResult.put("result", "success");
+				result = new PluginResult(Status.OK, apiResult); 
 				
-				JSONArray repeatArray = new JSONArray();
-				repeatArray.put("M");
-				repeatArray.put("T");
-				repeatArray.put("W");
-				
-				JSONObject object1 = new JSONObject(); 
-				object1.put("category", "home");
-				object1.put("label", "palash1");
-				object1.put("latitude", 123.123);
-				object1.put("longitude", 123.123);
-				object1.put("survey_id", "exerciseAndActivity");
-				object1.put("repeat", repeatArray);
-				
-				JSONArray triggerArray = new JSONArray(); 
-				triggerArray.put(object1);
-				
-				apiResult.put("triggers", triggerArray);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				JSONObject apiResult = new JSONObject();
+				try {
+					apiResult.put("result", "failed");
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				result = new PluginResult(Status.JSON_EXCEPTION, apiResult);
 			}
-			result = new PluginResult(Status.OK, apiResult); 			
-		}
+		}else if (action.equals("get") || action.equals("getloc")){
 		
+			String EXTFILENAME = null;
+			
+			if(action.equals("get"))
+			EXTFILENAME = "location_triggers.txt";	
+			else if(action.equals("getloc"))
+			EXTFILENAME = "locations.txt";
+			
+			JSONArray ObjArr = null;
+			
+			try {
+				ObjArr = readFromExternal(EXTFILENAME);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			JSONObject dataObj = new JSONObject();
+			
+			try {
+				
+				dataObj.put("result", "success");
+				
+				if(action.equals("get"))
+					dataObj.put("triggers", ObjArr);
+				else if(action.equals("getloc"))
+					dataObj.put("types", ObjArr);
+					
+				result = new PluginResult(Status.OK, dataObj);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				JSONObject apiResult = new JSONObject();
+				try {
+					apiResult.put("result", "failed");
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				result = new PluginResult(Status.JSON_EXCEPTION, apiResult);
+			}
+		}
+			
 		
 		return result;
 	}
 	
-	private void writeToExternal() throws IOException {
+	private void writeToExternal(String filename, String myString) throws IOException {
 		// TODO Auto-generated method stub
 		
 		try {
+			File root = Environment.getExternalStorageDirectory();
+			File myfile = new File(root, filename);
 			OutputStream out = new FileOutputStream(myfile, false);
 			out.write(myString.getBytes());
 			out.close();
@@ -118,6 +180,40 @@ public class LocationTriggerPlugin extends Plugin {
 			//e.printStackTrace();
 		}
 		
+	}
+	
+	private JSONArray readFromExternal(String filename) throws IOException {
+	
+	   StringBuilder contents = new StringBuilder();
+	   
+	   try {
+	   File root = Environment.getExternalStorageDirectory();
+	   File myfile = new File(root, filename);
+ 	   FileInputStream fileIS = new FileInputStream(myfile);
+ 	   BufferedReader buf = new BufferedReader(new InputStreamReader(fileIS));
+ 	   String readString = new String();
+ 	  while (( readString = buf.readLine()) != null){
+          contents.append(readString);
+          contents.append(System.getProperty("line.separator"));
+        }
+	   }
+	   catch (FileNotFoundException e) {
+			//e.printStackTrace();
+		}
+	
+	   JSONArray JSONArr = null;
+ 	  
+	try {
+		if(contents.toString().length()!=0)
+		 JSONArr = new JSONArray(contents.toString());
+		else
+		 JSONArr = new JSONArray();
+	} catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+ 	  
+ 	 return JSONArr;
 	}
 
 }

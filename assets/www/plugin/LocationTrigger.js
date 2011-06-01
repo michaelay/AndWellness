@@ -21,48 +21,44 @@ var dataObj = {
               };
 */
 LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
-    var resultObj = null;
-   return PhoneGap.exec(function(result) { 
-                           //resultObj = result; 
-                          alert("success");
-                          // successCallback(result);
-                        }, 
-                        function(result) {
-                           //resultObj = { result: "failure" }; 
-                           //alert("failed");
-                           //failureCallback(result);
-                        }, 
+
+   var resultObj = null;
+   return PhoneGap.exec(successCallback, 
+                        failureCallback, 
                         'LocationTriggerPlugin',
                         'set',
                         [dataObj]);
    
 }
-/*
-   var resultObj = { result: "success" }; 
-*/
+
 LocationTrigger.prototype.addlocation = function(dataObj, successCallback, failureCallback) {
-    /*
+       
        return PhoneGap.exec(successCallback,    //Callback which will be called when adding time trigger is successful
                             failureCallback,     //Callback which will be called when adding a time trigger encounters an error
-                            'LocationTrigger',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
-                            'add',              //Telling the plugin, which action we want to perform
-                            [time]);        //Passing a list of arguments to the plugin, in this case this is the time to be added
-    */
-       var resultObj = { result: "success" }; 
-       successCallback(resultObj);  
-
-   //alert("1");
-   //successCallback(resultObj);
-   //alert("2");
+                            'LocationTriggerPlugin',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
+                            'addloc',              //Telling the plugin, which action we want to perform
+                            [dataObj]);        //Passing a list of arguments to the plugin, in this case this is the time to be added
+      
 };
- 
+
+LocationTrigger.prototype.getlocation = function(successCallback, failureCallback) {
+    
+    return PhoneGap.exec(successCallback,    //Callback which will be called when adding time trigger is successful
+                         failureCallback,     //Callback which will be called when adding a time trigger encounters an error
+                         'LocationTriggerPlugin',  //Telling PhoneGap that we want to run "DirectoryListing" Plugin
+                         'getloc',              //Telling the plugin, which action we want to perform
+                         []);        //Passing a list of arguments to the plugin, in this case this is the time to be added
+   
+};
+
 LocationTrigger.prototype.removelocation = function(dataObj, successCallback, failureCallback) {
        var resultObj = { result: "success" }; 
        successCallback(resultObj);    
 };
 
 LocationTrigger.prototype.get = function(successCallback, failureCallback) {
-   var resultObj = { 
+   /*
+    var resultObj = { 
                     result: "success",
                     triggers: [ 
                                { category: "Home", latitude: 123.123, longitude: 123.12, survey_id: ["exerciseAndActivity"]},
@@ -71,15 +67,14 @@ LocationTrigger.prototype.get = function(successCallback, failureCallback) {
                               ]
    
                    };
-   successCallback(resultObj);
-/*
-   var resultObj = null; 
+   successCallback(resultObj);*/
+    
    return PhoneGap.exec(successCallback,
                         failureCallback,
                         'LocationTriggerPlugin',
-                        'getAll',
+                        'get',
                         []); 
-*/
+
 } ;
 /**
  * <ul>
