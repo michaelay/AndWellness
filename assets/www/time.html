@@ -74,7 +74,8 @@ document.addEventListener('deviceready', function() {
      		
      		  
 	  	if(cat_name){
-  		//$("#"+cat_name).attr('checked', 'checked');
+  		$("#hours").val(cat_name[0]+cat_name[1]);
+  		$("#minutes").val(cat_name[2]+cat_name[3]);
   		document.getElementById("delete-button").style.display = "block";
   		} 	
      		
@@ -191,7 +192,7 @@ document.addEventListener('deviceready', function() {
 </div>
 <div class="button-full button-padded">
     <a href="trigger.html" class="button-first" id="done">Done</a>
-    <a class="button-last" href="createnew.html">Cancel</a>
+    <a class="button-last" href="trigger.html">Cancel</a>
 </div>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script>
