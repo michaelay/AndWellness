@@ -28,7 +28,7 @@
 </div>
 -->
 <div class="button-full button-padded"> 
-   <a class="button-first" href="surveylist.html">Survey list</a>
+   <a class="button-first" href="surveylist.html">Home</a>
    <a href="setting.html" class="button-last">Settings</a>
 </div>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
@@ -258,7 +258,7 @@
       // both photo and survey is saved in the below function call
       dataObj = prepareFormData(eventObj);
       alert("Result is saved, you can upload it in the setting > status page");
-      //window.location.replace("surveylist.html");
+      window.location.replace("surveylist.html");
       // debug: actually submit the form 
       //uploadSurvey(dataObj);
    }; 
