@@ -11,7 +11,9 @@
    AndWellness
 </h1>
 
-<h1 class="center" id="desc-title"></h1>
+<div class="content-full content-padded">
+   <h1 class="center content-first" id="desc-title"></h1>
+</div>
 <div id="survey">
 </div>
 <!--
@@ -385,7 +387,7 @@ $(document).ready(function() {
       if (currentSurveyID == 1) { // disable prev button
          $firstButton = $('<a class="button-first button-light aws-button-disabled" href="#">Previous</a>');
       } else { 
-         $firstButton = $('<a class="button-first" href="#">Previous</a>');
+         $firstButton = $('<a class="button-first button-light" href="#">Previous</a>');
       } 
       $firstButton.attr("id", firstButtonID); 
       $firstButton.click([ currentSurveyID ], onClickPrev);
@@ -421,7 +423,7 @@ $(document).ready(function() {
       case "number": 
          var min;
          var max;
-         var contentHTML = '<select name="v">\n';
+         var contentHTML = '<select name="v" style="margin-top:20px;">\n';
          $survey_properties.children("property").each(function() { 
             var label = $(this).find("label").text();
             var value = $(this).find("value").text();

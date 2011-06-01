@@ -11,7 +11,6 @@
 	<script src="js/jquery.cookie.js"></script>
 	<script src="plugin/LocationTrigger.js"></script>
 	<script>
-	
 	document.addEventListener('deviceready', function() {
 	var loader = new CampaignXMLLoader(); 
    	var xmlString = loader.loadDefaultCampaign(); 
@@ -35,10 +34,7 @@
 	      var category = temp.unique();
 		
 	      for(i=0;i<category.length;i++){
-			if(i == 0)
-	          cat_list = cat_list + "<li><input type=\"radio\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
-			else
-		    cat_list = cat_list + "<li><input type=\"radio\" name=\"category\" value=" + category[i] + "/>" + category[i] + "</li>";
+	            cat_list = cat_list + "<li><input type=radio id=\"category\" name=\"category\" value=" + category[i] + " checked />" + category[i] + "</li>";
 	      }
 	      cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
 	      cat_list= cat_list + "</ol>";
@@ -62,13 +58,12 @@
               };
 	*/
 	
-	//var category = document.getElementById("category").value; 
-	var category = [];
-    	$("#category-list").find('input:radio:checked').each(function() { category.push($(this).val());});
+	var category = document.getElementById("category").value; 
 	var survey_id = [];
-   	$("#survey-list").find('input:checkbox:checked').each(function() { survey_id.push($(this).val());});
+    $("#survey-list").find('input:checkbox:checked').each(function() {
+    	  survey_id.push($(this).val());
+            });
         
-
     var dataString = {category:category,survey_id:survey_id};
     
     var dataObj = JSON.stringify(dataString);
