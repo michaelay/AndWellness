@@ -29,6 +29,9 @@
 <script src="plugin/LocationTrigger.js"></script>
 <script>
 $(document).ready(function() {
+   if (getLogin()) { 
+      window.location.replace("surveylist.html"); 
+   } 
    $("#login").click(function() { 
       var username = $("#username").val(); 
       var password = $("#password").val();
