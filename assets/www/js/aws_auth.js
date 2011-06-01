@@ -80,17 +80,6 @@ var getPasswordHash = function() {
    return $.cookie("p"); 
 };  
 
-// helper methods, do not call directly
-/*
-var setAuthToken = function(token) { 
-   // omit expiry date, a session cookie, deleted when browse is closed 
-   $.cookie("token", token);
-} 
-var deleteAuthToken = function() { 
-   $.cookie("token", "", { expires: -1} );
-}
-*/
-
 /**
  * Upload photo 
  */ 
