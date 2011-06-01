@@ -21,11 +21,19 @@ var dataObj = {
               };
 */
 LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
+<<<<<<< HEAD
+    var resultObj = null;
+   return PhoneGap.exec(function(result) { 
+                           //resultObj = result; 
+                          alert("success");
+                          // successCallback(result);
+=======
    var resultObj = null;
    return PhoneGap.exec(function(result) { 
                            resultObj = result; 
                            alert(resultObj);
                            //successCallback(result);
+>>>>>>> 73bad1749dd96604b2e39113934793f3ae2212fd
                         }, 
                         function(result) {
                            //resultObj = { result: "failure" }; 

@@ -9,89 +9,93 @@
 <script src="js/aws_auth.js"></script>
 <script src="js/jquery.cookie.js"></script>
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
+<script src="plugin/TimeTrigger.js"></script>
 </head>
-<body onload="initialize()">
+<body onLoad="time_trigger()">
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
 <ol>
    <li class="menu-first"> 
-    <a onclick="func()">Trigger Time
-    <br /><span class="smallprint" id="time"></span></a>
-   </li>
-   <li> 
-    <a href="repeat.html" style="background:none">Repeat
-    <br /><span class="smallprint">jhvjdb</span></a>
-   </li>
-   <li> 
-    <a href="range.html" style="background:none">Time range
-    <input type="checkbox" name="range" value="range" style="float:right;width:95%;margin-left:auto;margin-right:32px;display:block"/>
-    <br /><span class="smallprint">Enforce a range for the trigger time</span></a>
-   </li>
-   <li class="menu-last"> 
-    <a href="tt.html">Trigger Time
-    <br /><span class="smallprint">jhvjdb</span></a>
-   </li>
-</ol>
-</div>
-<div style="display:none" id="tt">
-<div class="menu-full menu-detailed menu-padded" >
-<h1 class="light" style="text-align:left">Trigger Time</h1>
-    <ol>
-	<li class="menu-first">
-		<select name="hours" id="hours"> 
-			<script type="text/javascript">
-				for(i=0;i<12;i++)
+    <a style="background:none">Trigger Time (in 24 hour format)<br />
+    	<select name="hours" id="hours">
+		<script type="text/javascript">
+				for(i=0;i<=23;i++)
 				{ 
-						j=i+1;
-						if(j<10) document.write("<option value=0"+j+">"+"0"+j+"</option>");
-						else document.write("<option value="+j+">"+j+"</option>");
+						if(i<10) document.write("<option value=0"+i+">"+"0"+i+"</option>");
+						else document.write("<option value="+i+">"+i+"</option>");
 				}
-			</script>
-		</select>
-		<select name="minutes" id="minutes"> 
-			<script type="text/javascript">
+		</script>
+	</select>
+	<select name="minutes" id="minutes">
+		<script type="text/javascript">
 				for(i=0;i<60;i++)
 				{ 
 						if(i<10) document.write("<option value=0"+i+">"+"0"+i+"</option>");
 						else document.write("<option value="+i+">"+i+"</option>");
 				}
-			</script>		
-		</select>
-		<select name="ampm" id="ampm"> <option value="AM">AM</option> <option value="PM">PM</option> </select>
-	</li>
-   </ol>
+		</script>
+	</select>
+    </a>
+   </li>
+   <li class="menu-last"> 
+    <a style="background:none">Repeat<br />
+	<ol id="repeat">
+	<input id="mon" type="checkbox" name="mon" value="M" /> Monday<br/>          <input id="tue" type="checkbox" name="tue" value="T"/> Tuesday <br/>
+	<input id="wed" type="checkbox" name="wed" value="W"/> Wednesday<br/>        <input id="thurs" type="checkbox" name="thurs" value="TH"/> Thursday <br/>
+	<input id="fri" type="checkbox" name="fri" value="F" /> Friday<br/>          <input id="sat" type="checkbox" name="sat" value="ST" /> Saturday <br/>
+	<input id="sun" type="checkbox" name="sun" value="S"/> Sunday<br/> </ol>
+    </a>
+   </li>
+</ol>
+</div>
+<div class="menu-full menu-detailed menu-padded">
+   <h1 class="light form-first">Surveys</h1>
+   <ol id="survey-list"></ol>
 </div>
 <div class="button-full button-padded">
-<a class="button-first" onclick="submit()">Submit</a>
-<a class="button-last" onclick="cancel()">Cancel</a>
+    <a href="createnew.html" class="button-first" onClick="submit()">Done</a>
+    <a class="button-last" onClick="history.go(-1);return true;">Cancel</a>
 </div>
-</div>
-<a class="button-full button-padded" href="createnew.html">Back</a>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script type="text/javascript">
-function initialize()
-{ var a_p = "";
-var d = new Date();
-var curr_hour = d.getHours();
-if (curr_hour < 12){a_p = "AM";}
-else {a_p = "PM";}
-if (curr_hour == 0){curr_hour = 12;}
-if (curr_hour > 12){curr_hour = curr_hour - 12;}
-var curr_min = d.getMinutes();
-curr_min = curr_min + "";
-if (curr_min.length == 1){curr_min = "0" + curr_min;}
-if (curr_hour < 10){curr_hour = "0" + curr_hour;}
-document.getElementById("time").innerHTML= curr_hour + " : " + curr_min + " " + a_p;
+function time_trigger()
+{ 
+	var loader = new CampaignXMLLoader(); 
+   	var xmlString = loader.loadDefaultCampaign(); 
+
+   	// print out the titles 
+   	$(xmlString).find("survey").each(function() { 
+      var title = $(this).children("title_t").text();
+      var id = $(this).children("id").text();
+      $("#survey-list").append('<li><input type=checkbox id=\"surveys\" name=\"surveys\" value=' + id + ' />'+title+'</li>'); 
+   	});
+   	$("#survey-list:last-child").addClass("menu-last");
 };
 </script>
 <script type="text/javascript">
-function func() { document.getElementById("tt").style.display = "block"; };
 function submit()
 {
-	document.getElementById("time").innerHTML= document.getElementById("hours").value + " : " + document.getElementById("minutes").value + " " + 							   document.getElementById("ampm").value;
-	document.getElementById("tt").style.display = "block";
+	var time = document.getElementById("hours").value + ":" + document.getElementById("minutes").value;
+	var repeat = [];
+    	$("#repeat").find('input:checkbox:checked').each(function() { repeat.push($(this).val());});
+	var survey_id = [];
+   	$("#survey-list").find('input:checkbox:checked').each(function() { survey_id.push($(this).val());});
+        
+    	var dataString = {time:time,repeat:repeat,survey_id:survey_id};
+    
+    	var dataObj = JSON.stringify(dataString);
+    	//alert(dataObj);    
+	    var timetrigger = new TimeTrigger();
+    
+	    timetrigger.set(dataObj,
+	    function(r){
+	    alert("Time Trigger added");    
+	    },
+	  	function(e){
+		alert("Could not add Time Trigger");
+		}    
+	    );
 };
-function cancel(){document.getElementById("tt").style.display = "block";};
 </script>
 <script>
 $(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
