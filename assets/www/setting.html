@@ -13,18 +13,23 @@
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light">Settings</h1>
-   <ol id="survey-list">
-      <li><a href="trigger.html">Trigger</a></li>
-      <li><a href="mobility.html">Mobility</a></li>
-      <li><a href="location.html">Location tracing</a></li>
-      <li><a href="status.html">Status</a></li>
+   <ol id="setting-list">
    </ol>
 </div>
 <a class="button-full button-padded" href="surveylist.html">Home</a>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
 <script>
-$(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
+$(document).ready(function() { 
+   if (getLogin() == null) { window.location.replace("index.html"); }
+
+   if ($.hasPhoneGap()) {  // phone gap only options
+      $("#setting-list").append($('<li><a href="trigger.html">Trigger</a></li>')); 
+      $("#setting-list").append($('<li><a href="mobility.html">Mobility</a></li>')); 
+      $("#setting-list").append($('<li><a href="location.html">Location tracing</a></li>')); 
+   } 
+   $("#setting-list").append($('<li><a href="status.html">Status</a></li>')); 
+});
 </script>
 </body>
 </html>
