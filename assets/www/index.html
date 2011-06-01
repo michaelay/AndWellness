@@ -40,19 +40,6 @@ $(document).ready(function() {
    });
    
 });
-
- document.addEventListener('deviceready', function() {
-       
-   var dObj = {}; 
-   window.plugins.locationtrigger.set(dObj, function(r) { return true; }, function() { return true; }  );
-   window.plugins.locationtrigger.getAll(function(r) { return true; }, function() { return true; }  );
-/*
-         window.plugins.directorylisting.list("/sdcard",
-             function(r){printResult(r)},
-             function(e){log(e)}
-          );
-*/
-});
 </script>
 </body>
 </html>

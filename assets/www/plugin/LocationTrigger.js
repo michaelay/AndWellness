@@ -21,13 +21,13 @@ var dataObj = {
               };
 */
 LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallback) {
-   var resultObj = null; 
+   var resultObj = null;
    return PhoneGap.exec(function(result) { 
-                           //resultObj = result; 
-                           //alert("success");
+                           resultObj = result; 
+                           alert(resultObj);
                            //successCallback(result);
                         }, 
-                        function(result) { 
+                        function(result) {
                            //resultObj = { result: "failure" }; 
                            //alert("failed");
                            //failureCallback(result);
@@ -35,6 +35,7 @@ LocationTrigger.prototype.set = function(dataObj, successCallback, failureCallba
                         'LocationTriggerPlugin',
                         'set',
                         [dataObj]);
+   
 }
 /*
    var resultObj = { result: "success" }; 
@@ -60,7 +61,7 @@ LocationTrigger.prototype.removelocation = function(dataObj, successCallback, fa
        successCallback(resultObj);    
 };
 
-LocationTrigger.prototype.getAll = function(successCallback, failureCallback) {
+LocationTrigger.prototype.get = function(successCallback, failureCallback) {
    var resultObj = { 
                     result: "success",
                     triggers: [ 
