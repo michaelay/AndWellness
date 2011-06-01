@@ -17,27 +17,28 @@
    var locationtrigger = new LocationTrigger();
    var temp =[];
    
-   locationtrigger.get(
+   locationtrigger.getlocation(
    function(r){
-   var cat_list = "<ol>";
-      for(i=0;i<r.triggers.length;i++){
-      temp.push(r.triggers[i].category);  
+      for(i=0;i<r.locations.length;i++){
+      temp.push(r.locations[i].category);  
       }
    var category = temp.unique();
    var count = [];
    
       for(i=0;i<category.length;i++){
       count[i] = 0; 
-      for(j=0;j<r.triggers.length;j++){
-            if(category[i] == r.triggers[j].category)
+      for(j=0;j<r.locations.length;j++){
+            if(category[i] == r.locations[j].category)
             count[i] = count[i] + 1;   
       }
-      cat_list = cat_list + "<li><a href=\"addlocation.html?id="+ i +"&name="+category[i]+"\">" + category[i] + "<br /><span class=\"smallprint\">"+count[i]+" Locations already added</span></a></li>";
+      //cat_list = cat_list + "<li><a href=\"addlocation.html?id="+ i +"&name="+category[i]+"\">" + category[i] + "<br /><span class=\"smallprint\">"+count[i]+" Locations already added</span></a></li>";
+      $("#"+category[i]).text(count[i]+" Locations already added");
       }
    
-   //cat_list = cat_list + "<li class= \"menu-last\"><a href=\"manage_loc.html\">Manage Locations</a></li>";
-   cat_list= cat_list + "</ol>";
-   document.getElementById("category-list").innerHTML=cat_list;
+   //cat_list= cat_list + "</ol>";
+   
+   //document.getElementById("category-list").innerHTML=cat_list;
+   
    }
    ,
    function(e){
@@ -52,7 +53,14 @@
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Trigger Location</h1>
-   <div id="category-list"></div>
+   <div id="category-list">
+   <ol>
+   <li>
+   <a href="addlocation.html?id=1&name=Home">Home<br /><span class="smallprint"><div id="Home">0 Locations already added</div></span></a>
+   </li>
+   <li><a href="addlocation.html?id=2&name=Work">Work<br /><span class="smallprint"><div id="Work">0 Locations already added</div></span></a>
+   </li>
+   </div>
 </div>
 <div class="button-full button-padded">
     <a href="createnew.html" class="button-first">Done</a>

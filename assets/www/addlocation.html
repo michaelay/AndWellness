@@ -17,7 +17,7 @@
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	<script type="text/javascript">
 
-var poly;
+	var poly;
 	var geocoder;
 	var map;
 	var marker;
@@ -183,6 +183,36 @@ var poly;
     }); 
         
   }
+  
+  function submit(){
+	
+	/*
+	var dataObj = {
+               category: "1231212132",
+               markers:[
+               			{address: results[0].formatted_address,
+              			position: results[0].geometry.location,
+              			map: map,
+              			icon: image}
+               			]
+              };
+	*/
+	    
+    var dataObj = {category:cat_name,markers:markers};
+    
+    var locationtrigger = new LocationTrigger();
+    
+    locationtrigger.addlocation(dataObj,
+    function(r){
+    alert("Location Trigger added");    
+    },
+  	function(e){
+	alert("Could not add Location Trigger");
+	}    
+    );
+	
+	}
+  
 	</script>
  
 </head>
@@ -205,46 +235,13 @@ var poly;
 </div>
 
 <div class="button-full button-padded">
-    <a href="createnew.html" class="button-first" onClick="submit()">Done</a>
+    <a href="manage_loc.html" class="button-first" onClick="submit()">Done</a>
     <a class="button-last" onClick="history.go(-1);return true;">Cancel</a>
 </div>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
 <script>
 $(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
-
-function submit(){
-	
-	/*
-	var dataObj = {
-               category: "1231212132",
-               lat: 123123,
-               lng: 1232               
-              };
-	*/
-	
-	var category = document.getElementById("category").value; 
-	var survey_id = [];
-    $("#survey-list").find('input:checkbox:checked').each(function() {
-    	  survey_id.push($(this).val());
-            });
-        
-    var dataString = {category:category,survey_id:survey_id};
-    
-    var dataObj = JSON.stringify(dataString);
-    
-    var locationtrigger = new LocationTrigger();
-    
-    locationtrigger.set(dataObj,
-    function(r){
-    alert("Location Trigger added");    
-    },
-  	function(e){
-	alert("Could not add Location Trigger");
-	}    
-    );
-	
-	}
 </script>
 </body>
 </html>

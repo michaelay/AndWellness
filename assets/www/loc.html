@@ -25,13 +25,14 @@
    	});
    	$("#survey-list:last-child").addClass("menu-last");
   
+  /*
 	   var locationtrigger = new LocationTrigger();
-	   locationtrigger.get(
+	   locationtrigger.getlocation(
 	      function(r){
 	      var cat_list = "<ol>";
 	      var temp = [];
-	      for(i=0;i<r.triggers.length;i++){
-	         temp.push(r.triggers[i].category);
+	      for(i=0;i<r.locations.length;i++){
+	         temp.push(r.locations[i].category);
 	      }
 	      var category = temp.unique();
 		
@@ -45,7 +46,9 @@
 	      function(e){
 	         alert(e);
 	      }
-	   );	
+	   );
+	*/
+	   	
 	}, true);
 	
 	
@@ -94,7 +97,16 @@
 <h1 id="header" class="header center">AndWellness</h1>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Trigger Location</h1>
-   <div id="category-list"></div>
+   <div id="category-list">
+   <ol>
+   <li><input type="radio" id="category" name="category" value="Home" checked>Home</input>
+   </li>
+   <li><input type="radio" id="category" name="category" value="Work">Work</input>
+   </li>
+   <li class= "menu-last"><a href="manage_loc.html">Manage Locations</a></li>
+   </li>
+   </ol>
+   </div>
 </div>
 <div class="menu-full menu-detailed menu-padded">
    <h1 class="light form-first">Surveys</h1>

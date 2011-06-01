@@ -41,14 +41,20 @@ public class LocationTriggerPlugin extends Plugin {
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;
 		
-		if (action.equals("set")) { 
+		
+		if (action.equals("addloc")) {
+			
 			JSONObject dataObject;
 			JSONArray ObjArr = null;
 			String myString = null;
-			String EXTFILENAME = "location_triggers.txt";
+			String EXTFILENAME = null;
+			
+			if(action.equals("set"))
+			EXTFILENAME = "location_triggers.txt";
+			else if(action.equals("addloc"))
+			EXTFILENAME = "locations.txt";
 			
 			try {
-								
 				dataObject = data.getJSONObject(0);
 				
 				try {
@@ -61,16 +67,6 @@ public class LocationTriggerPlugin extends Plugin {
 				ObjArr.put(dataObject);
 				
 				myString = ObjArr.toString();
-				
-				//String category = dataObject.getString("category");
-				//String surveyId = dataObject.getString("survey_id");
-//				long latitude = dataObject.getLong("latitude");
-//				long longitude = dataObject.getLong("longitude");
-//				JSONArray repeatArray = dataObject.getJSONArray("repeat");
-				
-//			    FileOutputStream out = new FileOutputStream("/sdcard/location_temp.jpg");
-			   
-				
 				try {
 					writeToExternal(EXTFILENAME, myString);
 				} catch (IOException e) {
@@ -86,10 +82,17 @@ public class LocationTriggerPlugin extends Plugin {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if (action.equals("get")){
+		}else if (action.equals("get") || action.equals("getloc")){
 		
-			String EXTFILENAME = "location_triggers.txt";
+			String EXTFILENAME = null;
+			
+			if(action.equals("get"))
+			EXTFILENAME = "location_triggers.txt";
+			else if(action.equals("getloc"))
+			EXTFILENAME = "locations.txt";
+			
 			JSONArray ObjArr = null;
+			
 			try {
 				ObjArr = readFromExternal(EXTFILENAME);
 			} catch (IOException e) {
@@ -100,8 +103,14 @@ public class LocationTriggerPlugin extends Plugin {
 			JSONObject dataObj = new JSONObject();
 			
 			try {
+				
 				dataObj.put("result", "success");
-				dataObj.put("triggers", ObjArr);
+				
+				if(action.equals("get"))
+					dataObj.put("triggers", ObjArr);
+				else if(action.equals("getloc"))
+					dataObj.put("locations", ObjArr);
+					
 				result = new PluginResult(Status.OK, dataObj);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -115,37 +124,8 @@ public class LocationTriggerPlugin extends Plugin {
 				}
 				result = new PluginResult(Status.JSON_EXCEPTION, apiResult);
 			}
-			
-			
-		}else if (action.equals("getAll")) { 
-			JSONObject apiResult = new JSONObject();
-			try {
-				apiResult.put("result", "success");
-				
-				JSONArray repeatArray = new JSONArray();
-				repeatArray.put("M");
-				repeatArray.put("T");
-				repeatArray.put("W");
-				
-				JSONObject object1 = new JSONObject(); 
-				object1.put("category", "home");
-				object1.put("label", "palash1");
-				object1.put("latitude", 123.123);
-				object1.put("longitude", 123.123);
-				object1.put("survey_id", "exerciseAndActivity");
-				object1.put("repeat", repeatArray);
-				
-				JSONArray triggerArray = new JSONArray(); 
-				triggerArray.put(object1);
-				
-				apiResult.put("triggers", triggerArray);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			result = new PluginResult(Status.OK, apiResult); 			
 		}
-		
+			
 		
 		return result;
 	}
