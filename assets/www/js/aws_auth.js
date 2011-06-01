@@ -83,12 +83,12 @@ var getPasswordHash = function() {
 /**
  * Upload photo 
  */ 
-var uploadPhoto = function(dataObj) { 
+var uploadPhoto = function(dataObj, successCallback, failureCallback) { 
+   var result = false;
    // create an invisible form and submit the data
-   var result = false; 
    if ($.hasPhoneGap()) { 
       var uploader = new PhotoUploader(); 
-      uploader.upload(dataObj); 
+      uploader.upload(dataObj, successCallback, failureCallback);
       result = true;
    } else { 
       // post to proxy 
