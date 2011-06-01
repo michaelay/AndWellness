@@ -19,11 +19,14 @@
     <input type="button" name="survey_up" value="Upload Now" style="float:left;width:15%;display:block" onClick="onClickSurveyUpload()"/>
     <br/><br/></a>   
    </li>
+
+<!--
    <li> 
     <a style="background:none"># of mobility data points not yet uploaded: <span class="smallprint" id="mobility_up"></span><br/>
     <input type="button" name="mobility_up" value="Upload Now" style="float:left;width:15%;display:block" onclick="func2()"/>
     <br/><br/></a>   
    </li>
+--> 
    <li class="menu-last"> 
    <a style="background:none"># of photos not yet uploaded: <span class="smallprint" id="image_up"></span><br/>
     <input type="button" name="image_up" value="Upload Now" style="float:left;width:15%;display:block" onclick="onClickImageUpload()"/>
@@ -94,7 +97,7 @@ function onClickSurveyUpload()
    } 
    populateData();
 }
-function func2() {};
+//function func2() {};
 function onClickImageUpload() {
    var dataArray = getAllPhoto(); 
    var len = dataArray.length; 
