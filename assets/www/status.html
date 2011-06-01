@@ -2,12 +2,6 @@
 <head>
    <meta name="viewport" content="height=device-height,width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
    <link rel="stylesheet" href="http://m.ucla.edu/assets/css.php" type="text/css">
-   <script src="http://m.ucla.edu/assets/js.php"></script>
-<script src="js/jquery-1.6.1.min.js"></script>
-<script src="js/aws_campaign.js"></script>
-<script src="js/aws_utility.js"></script>
-<script src="js/aws_auth.js"></script>
-<script src="js/jquery.cookie.js"></script>
 </head>
 <body onload="check()">
 <h1 id="header" class="header center">AndWellness</h1>
@@ -59,14 +53,20 @@
 <a class="button-full button-padded" href="setting.html">Back</a>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
+<script src="js/jquery-1.6.1.min.js"></script>
+<script src="js/aws_campaign.js"></script>
+<script src="js/aws_utility.js"></script>
+<script src="js/aws_auth.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/phonegap.0.9.5.js"></script>
+<script src="plugin/PhotoUploader.js"></script>
 <script>
 function check()
 {
    document.getElementById("user").innerHTML = $.cookie('u');
-        document.getElementById("survey_up").innerHTML = (getAllSurveyResult()).length;
-   //document.getElementById("mobility_up").innerHTML = count(/*function placeholder*/);
+   document.getElementById("survey_up").innerHTML = (getAllSurveyResult()).length;
    document.getElementById("image_up").innerHTML = (getAllPhoto()).length;
-return true;
+   return true;
 }
 function func1() 
 {
@@ -78,13 +78,15 @@ function func3() {};
 function func() 
 {
    document.getElementById("ch_pwd").style.display = "block";
-
 };
 function submit() {};
-function cancel() {document.getElementById("ch_pwd").style.display = "none";};
-</script>
-<script>
+function cancel() {
+   document.getElementById("ch_pwd").style.display = "none";
+};
+// check login 
 $(document).ready(function() { if (getLogin() == null) { window.location.replace("index.html"); }});
+
+
 </script>
 </body>
 </html>
