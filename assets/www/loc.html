@@ -11,7 +11,6 @@
 	<script src="js/jquery.cookie.js"></script>
 	<script src="plugin/LocationTrigger.js"></script>
 	<script>
-	
 	document.addEventListener('deviceready', function() {
 	var loader = new CampaignXMLLoader(); 
    	var xmlString = loader.loadDefaultCampaign(); 
@@ -68,15 +67,7 @@
 	var survey_id = [];
    	$("#survey-list").find('input:checkbox:checked').each(function() { survey_id.push($(this).val());});
         
-<<<<<<< HEAD
-    var dataString = {category:category,survey_id:survey_id};
-    
-    var dataObj = JSON.stringify(dataString);
-   // alert(dataObj);
-    var locationtrigger = new LocationTrigger();
-=======
     var dataObj = {category:category,survey_id:survey_id};    
->>>>>>> 73bad1749dd96604b2e39113934793f3ae2212fd
     
     window.plugins.locationtrigger.set(dataObj,
     	function(r){
