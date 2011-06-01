@@ -24,6 +24,15 @@
 <script src="js/phonegap.0.9.5.js"></script>
 <script src="plugin/LocationTrigger.js"></script>
 <script>
+document.addEventListener("deviceready", 
+                          function() {
+                           document.addEventListener("backbutton", 
+                                                     function() { 
+                                                       navigator.app.exitApp();
+                                                     }, 
+                                                     false);
+                          }, 
+                          false);
 $(document).ready(function() {
    if (getLogin() != null) { 
       window.location.replace("surveylist.html"); 
