@@ -23,8 +23,10 @@
    <a id="begin-button" href="#" class="button-full button-light button-padded">Begin</a>
 </div>
 -->
-<a class="button-full button-padded" href="surveylist.html">survey list</a>
-<a href="setting.html" class="button-full button-padded">Settings</a>
+<div class="button-full button-padded"> 
+   <a class="button-first" href="surveylist.html">Survey list</a>
+   <a href="setting.html" class="button-last">Settings</a>
+</div>
 <a href="index.html" class="button-full button-padded" onclick="logout()">Logout</a>
 <script src="http://m.ucla.edu/assets/js.php"></script>
 <script src="js/phonegap.0.9.5.js"></script>
@@ -381,7 +383,7 @@ $(document).ready(function() {
       var firstButtonID = 'prev' + currentSurveyID; 
       var $firstButton; 
       if (currentSurveyID == 1) { // disable prev button
-         $firstButton = $('<a class="button-first aws-button-disabled" href="#">Previous</a>');
+         $firstButton = $('<a class="button-first button-light aws-button-disabled" href="#">Previous</a>');
       } else { 
          $firstButton = $('<a class="button-first" href="#">Previous</a>');
       } 
@@ -389,7 +391,7 @@ $(document).ready(function() {
       $firstButton.click([ currentSurveyID ], onClickPrev);
 
       var lastButtonID = 'next' + currentSurveyID; 
-      var $lastButton = $('<a class="button-last aws-button-disabled" href="#">Next</a>');
+      var $lastButton = $('<a class="button-last button-light aws-button-disabled" href="#">Next</a>');
       $lastButton.attr("id", lastButtonID); 
       $lastButton.click([ currentSurveyID ], onClickNext);
 
